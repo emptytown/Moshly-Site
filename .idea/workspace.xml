@@ -4,71 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/moshly-landing/.instructions.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/.junie/guidelines.md" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/.junie/guidelines.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/.wrangler/cache/cf.json" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/.wrangler/cache/cf.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/AUTH-STRATEGY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/FEEME-SETUP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/LAUNCH-DAY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/Moshly-deploy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/README-Worker.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/_headers" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/_redirects" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/admin.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/app-config.feeme.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/app-manifest.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/BrainRoom-icon-svg.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-darkoutline.svg" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-darkoutline.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-nofill.svg" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/assets/Moshly-Main-Logo-nofill.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/Rankwize-logo-icon-png.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/Rankwize-logo-icon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/feeme-logo-icon.svg" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/assets/feeme-logo-icon.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/merchclick-logo-icon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/rbapp-logo-icon-png.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/assets/rbapp-logo-icon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/auth-client.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/auth-sync.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/chat-box.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/collab.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/connect-more.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/contact.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/faq.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/faq.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/feeme.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/launcher.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/launching-soon/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/node_modules/.mf/cf.json" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/node_modules/.mf/cf.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/pricing.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/pricing.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/privacy.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/privacy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/reset-password.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/setup-profile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/terms.html" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-landing/terms.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/auth-worker-deep.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/auth-worker-smoke.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/feeme-integration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/login-smoke.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/monolith-auth-proxy-smoke.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/test-feeme-integration.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/tests/usage-worker-smoke.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/auth-worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/collab-worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/project-worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/usage-worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/wrangler.auth.example.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/wrangler.auth.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/wrangler.collab.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/wrangler.project.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/workers/wrangler.usage.example.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-landing/wrangler.toml" beforeDir="false" />
-    </list>
+    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,7 +18,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/moshly-landing" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SWAP_SIDES_IN_COMPARE_BRANCHES" value="true" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
