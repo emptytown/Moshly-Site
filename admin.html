@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moshly — God Mode</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { overflow-x: hidden; }
+
+    /* ── SHELL ── */
+    .adm-shell {
+      min-height: 100vh;
+      background: var(--color-bg-primary);
+      padding: 0 0 60px;
+    }
+
+    /* ── TOPBAR ── */
+    .adm-topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 60px;
+    }
+    .adm-topbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+    .adm-topbar-brand svg { color: #a78bfa; }
+    .adm-topbar-brand span { color: #a78bfa; }
+    .adm-topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .adm-back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--color-text-secondary);
+      background: none; border: 1px solid var(--color-border-subtle);
+      border-radius: 8px; padding: 6px 12px; cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .adm-back-btn:hover { color: var(--color-text-primary); border-color: var(--color-border-strong); }
+
+    /* ── CONTENT ── */
+    .adm-content { max-width: 1100px; margin: 0 auto; padding: 36px 28px 0; }
+
+    .adm-page-title {
+      font-size: 22px; font-weight: 700;
+      color: var(--color-text-primary); margin: 0 0 6px;
+    }
+    .adm-page-sub { font-size: 13px; color: var(--color-text-tertiary); margin: 0 0 32px; }
+
+    /* ── SECTIONS ── */
+    .adm-section-title {
+      font-size: 12px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--color-text-tertiary);
+      margin: 0 0 14px;
+    }
+
+    /* ── CARD ── */
+    .adm-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: 14px; padding: 22px 24px; margin-bottom: 24px;
+    }
+    .adm-card-title {
+      font-size: 15px; font-weight: 600; color: var(--color-text-primary);
+      margin: 0 0 16px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── FLAGS ── */
+    .adm-flags-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .adm-flag-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--color-bg-primary); border-radius: 10px; padding: 12px 16px;
+    }
+    .adm-flag-info .adm-flag-name { font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+    .adm-flag-info .adm-flag-desc { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+    .adm-toggle {
+      position: relative; width: 42px; height: 24px; flex-shrink: 0; cursor: pointer;
+    }
+    .adm-toggle input { opacity: 0; width: 0; height: 0; }
+    .adm-toggle-track {
+      position: absolute; inset: 0; background: var(--color-border-strong);
+      border-radius: 12px; transition: background .2s;
+    }
+    .adm-toggle input:checked + .adm-toggle-track { background: #4ADE80; }
+    .adm-toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 18px; height: 18px; background: #fff;
+      border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    .adm-toggle input:checked ~ .adm-toggle-thumb { transform: translateX(18px); }
+
+    /* ── INVITE CODES ── */
+    .adm-code-form-wrap {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: 10px;
+      padding: 16px 18px 18px;
+      margin-bottom: 0;
+    }
+    .adm-code-form-title {
+      font-size: 11px; font-weight: 600; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--color-text-tertiary);
+      margin: 0 0 14px;
+    }
+    .adm-code-form { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-end; margin-bottom: 0; }
+    .adm-code-field { display: flex; flex-direction: column; gap: 5px; }
+    .adm-code-field label {
+      font-size: 11px; font-weight: 500; letter-spacing: .04em;
+      color: var(--color-text-tertiary); white-space: nowrap;
+    }
+    .adm-code-form select,
+    .adm-code-form input {
+      font-size: 13px; padding: 8px 12px;
+      background: var(--color-bg-primary); color: var(--color-text-primary);
+      border: 1px solid var(--color-border-subtle); border-radius: 8px;
+      outline: none; transition: border-color .15s;
+    }
+    .adm-code-form select:focus,
+    .adm-code-form input:focus { border-color: #a78bfa; }
+    .adm-code-form input[placeholder*="MOSH"] { text-transform: uppercase; letter-spacing: .1em; }
+    .adm-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 600; padding: 8px 16px;
+      border-radius: 8px; cursor: pointer; border: none; transition: opacity .15s;
+    }
+    .adm-btn:hover { opacity: .85; }
+    .adm-btn-primary { background: #a78bfa; color: #fff; }
+    .adm-btn-danger  { background: rgba(248,113,113,.15); color: #F87171; }
+    .adm-btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    /* ── CODES TABLE SECTION ── */
+    .adm-codes-section {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+    .adm-codes-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin: 0 0 14px;
+    }
+
+    /* ── TABLES ── */
+    .adm-table-wrap { overflow-x: auto; }
+    table.adm-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    .adm-table th {
+      text-align: left; font-size: 10.5px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(148,163,184,.55);
+      padding: 8px 12px 8px 0; border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .adm-table td {
+      padding: 11px 12px 11px 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+      color: var(--color-text-primary); vertical-align: middle;
+    }
+    .adm-table tr:last-child td { border-bottom: none; }
+    .adm-table tbody tr:hover td { background: rgba(167,139,250,.04); }
+
+    .adm-badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .adm-badge-solo     { background: rgba(100,116,139,.15); color: #94a3b8; }
+    .adm-badge-collective { background: rgba(74,222,128,.12); color: #4ADE80; }
+    .adm-badge-business { background: rgba(251,191,36,.12);  color: #FBBF24; }
+    .adm-badge-major    { background: rgba(167,139,250,.15); color: #a78bfa; }
+    .adm-badge-collab   { background: rgba(96,165,250,.12);  color: #60a5fa; }
+    .adm-badge-free     { background: rgba(248,113,113,.12); color: #F87171; }
+    .adm-badge-god      { background: rgba(167,139,250,.25); color: #a78bfa; }
+    .adm-badge-semi_god { background: rgba(251,191,36,.15);  color: #FBBF24; }
+    .adm-badge-user     { background: rgba(100,116,139,.1);  color: #94a3b8; }
+    .adm-badge-active   { background: rgba(74,222,128,.12);  color: #4ADE80; }
+    .adm-badge-disabled { background: rgba(248,113,113,.12); color: #F87171; }
+
+    /* ── USERS TOOLBAR ── */
+    .adm-users-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .adm-search-input {
+      flex: 1; min-width: 200px; max-width: 320px;
+      font-size: 13px; padding: 8px 12px;
+      background: var(--color-bg-primary); color: var(--color-text-primary);
+      border: 1px solid var(--color-border-subtle); border-radius: 8px;
+      outline: none; transition: border-color .15s;
+    }
+    .adm-search-input:focus { border-color: #a78bfa; }
+
+    /* ── PAGINATION ── */
+    .adm-pagination { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px; }
+    .adm-pagination button {
+      padding: 5px 12px; font-size: 13px; background: var(--color-bg-primary);
+      border: 1px solid var(--color-border-subtle); border-radius: 7px;
+      color: var(--color-text-primary); cursor: pointer;
+    }
+    .adm-pagination button:disabled { opacity: .4; cursor: default; }
+    .adm-pagination-info { color: var(--color-text-tertiary); }
+
+    /* ── MODAL ── */
+    .adm-modal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.6); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .adm-modal-backdrop.open { display: flex; }
+    .adm-modal {
+      background: var(--color-bg-secondary); border-radius: 16px;
+      padding: 28px; width: 100%; max-width: 460px;
+      max-height: 90vh; overflow-y: auto;
+      border: 1px solid var(--color-border-subtle);
+    }
+    .adm-modal-title { font-size: 17px; font-weight: 700; margin: 0 0 18px; }
+    .adm-modal-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .adm-modal-row label { font-size: 13px; font-weight: 500; min-width: 100px; color: var(--color-text-secondary); }
+    .adm-modal-row select,
+    .adm-modal-row input {
+      font-size: 13px; padding: 8px 12px;
+      background: var(--color-bg-primary); color: var(--color-text-primary);
+      border: 1px solid var(--color-border-subtle); border-radius: 8px;
+      outline: none; flex: 1;
+    }
+    .adm-modal-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
+    .adm-modal-cancel {
+      font-size: 13px; padding: 8px 16px;
+      background: none; border: 1px solid var(--color-border-subtle);
+      border-radius: 8px; color: var(--color-text-secondary); cursor: pointer;
+    }
+    .adm-apps-checkboxes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .adm-apps-checkboxes label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 400; cursor: pointer; min-width: unset;
+    }
+
+    /* ── APP CATALOG ── */
+    .adm-catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .adm-catalog-row {
+      display: flex; flex-direction: column; gap: 8px;
+      background: var(--color-bg-primary); border-radius: 10px; padding: 14px 16px;
+    }
+    .adm-catalog-app { display: flex; align-items: center; gap: 8px; }
+    .adm-catalog-app img { width: 28px; height: 28px; border-radius: 8px; object-fit: cover; }
+    .adm-catalog-app-name { font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+    .adm-catalog-select {
+      width: 100%; font-size: 12px; padding: 7px 10px;
+      background: var(--color-bg-secondary); color: var(--color-text-primary);
+      border: 1px solid var(--color-border-subtle); border-radius: 8px;
+      outline: none; cursor: pointer; transition: border-color .15s;
+    }
+    .adm-catalog-select:focus { border-color: #a78bfa; }
+    .adm-catalog-select option { background: #0e0f14; }
+    .adm-empty { text-align: center; color: var(--color-text-tertiary); font-size: 13px; padding: 24px 0; }
+
+    /* ── SPRAWL ── */
+    .adm-sprawl-stats { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .adm-sprawl-stat {
+      flex: 1; min-width: 110px;
+      background: var(--color-bg-primary); border-radius: 10px;
+      padding: 14px 16px; text-align: center;
+    }
+    .adm-sprawl-stat-num { font-size: 26px; font-weight: 800; line-height: 1; }
+    .adm-sprawl-stat-label { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+    .adm-sprawl-bar {
+      display: inline-flex; gap: 3px; align-items: center;
+      vertical-align: middle; margin-left: 6px;
+    }
+    .adm-sprawl-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .adm-sprawl-dot--filled { background: #a78bfa; }
+    .adm-sprawl-dot--warn   { background: #FBBF24; }
+    .adm-sprawl-dot--cap    { background: #F87171; }
+    .adm-sprawl-dot--empty  { background: rgba(255,255,255,.12); }
+
+    /* ── SPRAWL ── */
+    .adm-sprawl-stats { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .adm-sprawl-stat {
+      flex: 1; min-width: 110px;
+      background: var(--color-bg-primary); border-radius: 10px;
+      padding: 14px 16px; text-align: center;
+    }
+    .adm-sprawl-stat-num  { font-size: 26px; font-weight: 800; line-height: 1; }
+    .adm-sprawl-stat-label { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+    .adm-sprawl-pip-row { display: inline-flex; gap: 4px; align-items: center; }
+    .adm-sprawl-pip {
+      width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+    }
+    .adm-sprawl-pip--on-ok   { background: #a78bfa; }
+    .adm-sprawl-pip--on-warn { background: #FBBF24; }
+    .adm-sprawl-pip--on-cap  { background: #F87171; }
+    .adm-sprawl-pip--off     { background: rgba(255,255,255,.1); }
+
+    /* ── TOAST ── */
+    #adm-toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: #1e2030; color: #fff; font-size: 13px;
+      padding: 10px 20px; border-radius: 10px;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+      z-index: 9999; border: 1px solid rgba(255,255,255,.1);
+      white-space: nowrap;
+    }
+    #adm-toast.show { opacity: 1; }
+  </style>
+</head>
+<body style="background:#0E0F14;color:#fff;font-family:Inter,sans-serif;">
+
+<!-- Loading screen -->
+<div id="admLoading" style="min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#a78bfa"/></svg>
+  <span style="font-size:13px;color:#6b7280;">Verifying access…</span>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<div class="adm-shell" id="admShell" style="display:none;">
+
+  <!-- Topbar -->
+  <header class="adm-topbar">
+    <div class="adm-topbar-brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      <span>God Mode</span>
+    </div>
+    <div class="adm-topbar-actions">
+      <button class="adm-back-btn" onclick="window.location.href='dashboard.html'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        Dashboard
+      </button>
+    </div>
+  </header>
+
+  <div class="adm-content">
+    <h1 class="adm-page-title">Admin Backoffice</h1>
+    <p class="adm-page-sub">Site controls, invite codes, and user management. You are god here.</p>
+
+    <!-- ── SITE CONTROLS ── -->
+    <p class="adm-section-title">Site Controls</p>
+    <div class="adm-card" id="adm-flags-card">
+      <div class="adm-card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        Feature Flags
+      </div>
+      <div class="adm-flags-grid" id="flagsGrid">
+        <div class="adm-empty">Loading flags…</div>
+      </div>
+    </div>
+
+    <!-- ── APP CATALOG ── -->
+    <p class="adm-section-title" style="margin-top:8px;">App Catalog</p>
+    <div class="adm-card">
+      <div class="adm-card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        App Status Overrides
+      </div>
+      <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 16px;">Override the display status of each app in the ACC. Changes are live immediately for god accounts.</p>
+      <div class="adm-catalog-grid" id="admCatalogGrid">
+        <div class="adm-empty">Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── PROMO CODES ── -->
+    <p class="adm-section-title" style="margin-top:8px;">Invite Codes</p>
+    <div class="adm-card">
+      <div class="adm-card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+        Promo Codes
+      </div>
+
+      <!-- Generator form -->
+      <div class="adm-code-form-wrap">
+        <p class="adm-code-form-title">Generate a code</p>
+        <form class="adm-code-form" id="codeForm" onsubmit="createCode(event)">
+          <div class="adm-code-field">
+            <label for="codePlan">Plan</label>
+            <select id="codePlan" required>
+              <option value="" disabled selected>Choose…</option>
+              <option value="solo">Solo</option>
+              <option value="collective">Collective</option>
+              <option value="business">Business</option>
+              <option value="major">Major</option>
+              <option value="semi_god">Semi God</option>
+              <option value="god">God</option>
+            </select>
+          </div>
+          <div class="adm-code-field">
+            <label for="codeMonths">Duration (months)</label>
+            <input type="number" id="codeMonths" min="0" max="120" placeholder="0 = forever" style="width:140px;" required />
+          </div>
+          <div class="adm-code-field">
+            <label for="codeMaxUses">Max uses</label>
+            <input type="number" id="codeMaxUses" min="1" max="9999" placeholder="e.g. 1" value="1" style="width:100px;" required />
+          </div>
+          <div class="adm-code-field">
+            <label for="codeNote">Note <span style="opacity:.5;font-weight:400;">(optional)</span></label>
+            <input type="text" id="codeNote" placeholder="e.g. Beta invite" style="width:180px;" />
+          </div>
+          <div class="adm-code-field">
+            <label for="codeCustom">Custom code <span style="opacity:.5;font-weight:400;">(optional)</span></label>
+            <input type="text" id="codeCustom" placeholder="MOSH-XXXX" style="width:150px;" maxlength="9" oninput="this.value=this.value.toUpperCase()" />
+          </div>
+          <div class="adm-code-field">
+            <label style="visibility:hidden;">x</label>
+            <button type="submit" class="adm-btn adm-btn-primary">Generate</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Codes table -->
+      <div class="adm-codes-section">
+        <p class="adm-codes-section-title">Generated Codes</p>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Code</th><th>Plan</th><th>Months</th><th>Uses</th><th>Note</th><th>Expires</th><th>Status</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="codesBody">
+              <tr><td colspan="8" class="adm-empty">Loading codes…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WORKSPACE SPRAWL ── -->
+    <p class="adm-section-title" style="margin-top:8px;">Workspace Sprawl</p>
+    <div class="adm-card">
+      <div class="adm-card-title" style="justify-content:space-between;">
+        <span style="display:flex;align-items:center;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M6.343 6.343a8 8 0 1 0 11.314 11.314"/><path d="M17.657 6.343A8 8 0 0 0 6.343 17.657"/></svg>
+          Anti-Sprawl Intelligence
+        </span>
+        <button class="adm-btn adm-btn-primary adm-btn-sm" onclick="loadSprawl()">Scan Workspaces</button>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 16px;">Users who joined foreign workspaces via MOSH-B invite. Cap: <strong style="color:#a78bfa;">3 workspaces</strong> per user.</p>
+      <div id="sprawlStats" class="adm-sprawl-stats" style="display:none;">
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlTotal" style="color:#a78bfa;">—</div>
+          <div class="adm-sprawl-stat-label">In workspaces</div>
+        </div>
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlWarn" style="color:#FBBF24;">—</div>
+          <div class="adm-sprawl-stat-label">Approaching cap (2/3)</div>
+        </div>
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlCap" style="color:#F87171;">—</div>
+          <div class="adm-sprawl-stat-label">At cap (3/3)</div>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>User</th><th>Plan</th><th>Workspaces</th><th>Load</th><th>Status</th></tr>
+          </thead>
+          <tbody id="sprawlBody">
+            <tr><td colspan="5" class="adm-empty">Click “Scan Workspaces” to load.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── WORKSPACE SPRAWL ── -->
+    <p class="adm-section-title" style="margin-top:8px;">Workspace Sprawl</p>
+    <div class="adm-card">
+      <div class="adm-card-title" style="justify-content:space-between;">
+        <span style="display:flex;align-items:center;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4m-4.9 5.4L10 14m3.9 2.6L14 14"/></svg>
+          Anti-Sprawl Intelligence
+        </span>
+        <button class="adm-btn adm-btn-primary adm-btn-sm" onclick="loadSprawl()">Scan Workspaces</button>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 16px;">Users who joined foreign workspaces via MOSH-B invite. Cap: <strong style="color:#a78bfa;">3 workspaces</strong> per user.</p>
+      <div id="sprawlStats" class="adm-sprawl-stats" style="display:none;">
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlTotal" style="color:#a78bfa;">—</div>
+          <div class="adm-sprawl-stat-label">In workspaces</div>
+        </div>
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlWarn" style="color:#FBBF24;">—</div>
+          <div class="adm-sprawl-stat-label">Approaching cap (2/3)</div>
+        </div>
+        <div class="adm-sprawl-stat">
+          <div class="adm-sprawl-stat-num" id="sprawlCap" style="color:#F87171;">—</div>
+          <div class="adm-sprawl-stat-label">At cap (3/3)</div>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>User</th><th>Plan</th><th>Workspaces</th><th>Load</th><th>Status</th></tr>
+          </thead>
+          <tbody id="sprawlBody">
+            <tr><td colspan="5" class="adm-empty">Click "Scan Workspaces" to load.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── USERS ── -->
+    <p class="adm-section-title" style="margin-top:8px;">Users</p>
+    <div class="adm-card">
+      <div class="adm-card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        All Users
+      </div>
+      <div class="adm-users-toolbar">
+        <input class="adm-search-input" type="text" id="userSearch" placeholder="Search email or name…" oninput="searchUsers()" />
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Plan</th><th>Privilege</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="usersBody">
+            <tr><td colspan="7" class="adm-empty">Loading users…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="adm-pagination" id="usersPagination"></div>
+    </div>
+  </div>
+</div><!-- /adm-shell -->
+
+<!-- ── EDIT USER MODAL ── -->
+<div class="adm-modal-backdrop" id="editModal">
+  <div class="adm-modal">
+    <h3 class="adm-modal-title">Edit User</h3>
+    <input type="hidden" id="editUserId" />
+    <div class="adm-modal-row">
+      <label>Plan</label>
+      <select id="editPlan">
+        <option value="free">Free</option>
+        <option value="solo">Solo</option>
+        <option value="collective">Collective</option>
+        <option value="business">Business</option>
+        <option value="major">Major</option>
+      </select>
+    </div>
+    <div class="adm-modal-row">
+      <label>Privilege</label>
+      <select id="editPrivilege">
+        <option value="user">User</option>
+        <option value="semi_god">Semi God</option>
+        <option value="god">God</option>
+      </select>
+    </div>
+    <div class="adm-modal-row" style="align-items:flex-start;">
+      <label style="padding-top:4px;">Apps</label>
+      <div class="adm-apps-checkboxes" id="editApps">
+        <label><input type="checkbox" value="rbapp" /> RBapp</label>
+        <label><input type="checkbox" value="merchclick" /> MerchClick</label>
+      </div>
+    </div>
+    <div class="adm-modal-actions">
+      <button class="adm-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="adm-btn adm-btn-primary" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="adm-toast"></div>
+
+<script src="auth-client.js"></script>
+<script src="moshly-ui.js"></script>
+<script>
+  // ── Auth guard ──
+  (async () => {
+    const loadingEl = document.getElementById('admLoading');
+    const hide = () => { if (loadingEl) loadingEl.style.display = 'none'; };
+    const fail = (msg) => {
+      if (!loadingEl) return;
+      loadingEl.style.display = 'flex';
+      loadingEl.innerHTML = `<p style="color:#F87171;font-size:14px;">${msg}</p><a href="/dashboard.html" style="color:#a78bfa;font-size:13px;margin-top:8px;">← Back to dashboard</a>`;
+    };
+    try {
+      const user = await window.MoshlyAuth.requireGod();
+      if (!user) return; // already redirected
+      hide();
+      document.getElementById('admShell').style.display = '';
+      init();
+    } catch(e) {
+      fail('Authentication error. <a href="/dashboard.html" style="color:#a78bfa;">← Dashboard</a>');
+    }
+  })();
+
+  // ── State ──
+  let usersPage = 1;
+  let usersSearch = '';
+  let usersTotal = 0;
+  const PAGE_SIZE = 20;
+
+  const FLAGS = [
+    { key: 'flag_login_enabled',      name: 'Login',       desc: 'Allow new logins' },
+    { key: 'flag_maintenance_rbapp',  name: 'RBapp',       desc: 'RBapp maintenance mode' },
+    { key: 'flag_maintenance_moshly', name: 'Moshly Site', desc: 'Moshly maintenance mode' },
+  ];
+
+  function toast(msg, ms = 2800) {
+    const el = document.getElementById('adm-toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), ms);
+  }
+
+  async function init() {
+    await Promise.all([loadFlags(), loadAppCatalog(), loadCodes(), loadUsers()]);
+  }
+
+  // ── FLAGS ──
+  async function loadFlags() {
+    const { ok, data } = await window.MoshlyAuth.authFetch('/admin/flags');
+    if (!ok) return;
+    const grid = document.getElementById('flagsGrid');
+    grid.innerHTML = FLAGS.map(f => {
+      const val = data.flags[f.key] ?? 'false';
+      const checked = val === 'true' ? 'checked' : '';
+      return `<div class="adm-flag-row">
+        <div class="adm-flag-info">
+          <div class="adm-flag-name">${f.name}</div>
+          <div class="adm-flag-desc">${f.desc}</div>
+        </div>
+        <label class="adm-toggle">
+          <input type="checkbox" ${checked} onchange="setFlag('${f.key}', this.checked)" />
+          <span class="adm-toggle-track"></span>
+          <span class="adm-toggle-thumb"></span>
+        </label>
+      </div>`;
+    }).join('');
+  }
+
+  async function setFlag(key, val) {
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/flags/${key}`, {
+      method: 'PUT', body: JSON.stringify({ value: String(val) }),
+    });
+    toast(ok ? `${key} → ${val}` : 'Failed to update flag');
+  }
+
+  // ── APP CATALOG ──
+  const APP_CATALOG = [
+    { slug: 'rbapp',      name: 'RBapp',      icon: 'assets/rbapp-logo-icon.svg' },
+    { slug: 'merchclick', name: 'MerchClick', icon: 'assets/merchclick-logo-icon.svg' },
+  ];
+  const STATUS_OPTIONS = [
+    { value: '',            label: '— Manifest default —' },
+    { value: 'live',        label: '🟢 Live' },
+    { value: 'soon',        label: '🔵 Coming Soon' },
+    { value: 'maintenance', label: '🟡 On Maintenance' },
+    { value: 'offline',     label: '🔴 Offline' },
+  ];
+
+  async function loadAppCatalog() {
+    const { ok, data } = await window.MoshlyAuth.authFetch('/admin/flags');
+    const grid = document.getElementById('admCatalogGrid');
+    grid.innerHTML = APP_CATALOG.map(app => {
+      const flagKey = `flag_app_status_${app.slug}`;
+      const current = ok ? (data.flags[flagKey] ?? '') : '';
+      const opts = STATUS_OPTIONS.map(o => `<option value="${o.value}"${o.value === current ? ' selected' : ''}>${o.label}</option>`).join('');
+      return `<div class="adm-catalog-row">
+        <div class="adm-catalog-app">
+          <img src="${app.icon}" alt="" />
+          <span class="adm-catalog-app-name">${app.name}</span>
+        </div>
+        <select class="adm-catalog-select" onchange="setAppStatus('${app.slug}', this.value)">${opts}</select>
+      </div>`;
+    }).join('');
+  }
+
+  async function setAppStatus(slug, val) {
+    const key = `flag_app_status_${slug}`;
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/flags/${key}`, {
+      method: 'PUT', body: JSON.stringify({ value: val }),
+    });
+    toast(ok ? `${slug} status → ${val || 'manifest default'}` : 'Failed to update');
+  }
+
+  // ── CODES ──
+  async function loadCodes() {
+    const { ok, data } = await window.MoshlyAuth.authFetch('/admin/invite-codes');
+    const tbody = document.getElementById('codesBody');
+    if (!ok) { tbody.innerHTML = `<tr><td colspan="8" class="adm-empty">Error loading codes.</td></tr>`; return; }
+    if (!data.codes?.length) { tbody.innerHTML = `<tr><td colspan="8" class="adm-empty">No codes yet.</td></tr>`; return; }
+    tbody.innerHTML = data.codes.map(c => {
+      const expired = c.expires_at && new Date(c.expires_at) < new Date();
+      const full    = c.max_uses > 0 && c.uses_count >= c.max_uses;
+      const status  = expired ? 'expired' : full ? 'exhausted' : 'active';
+      const statusHtml = status === 'active'
+        ? `<span class="adm-badge adm-badge-active">Active</span>`
+        : `<span class="adm-badge adm-badge-free">${status}</span>`;
+      const planBadge = `<span class="adm-badge adm-badge-${c.plan}">${c.plan}</span>`;
+      const expStr = c.expires_at ? new Date(c.expires_at).toLocaleDateString() : '—';
+      const usesStr = c.max_uses > 0 ? `${c.uses_count}/${c.max_uses}` : `${c.uses_count}/∞`;
+      return `<tr>
+        <td><code style="font-size:12px;letter-spacing:.08em;">${c.code}</code></td>
+        <td>${planBadge}</td>
+        <td>${c.months === 0 ? '∞' : c.months}</td>
+        <td>${usesStr}</td>
+        <td style="color:var(--color-text-tertiary);font-size:12px;">${c.note ?? '—'}</td>
+        <td style="font-size:12px;">${expStr}</td>
+        <td>${statusHtml}</td>
+        <td><button class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteCode('${c.code}')">Revoke</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function createCode(e) {
+    e.preventDefault();
+    const plan     = document.getElementById('codePlan').value;
+    const months   = parseInt(document.getElementById('codeMonths').value);
+    const max_uses = parseInt(document.getElementById('codeMaxUses').value);
+    const note     = document.getElementById('codeNote').value.trim() || undefined;
+    const custom   = document.getElementById('codeCustom').value.trim() || undefined;
+    const body = { plan, months, max_uses, ...(note && { note }), ...(custom && { code: custom }) };
+    const { ok, data } = await window.MoshlyAuth.authFetch('/admin/invite-codes', {
+      method: 'POST', body: JSON.stringify(body),
+    });
+    if (!ok) { toast(data.error ?? 'Failed to create code'); return; }
+    toast(`Code created: ${data.code.code}`);
+    document.getElementById('codeForm').reset();
+    await loadCodes();
+  }
+
+  async function deleteCode(code) {
+    if (!confirm(`Revoke code ${code}?`)) return;
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/invite-codes/${code}`, { method: 'DELETE' });
+    toast(ok ? 'Code revoked.' : 'Failed to revoke.');
+    if (ok) await loadCodes();
+  }
+
+  // ── USERS ──
+  async function loadUsers() {
+    const params = new URLSearchParams({ page: usersPage, search: usersSearch });
+    const { ok, data } = await window.MoshlyAuth.authFetch(`/admin/users?${params}`);
+    const tbody = document.getElementById('usersBody');
+    if (!ok) { tbody.innerHTML = `<tr><td colspan="7" class="adm-empty">Error loading users.</td></tr>`; return; }
+    usersTotal = data.total ?? 0;
+    if (!data.users?.length) { tbody.innerHTML = `<tr><td colspan="7" class="adm-empty">No users found.</td></tr>`; renderPagination(); return; }
+    tbody.innerHTML = data.users.map(u => {
+      const planBadge = `<span class="adm-badge adm-badge-${u.plan ?? 'free'}">${u.plan ?? 'free'}</span>`;
+      const privilegeBadge = `<span class="adm-badge adm-badge-${u.privilege ?? 'user'}">${u.privilege ?? 'user'}</span>`;
+      const isDisabled = !!u.disabled_at;
+      const statusBadge = isDisabled
+        ? `<span class="adm-badge adm-badge-disabled">Disabled</span>`
+        : `<span class="adm-badge adm-badge-active">Active</span>`;
+      const created = u.created_at ? new Date(u.created_at).toLocaleDateString() : '—';
+      return `<tr>
+        <td>${esc(u.name ?? '')}</td>
+        <td style="font-size:12px;">${esc(u.email ?? '')}</td>
+        <td>${planBadge}</td>
+        <td>${privilegeBadge}</td>
+        <td>${statusBadge}</td>
+        <td style="font-size:12px;">${created}</td>
+        <td>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="adm-btn adm-btn-primary adm-btn-sm" onclick="openEdit('${u.id}','${u.plan}','${u.privilege ?? 'user'}')">Edit</button>
+            ${isDisabled
+              ? `<button class="adm-btn adm-btn-sm" style="background:rgba(74,222,128,.15);color:#4ADE80;" onclick="enableUser('${u.id}')">Enable</button>`
+              : `<button class="adm-btn adm-btn-danger adm-btn-sm" onclick="disableUser('${u.id}')">Disable</button>`}
+            <button class="adm-btn adm-btn-sm" style="background:rgba(251,191,36,.12);color:#FBBF24;font-size:11px;" onclick="revokeUser('${u.id}')">Revoke Sessions</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(usersTotal / PAGE_SIZE) || 1;
+    const pg = document.getElementById('usersPagination');
+    pg.innerHTML = `
+      <button onclick="changePage(${usersPage - 1})" ${usersPage <= 1 ? 'disabled' : ''}>← Prev</button>
+      <span class="adm-pagination-info">Page ${usersPage} of ${totalPages} (${usersTotal} users)</span>
+      <button onclick="changePage(${usersPage + 1})" ${usersPage >= totalPages ? 'disabled' : ''}>Next →</button>
+    `;
+  }
+
+  function changePage(p) { usersPage = p; loadUsers(); }
+
+  let searchTimer;
+  function searchUsers() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      usersSearch = document.getElementById('userSearch').value.trim();
+      usersPage = 1;
+      loadUsers();
+    }, 350);
+  }
+
+  async function disableUser(id) {
+    if (!confirm('Disable this user?')) return;
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/users/${id}/disable`, { method: 'POST' });
+    toast(ok ? 'User disabled.' : 'Failed.'); if (ok) loadUsers();
+  }
+  async function enableUser(id) {
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/users/${id}/enable`, { method: 'POST' });
+    toast(ok ? 'User enabled.' : 'Failed.'); if (ok) loadUsers();
+  }
+  async function revokeUser(id) {
+    if (!confirm('Revoke all sessions for this user?')) return;
+    const { ok } = await window.MoshlyAuth.authFetch(`/admin/users/${id}/revoke`, { method: 'POST' });
+    toast(ok ? 'Sessions revoked.' : 'Failed.');
+  }
+
+  // ── EDIT MODAL ──
+  let editAppsOriginal = [];
+  async function openEdit(id, plan, privilege) {
+    document.getElementById('editUserId').value = id;
+    document.getElementById('editPlan').value  = plan;
+    document.getElementById('editPrivilege').value  = privilege;
+    // Load apps
+    const { ok, data } = await window.MoshlyAuth.authFetch(`/admin/users/${id}/apps`);
+    const apps = ok ? (data.apps ?? []) : [];
+    editAppsOriginal = apps;
+    document.querySelectorAll('#editApps input[type=checkbox]').forEach(cb => {
+      cb.checked = apps.includes(cb.value);
+    });
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('editModal').classList.remove('open'); }
+
+  async function saveEdit() {
+    const id   = document.getElementById('editUserId').value;
+    const plan = document.getElementById('editPlan').value;
+    const privilege = document.getElementById('editPrivilege').value;
+    const apps = Array.from(document.querySelectorAll('#editApps input[type=checkbox]'))
+                      .filter(c => c.checked).map(c => c.value);
+    const [r1, r2] = await Promise.all([
+      window.MoshlyAuth.authFetch(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ plan, privilege }) }),
+      window.MoshlyAuth.authFetch(`/admin/users/${id}/apps`, { method: 'PUT', body: JSON.stringify({ apps }) }),
+    ]);
+    if (r1.ok && r2.ok) { toast('User updated.'); closeModal(); loadUsers(); }
+    else toast(r1.data?.error ?? r2.data?.error ?? 'Update failed.');
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('editModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  // ── Helpers ──
+  function esc(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"'/g,'&quot;');
+  }
+
+  // ── SPRAWL ──
+  async function loadSprawl() {
+    const tbody = document.getElementById('sprawlBody');
+    tbody.innerHTML = `<tr><td colspan="5" class="adm-empty" style="color:#a78bfa;">Scanning…</td></tr>`;
+    document.getElementById('sprawlStats').style.display = 'none';
+
+    const AUTH_URL =
+      (window.MoshlyAuth && window.MoshlyAuth.baseUrl)
+      || window.AUTH_URL
+      || window.MOSHLY_API_URL
+      || '/api';
+    const token = window.MoshlyAuth.getToken() || '';
+    let data;
+    try {
+      const res = await fetch(`${AUTH_URL}/admin/sprawl`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'X-Admin-Key':   token,
+          'Origin': 'https://moshly.io',
+        },
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error');
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" class="adm-empty" style="color:#F87171;">Failed: ${esc(e.message)}</td></tr>`;
+      return;
+    }
+
+    const { stats, users } = data;
+    document.getElementById('sprawlTotal').textContent = stats.total_in_workspaces;
+    document.getElementById('sprawlWarn').textContent  = stats.approaching_cap;
+    document.getElementById('sprawlCap').textContent   = stats.at_cap;
+    document.getElementById('sprawlStats').style.display = '';
+
+    if (!users || !users.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="adm-empty">✓ No users in foreign workspaces.</td></tr>`;
+      return;
+    }
+
+    const MAX = stats.max_joinable || 3;
+    tbody.innerHTML = users.map(u => {
+      const pipClass = u.risk === 'cap' ? 'cap' : u.risk === 'warning' ? 'warn' : 'ok';
+      const pips = Array.from({ length: MAX }, (_, i) => {
+        const filled = i < u.membership_count;
+        const cls = filled ? `adm-sprawl-pip--on-${pipClass}` : 'adm-sprawl-pip--off';
+        return `<span class="adm-sprawl-pip ${cls}"></span>`;
+      }).join('');
+
+      const wsNames = u.memberships.map(m => esc(m.owner_name || m.owner_id)).join(', ');
+      const statusColor = u.risk === 'cap' ? '#F87171' : u.risk === 'warning' ? '#FBBF24' : '#4ADE80';
+      const statusLabel = u.risk === 'cap' ? 'AT CAP' : u.risk === 'warning' ? 'WARNING' : 'OK';
+
+      return `<tr>
+        <td>
+          <div style="font-size:13px;font-weight:600;">${esc(u.name)}</div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);">${esc(u.email)}</div>
+        </td>
+        <td><span class="adm-badge adm-badge-${u.plan}">${u.plan}</span></td>
+        <td style="font-size:12px;color:var(--color-text-secondary);max-width:240px;">${wsNames}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:13px;font-weight:700;color:${statusColor};">${u.membership_count}/${MAX}</span>
+            <span class="adm-sprawl-pip-row">${pips}</span>
+          </div>
+        </td>
+        <td><span class="adm-badge" style="background:${statusColor}22;color:${statusColor};">${statusLabel}</span></td>
+      </tr>`;
+    }).join('');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entering FeeMe — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(139,92,246,.22), transparent 55%),
+                  radial-gradient(1000px 700px at 85% 90%, rgba(192,38,211,.18), transparent 55%),
+                  #0A0B10;
+      color: #E6E9F5;
+    }
+    .card {
+      width: min(520px, calc(100% - 40px));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      background: rgba(17, 18, 28, .78);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      padding: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .brand img { width: 32px; height: 32px; }
+    .brand span { font-weight: 800; letter-spacing: -.02em; }
+    h1 { margin: 8px 0 8px; font-size: 20px; letter-spacing: -.02em; }
+    p { margin: 0; color: #BFC4D9; font-size: 14px; line-height: 1.5; }
+    .status { margin-top: 16px; font-size: 13px; color: #9FA7C6; }
+    .dot {
+      display: inline-block;
+      width: 9px; height: 9px; border-radius: 999px;
+      margin-right: 8px;
+      background: #8b5cf6;
+      box-shadow: 0 0 0 0 rgba(139,92,246,.6);
+      animation: pulse 1.6s infinite;
+      vertical-align: middle;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(139,92,246,.6); }
+      70% { box-shadow: 0 0 0 10px rgba(139,92,246,0); }
+      100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
+    }
+    .error {
+      color: #ff6b6b;
+      padding: 12px;
+      background: rgba(255,107,107,.1);
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+  <script src="auth-client.js"></script>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
+      <span>Moshly Hub</span>
+    </div>
+    <h1>Welcome to FeeMe…</h1>
+    <p>Validating your secure session with the Hub and preparing FeeMe.</p>
+    <div class="status" id="status"><span class="dot"></span>Validating SSO token…</div>
+    <div id="error" class="error" style="display:none;"></div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const errorEl = document.getElementById('error');
+
+    const FEEME_BASE_URL = 'https://feeme.moshly.io';
+
+    (async function feemeCallback() {
+      try {
+        // Step 1: Extract SSO token from URL
+        const params = new URLSearchParams(window.location.search);
+        const ssoToken = params.get('token');
+
+        if (!ssoToken) {
+          // Direct access without SSO token — check existing Hub session
+          statusEl.innerHTML = '<span class="dot"></span>Checking Moshly session…';
+
+          const user = await window.MoshlyAuth.getSessionRobust();
+          if (!user) {
+            showError('No active session. Redirecting to Moshly…');
+            setTimeout(() => {
+              window.location.href = '/home?auth=login&redirect=' + encodeURIComponent(window.location.href);
+            }, 1200);
+            return;
+          }
+
+          // Has Hub session but no SSO token — send back to dashboard to issue one
+          showError('Session found but no FeeMe token. <a href="/dashboard.html">Return to the Hub</a> and open FeeMe from there.');
+          return;
+        }
+
+        // Step 2: Show handoff UI, then redirect to FeeMe with the token intact
+        // The token must NOT be consumed here — FeeMe's own server validates it.
+        statusEl.innerHTML = '<span class="dot"></span>Establishing secure session…';
+
+        setTimeout(() => {
+          statusEl.innerHTML = '✓ Secure session established';
+          document.querySelector('h1').textContent = 'FeeMe Ready';
+          document.querySelector('p').textContent = 'Your session has been validated with the Moshly Hub.';
+
+          // Redirect to FeeMe callback with the SSO token
+          const destination = FEEME_BASE_URL + '/feeme.html?token=' + encodeURIComponent(ssoToken);
+          window.location.replace(destination);
+        }, 300);
+
+      } catch (err) {
+        console.error('FeeMe callback error:', err);
+        showError(
+          'Session handoff failed: ' + err.message +
+          '<br />Please return to <a href="/dashboard.html">the Hub</a> and try again.'
+        );
+      }
+    })();
+
+    function showError(message) {
+      statusEl.style.display = 'none';
+      errorEl.style.display = 'block';
+      errorEl.innerHTML = message;
+    }
+  </script>
+</body>
+</html>

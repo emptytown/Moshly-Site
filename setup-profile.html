@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moshly — Set Up Your Profile</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-bg-primary:    #0E0F14;
+      --color-bg-secondary:  #141624;
+      --color-bg-surface:    #1B1E2E;
+      --color-text-primary:  #E6E7EB;
+      --color-text-secondary:#A4A7B5;
+      --color-text-tertiary: #7B7F93;
+      --color-accent-primary:#6B5CFF;
+      --color-accent-hover:  #7C6DFF;
+      --color-border-subtle: #24273A;
+      --color-border-strong: #2D3048;
+      --color-success:       #4ADE80;
+      --color-error:         #F87171;
+      --gradient-subtle: linear-gradient(135deg, #6B5CFF 0%, #C026D3 100%);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+
+    /* ── BACKGROUND SITE BLUR ── */
+    .sp-backdrop {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(107,92,255,.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(192,38,211,.12) 0%, transparent 55%),
+        var(--color-bg-primary);
+      z-index: 0;
+    }
+
+    /* ── OVERLAY ── */
+    .sp-overlay {
+      position: fixed; inset: 0;
+      background: rgba(8, 9, 13, 0.80);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── CARD ── */
+    .sp-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-strong);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      padding: 36px 36px 32px;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5), 0 0 0 1px rgba(107,92,255,.08);
+      animation: slideUp .3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BACK BUTTON ── */
+    .sp-back {
+      position: absolute;
+      top: 20px; left: 20px;
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none;
+      color: var(--color-text-tertiary);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: color .2s;
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+    .sp-back:hover {
+      color: var(--color-text-primary);
+      background: rgba(255,255,255,.04);
+    }
+    .sp-back svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── AVATAR INITIALS ── */
+    .sp-avatar-wrap {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px; margin-top: 10px;
+    }
+    .sp-avatar {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: var(--gradient-subtle);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; color: #fff; flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(107,92,255,.25);
+    }
+    .sp-avatar-label { font-size: 15px; font-weight: 700; }
+    .sp-avatar-sub   { font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px; }
+
+    /* ── HEADING ── */
+    .sp-heading {
+      font-size: 22px; font-weight: 800;
+      letter-spacing: -.3px;
+      margin-bottom: 4px;
+    }
+    .sp-sub {
+      font-size: 13px; color: var(--color-text-tertiary);
+      margin-bottom: 28px; line-height: 1.5;
+    }
+
+    /* ── FORM ── */
+    .sp-form { display: flex; flex-direction: column; gap: 14px; }
+
+    .sp-field { display: flex; flex-direction: column; gap: 6px; }
+    .sp-label {
+      font-size: 12px; font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .sp-input {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-md);
+      color: var(--color-text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .sp-input::placeholder { color: var(--color-text-tertiary); }
+    .sp-input:focus {
+      border-color: var(--color-accent-primary);
+      box-shadow: 0 0 0 3px rgba(107,92,255,.15);
+    }
+
+    /* ── DIVIDER ── */
+    .sp-divider {
+      height: 1px;
+      background: var(--color-border-subtle);
+      margin: 6px 0 4px;
+    }
+
+    /* ── ACTIONS ── */
+    .sp-actions {
+      display: flex; gap: 10px; margin-top: 8px;
+    }
+    .sp-skip {
+      flex: 1;
+      background: none;
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .sp-skip:hover {
+      border-color: var(--color-text-tertiary);
+      color: var(--color-text-primary);
+    }
+    .sp-save {
+      flex: 2;
+      background: var(--gradient-subtle);
+      border: none;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-family: inherit; font-size: 14px; font-weight: 700;
+      padding: 12px;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .sp-save:hover   { opacity: .9; transform: translateY(-1px); }
+    .sp-save:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* ── MESSAGE ── */
+    .sp-msg {
+      font-size: 12px; text-align: center;
+      min-height: 18px; margin-top: 4px;
+    }
+    .sp-msg.error   { color: var(--color-error); }
+    .sp-msg.success { color: var(--color-success); }
+
+    /* ── STEP DOTS ── */
+    .sp-steps {
+      display: flex; gap: 6px; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .sp-step {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--color-border-strong);
+      transition: background .2s, width .2s;
+    }
+    .sp-step.active {
+      width: 20px; border-radius: 3px;
+      background: var(--gradient-subtle);
+    }
+
+    @media (max-width: 520px) {
+      .sp-card { padding: 32px 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background glow -->
+  <div class="sp-backdrop"></div>
+
+  <!-- Overlay + Card -->
+  <div class="sp-overlay">
+    <div class="sp-card">
+
+      <!-- Back button -->
+      <button class="sp-back" id="sp-back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Back
+      </button>
+
+      <!-- Step indicator -->
+      <div class="sp-steps">
+        <div class="sp-step"></div>
+        <div class="sp-step active"></div>
+        <div class="sp-step"></div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="sp-avatar-wrap">
+        <div class="sp-avatar" id="sp-avatar">?</div>
+        <div>
+          <div class="sp-avatar-label" id="sp-display-name">Your Name</div>
+          <div class="sp-avatar-sub" id="sp-display-email">—</div>
+        </div>
+      </div>
+
+      <div class="sp-heading">Set up your profile</div>
+      <div class="sp-sub">Tell the crew a bit about you. You can always update this later in your dashboard.</div>
+
+      <form class="sp-form" id="sp-form" autocomplete="off">
+
+        <div class="sp-field">
+          <label class="sp-label" for="sp-name">Display Name</label>
+          <input class="sp-input" id="sp-name" name="name" type="text" placeholder="e.g. Jane Doe" maxlength="80" required />
+        </div>
+
+        <div class="sp-field">
+          <label class="sp-label" for="sp-jobtitle">Role / Job Title</label>
+          <input class="sp-input" id="sp-jobtitle" name="job_title" type="text" placeholder="e.g. Tour Manager, Production Designer" maxlength="80" />
+        </div>
+
+        <div class="sp-field">
+          <label class="sp-label" for="sp-org">Organisation</label>
+          <input class="sp-input" id="sp-org" name="org" type="text" placeholder="e.g. Empty Town, Self-employed" maxlength="80" />
+        </div>
+
+        <div class="sp-field">
+          <label class="sp-label" for="sp-location">Location</label>
+          <input class="sp-input" id="sp-location" name="location" type="text" placeholder="e.g. Lisbon, Portugal" maxlength="80" />
+        </div>
+
+        <div class="sp-field">
+          <label class="sp-label" for="sp-skills">Skills</label>
+          <input class="sp-input" id="sp-skills" name="skills" type="text" placeholder="e.g. Logistics, Production, Lighting" maxlength="120" />
+        </div>
+
+        <div class="sp-divider"></div>
+
+        <div class="sp-actions">
+          <button type="button" class="sp-skip" id="sp-skip-btn">Skip for now</button>
+          <button type="submit" class="sp-save" id="sp-save-btn">Save &amp; Continue →</button>
+        </div>
+
+        <div class="sp-msg" id="sp-msg"></div>
+      </form>
+
+    </div>
+  </div>
+
+  <script src="auth-client.js"></script>
+  <script src="moshly-ui.js"></script>
+  <script>
+    // Guard: redirect to login if no session
+    (async () => {
+      const ok = await window.MoshlyAuth.requireSession('/?auth=login');
+      if (!ok) return;
+    })();
+
+    const params  = new URLSearchParams(location.search);
+    const noPlan  = params.get('no_plan') === '1';
+    const dest    = noPlan ? '/pricing.html?from=register' : '/dashboard.html';
+
+    // Populate from cached user
+    const cached = window.MoshlyAuth.getUser();
+    if (cached) {
+      const initials = (cached.name || '')
+        .split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
+      document.getElementById('sp-avatar').textContent       = initials;
+      document.getElementById('sp-display-name').textContent = cached.name || '';
+      document.getElementById('sp-display-email').textContent= cached.email || '';
+      document.getElementById('sp-name').value               = cached.name || '';
+    }
+
+    // Update avatar initials live from name field
+    document.getElementById('sp-name').addEventListener('input', function() {
+      const v = this.value.trim();
+      const initials = v.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
+      document.getElementById('sp-avatar').textContent       = initials;
+      document.getElementById('sp-display-name').textContent = v || 'Your Name';
+    });
+
+    // Back button
+    document.getElementById('sp-back-btn').addEventListener('click', () => {
+      if (history.length > 1) { history.back(); }
+      else { window.location.href = '/'; }
+    });
+
+    // Skip
+    document.getElementById('sp-skip-btn').addEventListener('click', () => {
+      window.location.href = dest;
+    });
+
+    function setMsg(text, type) {
+      const el = document.getElementById('sp-msg');
+      el.textContent = text;
+      el.className = 'sp-msg ' + (type || '');
+    }
+
+    // Save
+    document.getElementById('sp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('sp-save-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      setMsg('');
+
+      const body = {
+        name:      document.getElementById('sp-name').value.trim(),
+        job_title: document.getElementById('sp-jobtitle').value.trim(),
+        org:       document.getElementById('sp-org').value.trim(),
+        location:  document.getElementById('sp-location').value.trim(),
+        skills:    document.getElementById('sp-skills').value.trim(),
+      };
+
+      if (!body.name) {
+        setMsg('Display name is required.', 'error');
+        btn.disabled = false; btn.textContent = 'Save & Continue →';
+        return;
+      }
+
+      try {
+        const res = await window.MoshlyAuth.authFetch('/me', {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+        });
+
+        if (res.ok) {
+          // Update localStorage with new profile fields
+          const user = cached ? { ...cached, ...body } : body;
+          localStorage.setItem('moshly_user', JSON.stringify(user));
+          setMsg('Profile saved!', 'success');
+          setTimeout(() => { window.location.href = dest; }, 600);
+        } else {
+          setMsg(res.data?.error || 'Could not save profile. Try again.', 'error');
+          btn.disabled = false; btn.textContent = 'Save & Continue →';
+        }
+      } catch {
+        setMsg('Network error. Please try again.', 'error');
+        btn.disabled = false; btn.textContent = 'Save & Continue →';
+      }
+    });
+  </script>
+</body>
+</html>

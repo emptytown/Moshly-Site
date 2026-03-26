@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moshly — Tools for the Music Industry</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+      <div class="nav-links">
+        <a href="#apps" class="nav-link">Apps</a>
+        <a href="#roadmap" class="nav-link">Roadmap</a>
+        <a href="pricing.html" class="nav-link">Pricing</a>
+        <button class="nav-login-btn" id="nav-login-btn" onclick="openModal('login');return false;">Log In</button>
+        <a id="nav-dash-btn" href="/dashboard.html" class="nav-login-btn u-hidden">Dashboard →</a>
+      </div>
+      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <button class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu();openModal('login');return false;">Log In</button>
+      <a id="mobile-nav-dash-btn" href="/dashboard.html" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-glow hero-glow-3"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Built for the Music Industry
+      </div>
+      <h1 class="hero-title">
+        Micro-tools.<br />
+        <span class="gradient-text">Maximum impact.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Moshly is a growing suite of sharp, focused apps built for music professionals. No bloat. Just the tool you need, exactly when you need it.
+      </p>
+      <div class="hero-actions">
+        <a href="#apps" class="btn-primary">Explore Apps</a>
+        <a href="#roadmap" class="btn-ghost">See What's Coming</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- APPS SECTION -->
+  <section class="apps-section" id="apps">
+    <div class="section-inner">
+      <div class="section-label">The Suite</div>
+      <h2 class="section-title">Apps built for <span class="gradient-text">real work</span></h2>
+      <p class="section-subtitle">Each app solves one problem, with simplicity.</p>
+
+      <!-- Vertical route + cards -->
+      <div class="apps-route-wrapper">
+
+        <!-- Vertical route track: node → line → card → line → node → line → card ... -->
+        <div class="vr-track">
+
+          
+          <div class="vr-line vr-line--mid"></div>
+
+          <!-- ── STATION 2: FeeME ── -->
+          <div class="vr-node vr-node--mid" aria-hidden="true">
+            <div class="vr-node-glow vr-node-glow--mid"></div>
+            <div class="vr-node-ring vr-node-ring--mid"></div>
+            <div class="vr-node-dot vr-node-dot--mid"></div>
+          </div>
+          <div class="vr-line vr-line--future"></div>
+
+          <div class="app-card app-card--soon reveal">
+            <div class="app-card-top">
+              <div class="app-card-identity">
+                <div class="app-icon-wrap">
+                  <img src="assets/rbapp-logo-icon.svg" alt="RBapp" class="app-icon" />
+                </div>
+                <div class="app-card-meta">
+                  <h3 class="app-name">FeeME</h3>
+                  <p class="app-tagline">Budget Generator</p>
+                </div>
+              </div>
+              <div class="app-status app-status--soon">
+                <span class="status-dot status-dot--soon"></span>
+                ACTIVE
+              </div>
+            </div>
+            <p class="app-desc">Stop wasting hours on spreadsheets. Generate professional budget PDFs in seconds — perfect for bookings, venues, and tour planning.
+              ✓ Smart input — plug in your rates, equipment, travel. Done, ready to send.</p>
+            <div class="app-card-footer">
+              <div class="app-tags">
+                <span class="tag">Budgeting</span>
+                <span class="tag">PDF Creator</span>
+              </div>
+              <div class="app-cta app-cta--disabled">Notify Me <span class="cta-arrow">→</span></div>
+            </div>
+          </div>
+
+          <div class="vr-line vr-line--future"></div>
+
+          <!-- ── STATION 3: MerchClick ── -->
+          <div class="vr-node vr-node--future" aria-hidden="true">
+            <div class="vr-node-ring vr-node-ring--future"></div>
+            <div class="vr-node-dot vr-node-dot--future"></div>
+          </div>
+          <div class="vr-line vr-line--ghost"></div>
+
+          <div class="app-card app-card--soon reveal">
+            <div class="app-card-top">
+              <div class="app-card-identity">
+                <div class="app-icon-wrap">
+                  <img src="assets/merchclick-logo-icon.svg" alt="MerchClick" class="app-icon" />
+                </div>
+                <div class="app-card-meta">
+                  <h3 class="app-name">MerchClick</h3>
+                  <p class="app-tagline">Click Your Merch In</p>
+                </div>
+              </div>
+              <div class="app-status app-status--soon">
+                <span class="status-dot status-dot--soon"></span>
+                Coming Soon
+              </div>
+            </div>
+            <p class="app-desc">Merch management made effortless. Track inventory, sales, and restocks with a single click — from the stage or the studio to the streets. No spreadsheets, no stress.</p>
+            <div class="app-card-footer">
+              <div class="app-tags">
+                <span class="tag">Merch</span>
+                <span class="tag">Sales</span>
+                <span class="tag">Inventory</span>
+              </div>
+              <div class="app-cta app-cta--disabled">Notify Me <span class="cta-arrow">→</span></div>
+            </div>
+          </div>
+
+          <div class="vr-line vr-line--ghost"></div>
+
+          <!-- ── More to come node ── -->
+          <div class="vr-node vr-node--ghost" aria-hidden="true">
+            <div class="vr-node-ring vr-node-ring--ghost"></div>
+            <span class="vr-more-label">More apps on the way…</span>
+          </div>
+
+        </div><!-- /vr-track -->
+      </div><!-- /apps-route-wrapper -->
+    </div>
+  </section>
+
+  <!-- ROADMAP SECTION -->
+  <section class="roadmap-section" id="roadmap">
+    <div class="section-inner">
+      <div class="section-label">The Journey</div>
+      <h2 class="section-title">Every stop on the <span class="gradient-text">map</span></h2>
+      <p class="section-subtitle">We're building the tools you've always needed. Here's where we're headed.</p>
+
+      <!-- SVG Roadmap Path -->
+      <div class="roadmap-container">
+        <svg class="roadmap-svg" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="pathGrad" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6B5CFF"/>
+              <stop offset="35%" stop-color="#C026D3"/>
+              <stop offset="65%" stop-color="#6B5CFF" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#6B5CFF" stop-opacity="0.12"/>
+            </linearGradient>
+            <linearGradient id="pathGradSolid" x1="0" y1="0" x2="464" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6B5CFF"/>
+              <stop offset="100%" stop-color="#C026D3"/>
+            </linearGradient>
+            <linearGradient id="ng1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6B5CFF"/>
+              <stop offset="100%" stop-color="#00E5FF"/>
+            </linearGradient>
+            <linearGradient id="ng2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#C026D3"/>
+              <stop offset="100%" stop-color="#6B5CFF"/>
+            </linearGradient>
+            <linearGradient id="ng3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6B5CFF"/>
+              <stop offset="100%" stop-color="#C026D3"/>
+            </linearGradient>
+            <filter id="glowRM" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="glowSoftRM" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="10" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Dashed background track (full path) -->
+          <path
+            d="M 80 130 C 180 130, 230 70, 310 70 C 390 70, 420 130, 464 130 C 544 130, 584 185, 694 185 C 784 185, 834 130, 884 130"
+            stroke="url(#pathGrad)"
+            stroke-width="2"
+            stroke-dasharray="7 5"
+            opacity="0.45"
+          />
+
+          <!-- Solid active portion (FeeME active) -->
+          <path
+            d="M 80 130 C 180 130, 230 70, 310 70 C 390 70, 420 130, 464 130"
+            stroke="url(#pathGradSolid)"
+            stroke-width="2.5"
+            opacity="0.9"
+          />
+
+          <!-- NODE 1: Moshly.io -->
+          <circle cx="80" cy="130" r="26" fill="url(#ng1)" opacity="0.12" filter="url(#glowSoftRM)"/>
+          <circle cx="80" cy="130" r="17" fill="none" stroke="url(#ng1)" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="80" cy="130" r="11" fill="url(#ng1)" opacity="0.75"/>
+          <circle cx="80" cy="130" r="4" fill="#ffffff" opacity="0.9"/>
+          <text x="80" y="104" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="800" font-family="Inter, sans-serif" letter-spacing="-0.3" filter="url(#glowRM)">Moshly.io</text>
+          <text x="80" y="118" text-anchor="middle" fill="#00E5FF" font-size="10" font-weight="600" font-family="Inter, sans-serif">Active</text>
+
+          <!-- NODE 2: FeeME -->
+          <circle cx="464" cy="130" r="26" fill="url(#ng2)" opacity="0.08" filter="url(#glowSoftRM)"/>
+          <circle cx="464" cy="130" r="17" fill="none" stroke="url(#ng2)" stroke-width="1.5" opacity="0.3"/>
+          <circle cx="464" cy="130" r="11" fill="url(#ng2)" opacity="0.55"/>
+          <circle cx="464" cy="130" r="4" fill="#ffffff" opacity="0.65"/>
+          <text x="464" y="104" text-anchor="middle" fill="#A4A7B5" font-size="12" font-weight="700" font-family="Inter, sans-serif" letter-spacing="-0.3">FeeME</text>
+          <text x="464" y="118" text-anchor="middle" fill="#7B7F93" font-size="10" font-family="Inter, sans-serif">Coming Soon</text>
+
+          <!-- NODE 3: MerchClick -->
+          <circle cx="694" cy="185" r="26" fill="url(#ng3)" opacity="0.05" filter="url(#glowSoftRM)"/>
+          <circle cx="694" cy="185" r="17" fill="none" stroke="url(#ng3)" stroke-width="1.5" opacity="0.2"/>
+          <circle cx="694" cy="185" r="11" fill="url(#ng3)" opacity="0.3"/>
+          <circle cx="694" cy="185" r="4" fill="#ffffff" opacity="0.4"/>
+          <text x="694" y="215" text-anchor="middle" fill="#7B7F93" font-size="12" font-weight="700" font-family="Inter, sans-serif" letter-spacing="-0.3">MerchClick</text>
+          <text x="694" y="228" text-anchor="middle" fill="#4A4699" font-size="10" font-family="Inter, sans-serif">Coming Soon</text>
+
+          <!-- NODE 4: More to come -->
+          <circle cx="884" cy="130" r="14" fill="#1B1E2E" stroke="#2D3048" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+          <text x="884" y="134" text-anchor="middle" fill="#4A4699" font-size="14" font-family="Inter, sans-serif" opacity="0.7">···</text>
+          <text x="884" y="112" text-anchor="middle" fill="#4A4699" font-size="10" font-family="Inter, sans-serif" opacity="0.5">More</text>
+          <text x="884" y="124" text-anchor="middle" fill="#4A4699" font-size="10" font-family="Inter, sans-serif" opacity="0.5">to come</text>
+
+        </svg>
+      </div>
+
+      <!-- Roadmap Station Cards -->
+      <div class="roadmap-stations">
+
+        <div class="roadmap-station">
+          <div class="roadmap-station-header">
+            <div class="roadmap-station-num">01</div>
+            <div class="roadmap-badge roadmap-badge--live">Active</div>
+          </div>
+          <div class="roadmap-station-body">
+            <div class="roadmap-station-identity">
+              <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="roadmap-station-icon" />
+              <div>
+                <strong class="roadmap-station-name">Moshly.io</strong>
+                <span class="roadmap-station-tagline">Music Industry Ecosystem</span>
+              </div>
+            </div>
+            <p class="roadmap-station-desc">The central hub for all our music industry micro-tools. Moshly.io provides the infrastructure, identity and integration that connects every tool in our suite.</p>
+          </div>
+          <a href="#apps" class="roadmap-station-cta">Explore Apps →</a>
+        </div>
+
+        
+
+        <div class="roadmap-station">
+          <div class="roadmap-station-header">
+            <div class="roadmap-station-num">02</div>
+            <div class="roadmap-badge">Landing</div>
+          </div>
+          <div class="roadmap-station-body">
+            <div class="roadmap-station-identity">
+              <img src="assets/rbapp-logo-icon.svg" alt="feeme" class="roadmap-station-icon" />
+              <div>
+                <strong class="roadmap-station-name">FeeME</strong>
+                <span class="roadmap-station-tagline">Budget Generator</span>
+              </div>
+            </div>
+            <p class="roadmap-station-desc">We set out to solve a problem: make fast budgets in few steps and on the go, because those offers won't stand for long. We wanted a fast input of expenses, perfect visualization and <i>on the fly</i> PDF genetation. Meet FeeME, cash in and enjoy the rest of the day.</p>
+          </div>
+          <a href="#notify" class="roadmap-station-cta roadmap-station-cta--muted">Notify Me →</a>
+        </div>
+
+        <div class="roadmap-station">
+          <div class="roadmap-station-header">
+            <div class="roadmap-station-num">03</div>
+            <div class="roadmap-badge">Coming Soon</div>
+          </div>
+          <div class="roadmap-station-body">
+            <div class="roadmap-station-identity">
+              <img src="assets/merchclick-logo-icon.svg" alt="MerchClick" class="roadmap-station-icon" />
+              <div>
+                <strong class="roadmap-station-name">MerchClick</strong>
+                <span class="roadmap-station-tagline">Click Your Merch In</span>
+              </div>
+            </div>
+            <p class="roadmap-station-desc">Merch management made effortless. Track inventory, sales, and restocks with a single click — from the stage or the studio to the streets. No spreadsheets, no stress.</p>
+          </div>
+          <a href="#notify" class="roadmap-station-cta roadmap-station-cta--muted">Notify Me →</a>
+        </div>
+
+        <div class="roadmap-station roadmap-station--mystery">
+          <div class="roadmap-station-header">
+            <div class="roadmap-station-num">···</div>
+            <div class="roadmap-badge roadmap-badge--mystery">TBA</div>
+          </div>
+          <div class="roadmap-station-body">
+            <div class="roadmap-station-identity">
+              <div class="roadmap-station-icon roadmap-station-icon--mystery">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/><path d="M11 7v4M11 15h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/></svg>
+              </div>
+              <div>
+                <strong class="roadmap-station-name" style="opacity:0.4;">More to come</strong>
+                <span class="roadmap-station-tagline" style="opacity:0.3;">The suite keeps growing</span>
+              </div>
+            </div>
+            <p class="roadmap-station-desc" style="opacity:0.3;">We keep our roadmap private to stay ahead. Subscribe to Major and be first to know what's next.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / EARLY ACCESS SECTION -->
+  <section class="cta-section" id="notify">
+    <div class="cta-glow"></div>
+    <div class="section-inner cta-inner">
+      <h2 class="cta-title">Stay in the loop.<br /><span class="gradient-text">Be first.</span></h2>
+      <p class="cta-subtitle">Get early access to Moshly apps. No spam, just signal.</p>
+      <form class="cta-form cta-form--full" onsubmit="handleEarlyAccess(event)" id="earlyAccessForm">
+        <div class="cta-fields">
+          <div class="cta-field">
+            <label class="cta-label" for="ea-email">Email</label>
+            <input type="email" id="ea-email" placeholder="your@email.com" class="cta-input" required autocomplete="email" />
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="ea-phone">Phone</label>
+            <div class="cta-phone-wrap">
+              <select class="cta-dial" id="ea-dial" required aria-label="Country dialing code">
+                <option value="" disabled selected>Country</option>
+                <option value="+355">🇦🇱 +355 Albania</option>
+                <option value="+376">🇦🇩 +376 Andorra</option>
+                <option value="+54">🇦🇷 +54 Argentina</option>
+                <option value="+61">🇦🇺 +61 Australia</option>
+                <option value="+43">🇦🇹 +43 Austria</option>
+                <option value="+32">🇧🇪 +32 Belgium</option>
+                <option value="+55">🇧🇷 +55 Brazil</option>
+                <option value="+1-CA">🇨🇦 +1 Canada</option>
+                <option value="+56">🇨🇱 +56 Chile</option>
+                <option value="+57">🇨🇴 +57 Colombia</option>
+                <option value="+385">🇭🇷 +385 Croatia</option>
+                <option value="+357">🇨🇾 +357 Cyprus</option>
+                <option value="+420">🇨🇿 +420 Czech Republic</option>
+                <option value="+45">🇩🇰 +45 Denmark</option>
+                <option value="+372">🇪🇪 +372 Estonia</option>
+                <option value="+358">🇫🇮 +358 Finland</option>
+                <option value="+33">🇫🇷 +33 France</option>
+                <option value="+49">🇩🇪 +49 Germany</option>
+                <option value="+30">🇬🇷 +30 Greece</option>
+                <option value="+36">🇭🇺 +36 Hungary</option>
+                <option value="+354">🇮🇸 +354 Iceland</option>
+                <option value="+353">🇮🇪 +353 Ireland</option>
+                <option value="+39">🇮🇹 +39 Italy</option>
+                <option value="+81">🇯🇵 +81 Japan</option>
+                <option value="+371">🇱🇻 +371 Latvia</option>
+                <option value="+423">🇱🇮 +423 Liechtenstein</option>
+                <option value="+370">🇱🇹 +370 Lithuania</option>
+                <option value="+352">🇱🇺 +352 Luxembourg</option>
+                <option value="+356">🇲🇹 +356 Malta</option>
+                <option value="+52">🇲🇽 +52 Mexico</option>
+                <option value="+377">🇲🇨 +377 Monaco</option>
+                <option value="+31">🇳🇱 +31 Netherlands</option>
+                <option value="+64">🇳🇿 +64 New Zealand</option>
+                <option value="+47">🇳🇴 +47 Norway</option>
+                <option value="+48">🇵🇱 +48 Poland</option>
+                <option value="+351">🇵🇹 +351 Portugal</option>
+                <option value="+40">🇷🇴 +40 Romania</option>
+                <option value="+378">🇸🇲 +378 San Marino</option>
+                <option value="+381">🇷🇸 +381 Serbia</option>
+                <option value="+421">🇸🇰 +421 Slovakia</option>
+                <option value="+386">🇸🇮 +386 Slovenia</option>
+                <option value="+27">🇿🇦 +27 South Africa</option>
+                <option value="+82">🇰🇷 +82 South Korea</option>
+                <option value="+34">🇪🇸 +34 Spain</option>
+                <option value="+46">🇸🇪 +46 Sweden</option>
+                <option value="+41">🇨🇭 +41 Switzerland</option>
+                <option value="+886">🇹🇼 +886 Taiwan</option>
+                <option value="+44">🇬🇧 +44 United Kingdom</option>
+              </select>
+              <input type="tel" id="ea-phone" placeholder="Mobile number" class="cta-input cta-phone-input" required pattern="[0-9\s\-]{6,15}" autocomplete="tel" />
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary cta-submit-btn">Get Early Access</button>
+      </form>
+      <div class="cta-success" id="earlyAccessSuccess" style="display:none;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        You're on the list! We'll be in touch soon.
+      </div>
+      <p class="cta-note">Join 200+ music professionals already on the list.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
+        <span>Moshly.io</span>
+      </div>
+      <p class="footer-tagline">Micro-tools for the music industry.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
+        <span class="theme-toggle-icon theme-toggle-icon--sun">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="theme-toggle-icon theme-toggle-icon--moon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authOverlay" onclick="closeModalOnOverlay(event)" aria-hidden="true">
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+
+      <!-- Close -->
+      <button class="auth-close" onclick="closeModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="auth-logo-img" />
+        <span>Moshly</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab auth-tab--active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button>
+        <button class="auth-tab" id="tabInsertCode" onclick="switchTab('insertCode')">Insert Code</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="auth-panel" id="panelLogin">
+        <form class="auth-form" autocomplete="on" onsubmit="handleAuth(event,'login')">
+          <div class="auth-field">
+            <label class="auth-label" for="login-email">Email</label>
+            <input class="auth-input" type="email" id="login-email" placeholder="your@email.com" required autocomplete="username" />
+          </div>
+          <div id="login-feedback" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:8px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);font-size:.85rem;color:#f87171;"></div>
+          <div class="auth-field">
+            <div class="auth-label-row">
+              <label class="auth-label" for="login-password">Password</label>
+              <a href="#" class="auth-forgot" onclick="switchTab('forgot');return false;">Forgot password?</a>
+            </div>
+            <div class="auth-pw-wrap">
+              <input class="auth-input" type="password" id="login-password" data-pw="1" placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="auth-pw-toggle" aria-label="Show password" onclick="togglePwVisibility(this)">
+                <svg class="pw-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="pw-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Log In</button>
+          <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('register');return false;">Sign Up</a></p>
+        </form>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div class="auth-panel auth-panel--hidden" id="panelRegister">
+        <form class="auth-form" onsubmit="handleAuth(event,'register')">
+          <div id="reg-invite-banner" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);font-size:.85rem;color:#a5b4fc;"></div>
+          <div class="auth-form-row">
+            <div class="auth-field">
+              <label class="auth-label" for="reg-fname">First Name</label>
+              <input class="auth-input" type="text" id="reg-fname" placeholder="First" required autocomplete="given-name" />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="reg-lname">Last Name</label>
+              <input class="auth-input" type="text" id="reg-lname" placeholder="Last" required autocomplete="family-name" />
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-email">Email</label>
+            <input class="auth-input" type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email" />
+            <div id="reg-email-hint" style="display:none;margin-top:5px;font-size:.78rem;color:#a5b4fc;">📎 Email bound to this invite — cannot be changed.</div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-phone">Phone</label>
+            <div class="auth-phone-wrap">
+              <select class="auth-dial" id="reg-dial" required>
+                <option value="" disabled selected>Country</option>
+                <option value="+355">🇦🇱 +355 Albania</option>
+                <option value="+376">🇦🇩 +376 Andorra</option>
+                <option value="+54">🇦🇷 +54 Argentina</option>
+                <option value="+61">🇦🇺 +61 Australia</option>
+                <option value="+43">🇦🇹 +43 Austria</option>
+                <option value="+32">🇧🇪 +32 Belgium</option>
+                <option value="+55">🇧🇷 +55 Brazil</option>
+                <option value="+1-CA">🇨🇦 +1 Canada</option>
+                <option value="+56">🇨🇱 +56 Chile</option>
+                <option value="+57">🇨🇴 +57 Colombia</option>
+                <option value="+385">🇭🇷 +385 Croatia</option>
+                <option value="+357">🇨🇾 +357 Cyprus</option>
+                <option value="+420">🇨🇿 +420 Czech Republic</option>
+                <option value="+45">🇩🇰 +45 Denmark</option>
+                <option value="+372">🇪🇪 +372 Estonia</option>
+                <option value="+358">🇫🇮 +358 Finland</option>
+                <option value="+33">🇫🇷 +33 France</option>
+                <option value="+49">🇩🇪 +49 Germany</option>
+                <option value="+30">🇬🇷 +30 Greece</option>
+                <option value="+36">🇭🇺 +36 Hungary</option>
+                <option value="+354">🇮🇸 +354 Iceland</option>
+                <option value="+353">🇮🇪 +353 Ireland</option>
+                <option value="+39">🇮🇹 +39 Italy</option>
+                <option value="+81">🇯🇵 +81 Japan</option>
+                <option value="+371">🇱🇻 +371 Latvia</option>
+                <option value="+423">🇱🇮 +423 Liechtenstein</option>
+                <option value="+370">🇱🇹 +370 Lithuania</option>
+                <option value="+352">🇱🇺 +352 Luxembourg</option>
+                <option value="+356">🇲🇹 +356 Malta</option>
+                <option value="+52">🇲🇽 +52 Mexico</option>
+                <option value="+377">🇲🇨 +377 Monaco</option>
+                <option value="+31">🇳🇱 +31 Netherlands</option>
+                <option value="+64">🇳🇿 +64 New Zealand</option>
+                <option value="+47">🇳🇴 +47 Norway</option>
+                <option value="+48">🇵🇱 +48 Poland</option>
+                <option value="+351">🇵🇹 +351 Portugal</option>
+                <option value="+40">🇷🇴 +40 Romania</option>
+                <option value="+378">🇸🇲 +378 San Marino</option>
+                <option value="+381">🇷🇸 +381 Serbia</option>
+                <option value="+421">🇸🇰 +421 Slovakia</option>
+                <option value="+386">🇸🇮 +386 Slovenia</option>
+                <option value="+27">🇿🇦 +27 South Africa</option>
+                <option value="+82">🇰🇷 +82 South Korea</option>
+                <option value="+34">🇪🇸 +34 Spain</option>
+                <option value="+46">🇸🇪 +46 Sweden</option>
+                <option value="+41">🇨🇭 +41 Switzerland</option>
+                <option value="+886">🇹🇼 +886 Taiwan</option>
+                <option value="+44">🇬🇧 +44 United Kingdom</option>
+              </select>
+              <input class="auth-input" type="tel" id="reg-phone" placeholder="Mobile number" required pattern="[0-9\s\-]{6,15}" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-password">Password</label>
+            <div class="auth-pw-wrap">
+              <input class="auth-input" type="password" id="reg-password" data-pw="1" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password" />
+              <button type="button" class="auth-pw-toggle" aria-label="Show password" onclick="togglePwVisibility(this)">
+                <svg class="pw-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="pw-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="invite-code-field" style="display:none;">
+            <div class="auth-field">
+              <label class="auth-label" for="reg-invite-code">Invite Code</label>
+              <input class="auth-input" type="text" id="reg-invite-code" placeholder="MOSH-XXXX" autocomplete="off" style="text-transform:uppercase;letter-spacing:.1em;" oninput="this.value=this.value.toUpperCase()" />
+            </div>
+          </div>
+          <div class="auth-field" style="margin-top:6px;">
+            <label class="auth-consent-label">
+              <input type="checkbox" id="reg-terms" class="auth-consent-check" required />
+              <span>I agree to the <a href="/terms.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Privacy Policy</a>.</span>
+            </label>
+          </div>
+          <div class="auth-field" style="margin-top:6px;">
+            <label class="auth-consent-label">
+              <input type="checkbox" id="reg-marketing" class="auth-consent-check" />
+              <span>I'd like to receive Moshly updates, early access news, and feature announcements by email.</span>
+            </label>
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Create Account</button>
+          <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Log In</a></p>
+        </form>
+      </div>
+
+      <!-- INSERT CODE PANEL -->
+      <div class="auth-panel auth-panel--hidden" id="panelInsertCode">
+        <div class="auth-forgot-header">
+          <h3 class="auth-panel-title">Join a Workspace</h3>
+          <p class="auth-panel-desc">Enter the invite code shared by a workspace owner.</p>
+        </div>
+        <div id="insert-code-banner" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);font-size:.85rem;color:#a5b4fc;"></div>
+        <div class="auth-field">
+          <label class="auth-label" for="insert-code-input">Invite Code</label>
+          <input class="auth-input" type="text" id="insert-code-input" placeholder="MOSH-BXXXX" autocomplete="off"
+            style="text-transform:uppercase;letter-spacing:.1em;"
+            oninput="this.value=this.value.toUpperCase()" />
+        </div>
+        <div id="insert-code-feedback" style="display:none;margin-top:6px;font-size:.82rem;"></div>
+        <button type="button" class="btn-primary auth-submit" onclick="handleInsertCode()" style="margin-top:12px;">Continue</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Log In</a></p>
+      </div>
+
+      <!-- FORGOT PASSWORD PANEL -->
+      <div class="auth-panel auth-panel--hidden" id="panelForgot">
+        <div class="auth-forgot-header">
+          <button class="auth-back" onclick="switchTab('login')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to Log In
+          </button>
+          <h3 class="auth-panel-title">Reset your password</h3>
+          <p class="auth-panel-desc">Enter your email and we'll send you a reset link.</p>
+        </div>
+        <form class="auth-form" onsubmit="handleAuth(event,'forgot')">
+          <div class="auth-field">
+            <label class="auth-label" for="forgot-email">Email</label>
+            <input class="auth-input" type="email" id="forgot-email" placeholder="your@email.com" required autocomplete="email" />
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Send Reset Link</button>
+        </form>
+        <div class="auth-success" id="forgotSuccess" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Check your inbox — reset link sent!
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="auth-client.js"></script>
+  <script src="moshly-ui.js"></script>
+  <script>
+    function closeModalOnOverlay(e) {
+      if (e.target === document.getElementById('authOverlay')) closeModal();
+    }
+
+    // Auto-open login modal if redirected from a protected page or via collab invite
+    (function() {
+      const p = new URLSearchParams(location.search);
+      const collabInvite = p.get('collab_invite');
+      if (collabInvite) {
+        window.addEventListener('DOMContentLoaded', () => {
+          openModal('insertCode');
+          const inp = document.getElementById('insert-code-input');
+          if (inp) inp.value = collabInvite.toUpperCase();
+        }, { once: true });
+      } else if (p.get('error') === 'hub_token_expired' && p.get('auth') === 'login') {
+        // Token handoff expired — if user already has a session, retry the app launch
+        // instead of forcing them to log in again.
+        const cachedUser = (() => {
+          try { return JSON.parse(localStorage.getItem('moshly_user')); } catch { return null; }
+        })();
+        const redirect = p.get('redirect');
+        const retryKey = redirect ? `hubRetry:${redirect}` : null;
+        const retryCount = retryKey ? Number(sessionStorage.getItem(retryKey) || '0') : 0;
+
+        const canRetry =
+          cachedUser?.email &&
+          redirect &&
+          retryKey &&
+          retryCount < 3 &&
+          (() => {
+            try {
+              const target = new URL(redirect);
+              const host = target.hostname || '';
+              return host.endsWith('moshly.io') || host.endsWith('pages.dev');
+            } catch { return false; }
+          })();
+
+        if (canRetry) {
+          try { sessionStorage.setItem(retryKey, String(retryCount + 1)); } catch {}
+          // Short backoff before re-launch to let KV propagate
+          setTimeout(() => window.location.replace(redirect), 450);
+        } else {
+          if (retryKey) sessionStorage.removeItem(retryKey);
+          window.addEventListener('DOMContentLoaded', () => openModal('login'), { once: true });
+        }
+      } else if (p.get('auth') === 'login') {
+        window.addEventListener('DOMContentLoaded', () => openModal('login'), { once: true });
+      }
+    })();
+
+    async function handleInsertCode() {
+      const input = document.getElementById('insert-code-input');
+      const feedback = document.getElementById('insert-code-feedback');
+      const banner = document.getElementById('insert-code-banner');
+      const code = (input?.value || '').trim().toUpperCase();
+
+      feedback.style.display = 'none';
+      feedback.textContent = '';
+      banner.style.display = 'none';
+
+      if (!code || !code.startsWith('MOSH-B')) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#f87171';
+        feedback.textContent = 'Please enter a valid invite code (starts with MOSH-B).';
+        return;
+      }
+
+      const btn = document.querySelector('#panelInsertCode .auth-submit');
+      if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+
+      try {
+        const AUTH_URL =
+          (window.MoshlyAuth && window.MoshlyAuth.baseUrl)
+          || window.AUTH_URL
+          || window.MOSHLY_API_URL
+          || '/api';
+        const res = await fetch(`${AUTH_URL}/invite/check?code=${encodeURIComponent(code)}`);
+        const data = await res.json();
+
+        if (!data.valid) {
+          feedback.style.display = 'block';
+          feedback.style.color = '#f87171';
+          feedback.textContent = 'This invite code is invalid or has expired.';
+          return;
+        }
+
+        const ownerLabel = data.owner_name ? `${data.owner_name}'s workspace` : 'the workspace';
+
+        if (data.user_exists) {
+          // User already has an account — store invite and go to login
+          sessionStorage.setItem('moshly_pending_collab_invite', code);
+          banner.style.display = 'block';
+          banner.textContent = `✓ Code accepted! Log in to join ${ownerLabel}.`;
+          switchTab('login');
+        } else {
+          // New user — pre-fill invite on register tab
+          const invField = document.getElementById('invite-code-field');
+          const invInput = document.getElementById('reg-invite-code');
+          if (invInput) invInput.value = code;
+          if (invField) invField.style.display = 'block';
+          // Autofill email from invite hint
+          const emailEl = document.getElementById('reg-email');
+          if (emailEl && data.email_hint) {
+            emailEl.value = data.email_hint;
+            emailEl.readOnly = true;
+          }
+          switchTab('register');
+          // Show banners inside register panel (after tab switch)
+          const hintEl = document.getElementById('reg-email-hint');
+          if (hintEl && data.email_hint) hintEl.style.display = 'block';
+          const regBanner = document.getElementById('reg-invite-banner');
+          if (regBanner) {
+            regBanner.style.display = 'block';
+            regBanner.textContent = `✓ Code accepted! Create an account to join ${ownerLabel}.`;
+          }
+          banner.style.display = 'none';
+        }
+
+      } catch {
+        feedback.style.display = 'block';
+        feedback.style.color = '#f87171';
+        feedback.textContent = 'Could not verify code. Please try again.';
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Continue'; }
+      }
+    }
+
+    function handleEarlyAccess(e) {
+      e.preventDefault();
+      const btn = document.querySelector('.cta-submit-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById('earlyAccessForm').style.display = 'none';
+        const success = document.getElementById('earlyAccessSuccess');
+        success.style.display = 'flex';
+      }, 900);
+    }
+  </script>
+</body>
+</html>

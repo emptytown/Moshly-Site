@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport"/>
+    <title>Moshly — Dashboard</title>
+    <link href="/assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"/>
+    <link href="/style.css" rel="stylesheet"/>
+    <link href="/dashboard.css" rel="stylesheet"/>
+</head>
+<body>
+
+
+<div class="db-shell">
+
+    <!-- ─── MOBILE BACKDROP ──────────────────────── -->
+    <div class="db-mob-backdrop" id="dbMobBackdrop"></div>
+
+    <!-- ─── MOBILE DRAWER ────────────────────────── -->
+    <div aria-hidden="true" class="db-mob-drawer" id="dbMobDrawer">
+        <div class="db-mob-drawer-logo">
+            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <span>Moshly</span>
+        </div>
+        <div class="db-mob-drawer-user">
+            <div class="db-mob-drawer-avatar">
+                <span class="db-mob-drawer-avatar-dot"></span>
+            </div>
+            <div>
+                <div class="db-mob-drawer-uname"></div>
+                <div class="db-mob-drawer-uplan"></div>
+            </div>
+        </div>
+        <nav class="db-mob-drawer-nav">
+            <div class="db-mob-drawer-section">Quick Access</div>
+            <button class="db-mob-drawer-link db-mob-drawer-btn active" onclick="closeMobDrawer(); openProfileOverlay();"
+                    type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile
+            </button>
+            <button class="db-mob-drawer-link db-mob-drawer-btn" onclick="closeMobDrawer(); openAppConnectorModal();"
+                    type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                APP Connector
+            </button>
+            <button class="db-mob-drawer-link db-mob-drawer-btn" onclick="closeMobDrawer(); openProjectsManagerModal();"
+                    type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                Projects
+            </button>
+            <button class="db-mob-drawer-link db-mob-drawer-btn" onclick="closeMobDrawer(); openAuditLogModal();"
+                    type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M3 3h18v18H3z"/>
+                    <path d="M7 7h10"/>
+                    <path d="M7 12h10"/>
+                    <path d="M7 17h6"/>
+                </svg>
+                Audit Log
+            </button>
+            <a class="db-mob-drawer-link" href="admin.html" id="db-admin-link-mob" style="display:none;"
+               title="App Control Center">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M12 20h9"/>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                </svg>
+                App Control Center
+            </a>
+        </nav>
+        <div class="db-mob-drawer-footer">
+            <button class="db-mob-drawer-footer-btn" id="dbMobThemeBtn">
+                <span id="dbMobThemeIconSun"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round"
+                                                  stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                                                  width="16"><circle cx="12" cy="12" r="5"/><line x1="12"
+                                                                                                               x2="12"
+                                                                                                               y1="1"
+                                                                                                               y2="3"/><line
+                        x1="12" x2="12" y1="21" y2="23"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36"
+                                                                                                              x2="19.78"
+                                                                                                              y1="18.36"
+                                                                                                              y2="19.78"/><line
+                        x1="1" x2="3" y1="12" y2="12"/><line x1="21" x2="23" y1="12" y2="12"/><line x1="4.22" x2="5.64"
+                                                                                                    y1="19.78"
+                                                                                                    y2="18.36"/><line
+                        x1="18.36" x2="19.78" y1="5.64" y2="4.22"/></svg></span>
+                <span class="db-hidden" id="dbMobThemeIconMoon"><svg fill="none" height="16" stroke="currentColor"
+                                                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                     viewBox="0 0 24 24" width="16"><path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+                <span id="dbMobThemeLabel">Light Mode</span>
+            </button>
+            <button class="db-mob-drawer-footer-btn signout">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                Sign out
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── SIDEBAR ─────────────────────────────────── -->
+    <nav class="db-sidebar" id="dbSidebar">
+        <div class="db-sidebar-logo">
+            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <span>Moshly</span>
+        </div>
+
+        <div class="db-sidebar-user">
+            <div class="db-user-avatar">
+                <span class="db-user-avatar-online"></span>
+            </div>
+            <div>
+                <div class="db-user-name"></div>
+                <div class="db-user-plan"></div>
+            </div>
+        </div>
+
+        <div class="db-nav">
+            <div class="db-nav-section">Quick Access</div>
+            <button class="db-nav-btn active" onclick="openProfileOverlay()" type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Profile</span>
+            </button>
+            <button class="db-nav-btn" onclick="openAppConnectorModal()" type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>APP Connector</span>
+            </button>
+
+            <button class="db-nav-btn" onclick="openAuditLogModal()" type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M3 3h18v18H3z"/>
+                    <path d="M7 7h10"/>
+                    <path d="M7 12h10"/>
+                    <path d="M7 17h6"/>
+                </svg>
+                <span>Audit Log</span>
+            </button>
+            <button class="db-nav-btn" onclick="openChatModal()" type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>App Control Center</span>
+            </button>
+        </div>
+
+        <div class="db-sidebar-footer" id="dbSidebarFooter">
+            <!-- Collapse -->
+            <button class="db-collapse-btn" id="dbCollapseBtn">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                <span class="db-collapse-label">Collapse</span>
+            </button>
+            <!-- Theme toggle -->
+            <button class="db-theme-btn" id="dbThemeBtn">
+                <span class="db-theme-icon" id="dbThemeIconSun"><svg fill="none" height="16" stroke="currentColor"
+                                                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                     viewBox="0 0 24 24" width="16"><circle
+                        cx="12" cy="12" r="5"/><line x1="12" x2="12" y1="1" y2="3"/><line x1="12" x2="12" y1="21"
+                                                                                          y2="23"/><line x1="4.22"
+                                                                                                         x2="5.64"
+                                                                                                         y1="4.22"
+                                                                                                         y2="5.64"/><line
+                        x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="1" x2="3" y1="12" y2="12"/><line x1="21"
+                                                                                                                x2="23"
+                                                                                                                y1="12"
+                                                                                                                y2="12"/><line
+                        x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64"
+                                                                         y2="4.22"/></svg></span>
+                <span class="db-theme-icon db-hidden" id="dbThemeIconMoon"><svg fill="none" height="16"
+                                                                                stroke="currentColor" stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                viewBox="0 0 24 24"
+                                                                                width="16"><path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+                <span class="db-theme-label" id="dbThemeLabel">Light Mode</span>
+            </button>
+            <button class="db-signout-btn">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" x2="9" y1="12" y2="12"/>
+                </svg>
+                <span>Sign out</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ─── MAIN CONTENT ──────────────────────────── -->
+    <main class="db-content" id="dbContent">
+
+        <!-- Top bar -->
+        <div class="db-topbar">
+            <div class="db-topbar-heading">
+                <button aria-expanded="false" aria-label="Open menu" class="db-mob-menu-btn" id="dbMobMenuBtn">
+                    <span class="db-mob-menu-line"></span>
+                    <span class="db-mob-menu-line"></span>
+                    <span class="db-mob-menu-line"></span>
+                </button>
+                <button aria-label="Back to top" class="db-mob-top-btn" id="dbMobTopBtn" title="Back to top"
+                        type="button">
+                    <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                         stroke-width="2.2" viewBox="0 0 24 24" width="20">
+                        <path d="M12 19V5"></path>
+                        <path d="M5 12l7-7 7 7"></path>
+                    </svg>
+                </button>
+                <div>
+                    <div class="db-greeting-sub" id="db-date"></div>
+                    <h1 class="db-greeting-title">Good morning, <span id="db-first-name">Jane</span> 👋</h1>
+                </div>
+            </div>
+            <div class="db-topbar-actions">
+                <a class="btn-ghost db-topbar-apps-link" href="launcher.html">
+                    <svg aria-hidden="true" height="13" viewBox="0 0 24 24" width="13">
+                        <rect height="7" width="7" x="3" y="3"/>
+                        <rect height="7" width="7" x="14" y="3"/>
+                        <rect height="7" width="7" x="3" y="14"/>
+                        <rect height="7" width="7" x="14" y="14"/>
+                    </svg>
+                    <span class="db-topbar-apps-label">Apps</span>
+                </a>
+                <a class="btn-ghost db-topbar-back db-topbar-back-link" href="/">Back to site</a>
+            </div>
+        </div>
+
+        <!-- New Flow Layout -->
+        <div class="db-flow" id="overview">
+            <div aria-hidden="true" class="db-flow-rail"></div>
+
+            <!-- Start Node -->
+            <div aria-hidden="true" class="db-flow-cap">
+                <div class="db-flow-node db-flow-node--start"></div>
+            </div>
+
+            <!-- Subscription (compact) -->
+            <section class="db-flow-stage db-flow-stage--subscription" id="subscription">
+                <div class="db-card db-card--subscription">
+                    <div class="db-sub-top">
+                        <span class="db-card-title db-card-title--flush">Subscription</span>
+                        <span class="db-stat-badge db-stat-badge--active db-stat-badge--flush">
+                <svg height="7" viewBox="0 0 7 7" width="7"><circle cx="3.5" cy="3.5" fill="#4ADE80" r="3.5"/></svg>
+                Active
+              </span>
+                    </div>
+                    <div class="db-sub-top db-sub-top--compact">
+                        <span class="db-sub-plan" id="db-billing-plan-name"></span>
+                        <span class="db-sub-price" id="db-billing-price"></span>
+                    </div>
+                    <div class="db-sub-line" id="db-plan-renew-sub"></div>
+                </div>
+            </section>
+
+            <!-- Profile (blended essentials) -->
+            <section class="db-flow-stage db-flow-stage--single" id="profile">
+                <div aria-hidden="true" class="db-flow-node"></div>
+                <div class="db-card">
+                    <div class="db-card-header">
+                        <span class="db-card-title">Profile</span>
+                        <a class="db-card-action" href="#" onclick="event.preventDefault(); openProfileOverlay();">Edit
+                            →</a>
+                    </div>
+                    <div class="db-profile-card">
+                        <div class="db-profile-avatar-wrap">
+                            <div class="db-profile-avatar"></div>
+                            <div>
+                                <div class="db-profile-pname"></div>
+                                <div class="db-profile-org" data-field="org"></div>
+                            </div>
+                        </div>
+                        <div class="db-profile-field">
+                            <span class="db-profile-field-label">Role</span>
+                            <span class="db-profile-field-val" data-field="job_title">—</span>
+                        </div>
+                        <div class="db-profile-field">
+                            <span class="db-profile-field-label">Skills</span>
+                            <span class="db-profile-field-val" data-field="skills">—</span>
+                        </div>
+                        <div class="db-profile-field">
+                            <span class="db-profile-field-label">Email</span>
+                            <span class="db-profile-field-val" data-field="email"></span>
+                        </div>
+                    </div>
+                    <div class="db-profile-metrics">
+                        <div class="db-profile-metric">
+                            <div class="db-profile-metric-label">Renewal</div>
+                            <strong id="db-billing-renewal-val"></strong>
+                        </div>
+                        <div class="db-profile-metric">
+                            <div class="db-profile-metric-label">Apps Included</div>
+                            <strong id="db-billing-apps-val"></strong>
+                        </div>
+
+                    </div>
+                    <div class="db-hero-rows db-hero-rows--spaced">
+                        <div class="db-hero-row"><span>PDF exports</span><strong id="db-billing-pdf-val"></strong></div>
+                        <div class="db-hero-row"><span>AI credits</span><strong id="db-billing-ai-val"></strong></div>
+                    </div>
+                    <div class="db-billing-actions" id="db-billing-change-cancel">
+                        <a class="btn-ghost db-btn-compact" href="pricing.html">Change plan</a>
+                        <button class="btn-ghost db-btn-compact db-btn-ghost-danger">Cancel</button>
+                    </div>
+                    <div class="db-hidden" id="db-billing-invoices"></div>
+                </div>
+            </section>
+
+            <!-- Your Apps -->
+            <section class="db-flow-stage db-flow-stage--single" id="apps">
+                <div aria-hidden="true" class="db-flow-node"></div>
+                <div class="db-card">
+                    <!-- APP SLOTS SECTION -->
+                    <div class="db-section-header">
+                        <h2 class="db-section-title">My Apps Slots</h2>
+                        <p class="db-section-subtitle">Permanent apps available in your plan.</p>
+                    </div>
+                    <div class="db-apps-grid" id="dbAppsGrid"></div>
+
+                    <!-- PEEK SLOT SECTION -->
+                    <div class="db-peek-section db-hidden" id="dbPeekSection">
+                        <div class="db-section-header">
+                            <h2 class="db-section-title">Peek Slot</h2>
+                            <p class="db-section-subtitle">Temporary 24h access to any app.</p>
+                        </div>
+                        <div class="db-peek-grid" id="dbPeekGrid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects -->
+            <section class="db-flow-stage db-flow-stage--single" id="projects-section">
+                <div aria-hidden="true" class="db-flow-node"></div>
+                <div class="db-card db-card--narrow">
+                    <div class="db-card-header">
+                        <span class="db-card-title">Projects</span>
+                    </div>
+                    <div class="db-split-card-actions">
+                        <button class="db-card-action db-card-action-btn" id="db-proj-open-header-btn"
+                                onclick="openProjectsManagerModal()"
+                                type="button">Open →
+                        </button>
+                        <button class="db-projects-add-btn db-projects-add-btn--flush" onclick="openProjectModal()"
+                                type="button">+ New Project
+                        </button>
+                    </div>
+                    <div class="db-projects-empty" id="db-projects-empty">
+                        <div class="db-projects-empty-icon">
+                            <svg fill="none" height="22" stroke="currentColor" stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="1.8" viewBox="0 0 24 24" width="22">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="db-projects-empty-title">No projects yet</div>
+                        <div class="db-projects-empty-sub">Projects let you organise work by Artist, Band, Theatre
+                            Company, Venue, Festival, Production House, or Agency.
+                        </div>
+                        <div class="db-projects-type-row">
+                            <span class="db-projects-type-tag db-projects-type-tag--artist">Artist</span>
+                            <span class="db-projects-type-tag db-projects-type-tag--band">Band</span>
+                            <span class="db-projects-type-tag db-projects-type-tag--company">Theatre Co.</span>
+                            <span class="db-projects-type-tag db-projects-type-tag--company">Venue</span>
+                        </div>
+                    </div>
+                    <div class="db-proj-list db-hidden" id="db-proj-list"></div>
+                </div>
+            </section>
+
+            <!-- PDF + AI Credits + Visibility -->
+            <section class="db-flow-stage db-flow-stage--split" id="collab-projects">
+                <div class="db-flow-branch" id="pdfs">
+                    <div aria-hidden="true" class="db-flow-node"></div>
+                    <div class="db-card db-card--narrow">
+                        <div class="db-card-header">
+                            <span class="db-card-title">Credits & Quotas</span>
+                        </div>
+                        <!-- PDF Section -->
+                        <div class="db-pdf-row">
+                            <div class="db-pdf-ring">
+                                <svg height="88" viewBox="0 0 88 88" width="88">
+                                    <defs>
+                                        <linearGradient id="pdfGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+                                            <stop offset="0%" stop-color="#6B5CFF"/>
+                                            <stop offset="100%" stop-color="#C026D3"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="db-pdf-ring-track" cx="44" cy="44" r="35"/>
+                                    <circle class="db-pdf-ring-fill" cx="44" cy="44" id="pdfRingFill" r="35"/>
+                                </svg>
+                                <div class="db-pdf-ring-label">
+                                    <span class="db-pdf-ring-num">∞</span>
+                                    <span class="db-pdf-ring-denom" id="db-pdf-ring-denom"></span>
+                                </div>
+                            </div>
+                            <div class="db-pdf-info">
+                                <div class="db-pdf-title">PDF exports</div>
+                                <div class="db-pdf-sub" id="db-pdf-sub"></div>
+                                <button class="db-btn-secondary db-btn-secondary-sm">Buy More PDFs</button>
+                            </div>
+                        </div>
+                        <!-- Divider -->
+                        <div class="db-card-divider"></div>
+                        <!-- AI Credits Section -->
+                        <div class="db-pdf-row">
+                            <div class="db-pdf-ring">
+                                <svg height="88" viewBox="0 0 88 88" width="88">
+                                    <defs>
+                                        <linearGradient id="aiGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+                                            <stop offset="0%" stop-color="#EC4899"/>
+                                            <stop offset="100%" stop-color="#F59E0B"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="db-pdf-ring-track" cx="44" cy="44" r="35"/>
+                                    <circle class="db-pdf-ring-fill" cx="44" cy="44" id="aiRingFill" r="35"/>
+                                </svg>
+                                <div class="db-pdf-ring-label">
+                                    <span class="db-pdf-ring-num" id="db-ai-ring-num">∞</span>
+                                    <span class="db-pdf-ring-denom" id="db-ai-ring-denom"></span>
+                                </div>
+                            </div>
+                            <div class="db-pdf-info">
+                                <div class="db-pdf-title">AI credits</div>
+                                <div class="db-pdf-sub" id="db-ai-sub"></div>
+                                <button class="db-btn-secondary db-btn-secondary-sm">Buy More Credits</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="db-flow-branch" id="visibility">
+                    <div aria-hidden="true" class="db-flow-node"></div>
+                    <div class="db-card db-card--narrow">
+                        <div class="db-card-header">
+                            <span class="db-card-title">Visibility</span>
+                        </div>
+                        <div class="db-visibility-toggle db-visibility-toggle--flush">
+                            <div class="db-toggle-label">
+                                <strong>Public Profile</strong>
+                                Visible to other crew members
+                            </div>
+                            <button class="db-toggle on" onclick="this.classList.toggle('on')"
+                                    title="Toggle public profile"></button>
+                        </div>
+                        <div class="db-visibility-toggle">
+                            <div class="db-toggle-label">
+                                <strong>Public on Moshly Metaverse</strong>
+                                Visible in the future Moshly Metaverse
+                            </div>
+                            <button class="db-toggle" onclick="this.classList.toggle('on')"
+                                    title="Toggle Metaverse visibility"></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Backup -->
+            <section class="db-flow-stage db-flow-stage--wide" id="audit-and-backup">
+                <div aria-hidden="true" class="db-flow-node"></div>
+                <div class="db-card">
+                    <div class="db-card-header">
+                        <span class="db-card-title">Audit and Back up Zone</span>
+                    </div>
+
+                    <!-- Audit Section (Recent Actions) -->
+                    <div class="db-audit-container" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--color-border-primary);">
+                        <div class="db-section-header">
+                            <h2 class="db-section-title">Recent Actions</h2>
+                            <p class="db-section-subtitle">Track activity in your workspace.</p>
+                        </div>
+                        <div class="db-card db-card--narrow" style="width: 100%; cursor: pointer;" onclick="openAuditModal()">
+                            <span class="db-collab-item-left">
+                                <span aria-hidden="true" class="db-collab-item-icon">
+                                    <svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                         viewBox="0 0 24 24" width="12"><path
+                                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                </span>
+                                <span class="db-collab-item-label">Audit Logs</span>
+                            </span>
+                            <strong>View full history</strong>
+                        </div>
+                    </div>
+
+                    <div class="db-section-header">
+                        <h2 class="db-section-title">Backups</h2>
+                        <p class="db-section-subtitle">Manage your data snapshots.</p>
+                    </div>
+                    <div class="db-backup-alert db-hidden" id="dbBackupAlert">
+                        <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                             stroke-width="2" viewBox="0 0 24 24" width="16">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" x2="12" y1="9" y2="13"/>
+                            <line x1="12" x2="12.01" y1="17" y2="17"/>
+                        </svg>
+                        <div id="dbBackupAlertMsg">Your next backup is due soon.</div>
+                    </div>
+                    <div class="db-backup-row">
+                        <div class="db-backup-info">
+                            <div class="db-backup-title">Automatic backup schedule</div>
+                            <div class="db-backup-sub">Select how often Moshly backs up your data.</div>
+                        </div>
+                        <select aria-label="Backup frequency" class="db-backup-select" id="dbBackupFreq"
+                                onchange="updateBackup()" title="Backup frequency">
+                            <option value="weekly">Weekly</option>
+                            <option selected value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="db-backup-next" id="dbBackupNext"></div>
+                    <div class="db-backup-actions">
+                        <button class="btn-primary db-btn-compact-lg"
+                                onclick="this.textContent='\u2713 Backed up!';localStorage.setItem('moshly_backup_last',new Date().toISOString());setTimeout(()=>{this.textContent='Back up now';updateBackup();},3000);">
+                            Back up now
+                        </button>
+                        <button class="btn-ghost db-btn-compact-lg">View backup history</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deadly Zone -->
+            <section class="db-flow-stage db-flow-stage--wide" id="deadly-zone">
+                <div aria-hidden="true" class="db-flow-node"></div>
+                <div class="db-card db-card--danger" style="width: 80%; margin: 0 auto;">
+                    <div class="db-card-header">
+                        <span class="db-card-title">Deadly Zone</span>
+                    </div>
+                    <p class="db-deadly-copy">Permanent account actions. These controls are intentionally separated from
+                        day-to-day settings.</p>
+                    <div class="db-deadly-actions">
+                        <button class="db-danger-btn" onclick="handleDangerAction('disconnect')" type="button">
+                            Disconnect all apps
+                        </button>
+                        <button class="db-danger-btn" onclick="handleDangerAction('erase')" type="button">Erase local
+                            cache
+                        </button>
+                        <button class="db-danger-btn" onclick="handleDangerAction('delete')" type="button">Delete
+                            workspace
+                        </button>
+                        <button class="db-danger-btn db-danger-btn--strong" onclick="handleDangerAction('terminate')"
+                                type="button">Terminate account
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- End Node -->
+            <div aria-hidden="true" class="db-flow-cap">
+                <div class="db-flow-node db-flow-node--end"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── PROFILE EDIT OVERLAY ─────────────────── -->
+    <div class="db-profile-overlay" id="dbProfileOverlay">
+        <div class="db-profile-overlay-backdrop" onclick="closeProfileOverlay()"></div>
+        <div class="db-profile-panel">
+            <div class="db-profile-panel-header">
+                <span class="db-profile-panel-title" id="dbProfilePanelTitle">Profile</span>
+                <button class="db-profile-panel-close" onclick="closeProfileOverlay()" title="Close">
+                    <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" viewBox="0 0 24 24"
+                         width="14">
+                        <line x1="18" x2="6" y1="6" y2="18"/>
+                        <line x1="6" x2="18" y1="6" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="db-profile-panel-body">
+                <!-- Avatar -->
+                <div class="db-profile-panel-avatar-section">
+                    <div class="db-profile-panel-avatar-lg" id="dbPanelAvatar"></div>
+                    <div class="db-profile-panel-avatar-info">
+                        <div class="db-profile-panel-name" id="dbPanelName"></div>
+                        <div class="db-profile-panel-email" id="dbPanelEmail"></div>
+                        <input accept="image/*" id="dbPhotoFileInput" onchange="handlePhotoFileChange(this)" style="display:none;"
+                               type="file"/>
+                        <button class="db-profile-panel-change-photo"
+                                onclick="document.getElementById('dbPhotoFileInput').click()">Change photo
+                        </button>
+                    </div>
+                </div>
+                <!-- View Mode -->
+                <div id="dbProfileViewFields">
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Display Name</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewName">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Job Title</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewJobTitle">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Organisation</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewOrg">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Location</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewLocation">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Skills</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewSkills">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Email</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewEmail">—</span>
+                    </div>
+                </div>
+                <!-- Edit Mode -->
+                <div class="db-hidden" id="dbProfileEditFields">
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditName">Display Name</label>
+                        <input autocomplete="name" class="db-profile-panel-input" id="dbEditName" placeholder="Your name"
+                               type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditJobTitle">Job Title</label>
+                        <input class="db-profile-panel-input" id="dbEditJobTitle" placeholder="e.g. Tour Manager, Sound Engineer"
+                               type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditOrg">Organisation</label>
+                        <input autocomplete="organization" class="db-profile-panel-input" id="dbEditOrg"
+                               placeholder="Your company or band" type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditLocation">Location</label>
+                        <input autocomplete="address-level2" class="db-profile-panel-input" id="dbEditLocation"
+                               placeholder="City, Country" type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditSkills">Skills</label>
+                        <input class="db-profile-panel-input" id="dbEditSkills" placeholder="e.g. Lighting, FOH, Stage Management"
+                               type="text"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="db-profile-panel-actions">
+                <div class="db-profile-actions-row" id="dbProfileActionsView">
+                    <button class="db-profile-panel-btn-edit" onclick="enableProfileEdit()">Edit Profile</button>
+                </div>
+                <div class="db-profile-actions-row db-hidden" id="dbProfileActionsEdit">
+                    <button class="db-profile-panel-btn-cancel" onclick="cancelProfileEdit()">Cancel</button>
+                    <button class="db-profile-panel-btn-save" id="dbProfileSaveBtn" onclick="saveProfileChanges()">Save
+                        Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ─── NEW PROJECT DRAWER ───────────────────── -->
+    <div class="db-proj-modal-overlay" id="dbProjModalOverlay">
+        <div class="db-proj-modal-backdrop" onclick="closeProjectModal()"></div>
+        <div class="db-proj-modal">
+            <div class="db-proj-modal-header">
+                <h3 class="db-proj-modal-title">New Project</h3>
+                <button aria-label="Close" class="db-proj-modal-close" onclick="closeProjectModal()">×</button>
+            </div>
+            <div class="db-proj-modal-body">
+                <div class="db-proj-field">
+                    <label for="dbProjName">Project Name</label>
+                    <input autocomplete="off" class="db-proj-input" id="dbProjName" maxlength="60"
+                           placeholder="e.g. Arctic Monkeys" type="text"/>
+                </div>
+                <div class="db-proj-field">
+                    <label id="dbProjTypeLabel">Type</label>
+                    <div aria-labelledby="dbProjTypeLabel" class="db-proj-type-picker" id="dbProjTypePicker">
+                        <button class="db-proj-type-btn active" data-type="artist" onclick="selectProjectType(this)">🎤
+                            Artist
+                        </button>
+                        <button class="db-proj-type-btn" data-type="band" onclick="selectProjectType(this)">🎸 Band
+                        </button>
+                        <button class="db-proj-type-btn" data-type="theatre_company" onclick="selectProjectType(this)">
+                            🎭 Theatre Company
+                        </button>
+                        <button class="db-proj-type-btn" data-type="venue" onclick="selectProjectType(this)">🏟 Venue
+                        </button>
+                        <button class="db-proj-type-btn" data-type="festival" onclick="selectProjectType(this)">🎪
+                            Festival
+                        </button>
+                        <button class="db-proj-type-btn" data-type="production_house" onclick="selectProjectType(this)">
+                            🎬 Production House
+                        </button>
+                        <button class="db-proj-type-btn" data-type="agency" onclick="selectProjectType(this)">🧭 Agency
+                        </button>
+                    </div>
+                </div>
+                <div class="db-proj-field" id="dbProjMusicFields">
+                    <div class="db-proj-two-col">
+                        <div>
+                            <label for="dbProjGenre">Genre <span class="optional">(for Artist/Band)</span></label>
+                            <input autocomplete="off" class="db-proj-input" id="dbProjGenre" maxlength="80"
+                                   placeholder="e.g. Indie Rock" type="text"/>
+                        </div>
+                        <div>
+                            <label for="dbProjBasedOn">Based on (city.country)</label>
+                            <input autocomplete="off" class="db-proj-input" id="dbProjBasedOn" maxlength="80"
+                                   placeholder="e.g. Lisbon, PT" type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="db-proj-field">
+                    <label for="dbProjDesc">Description <span class="optional">(optional)</span></label>
+                    <textarea class="db-proj-textarea" id="dbProjDesc" maxlength="200" placeholder="What is this project for?"
+                              rows="2"></textarea>
+                </div>
+                <div class="db-proj-field">
+                    <label for="dbProjNotes">Notes <span class="optional">(optional)</span></label>
+                    <textarea class="db-proj-textarea" id="dbProjNotes"
+                              maxlength="400" placeholder="Internal notes, routing context, production remarks..."
+                              rows="2"></textarea>
+                </div>
+                <div class="db-proj-field">
+                    <label id="dbProjPatchLabel">Patch Feed App Targets</label>
+                    <div class="db-proj-patchfeed-note">Select active app pads that should receive this project's
+                        default config (team, roles, fee model and mapped fields).
+                    </div>
+                    <div aria-labelledby="dbProjPatchLabel" class="db-proj-patch-pads" id="dbProjPatchPads"></div>
+                </div>
+                <div class="db-proj-field">
+                    <label id="dbProjExtraLabel">Extra Fields</label>
+                    <div class="db-proj-extra-note">Custom fields tracked per show — visible to you and your collabs.
+                        Use them for anything your workflow needs: rider details, catering, hotel notes, custom fees…
+                    </div>
+                    <div aria-labelledby="dbProjExtraLabel" class="db-proj-dyn-list" id="dbProjExtraFields"></div>
+                    <button class="db-proj-inline-btn" onclick="addProjectExtraFieldRow()" type="button">+ Add field
+                    </button>
+                </div>
+                <div class="db-proj-field">
+                    <label id="dbProjTeamLabel">Project Team</label>
+                    <div aria-labelledby="dbProjTeamLabel" class="db-proj-team-wrap" id="dbProjTeamWrap">
+                        <div class="db-proj-team-head" onclick="toggleProjectTeamSection()">
+                            <div class="db-proj-team-summary" id="dbProjTeamSummary">0 members added</div>
+                            <button class="db-proj-team-toggle" id="dbProjTeamToggleBtn" type="button">Open Team
+                            </button>
+                        </div>
+                        <div class="db-proj-team-body" id="dbProjTeamBody">
+                            <div aria-hidden="true" class="db-proj-team-cols">
+                                <span>Go</span>
+                                <span>Name</span>
+                                <span>Role</span>
+                                <span>Fee/Show</span>
+                                <span></span>
+                            </div>
+                            <div class="db-proj-dyn-list" id="dbProjTeamRows"></div>
+                            <button class="db-proj-inline-btn" onclick="addProjectTeamRow(); updateProjectTeamSummary();"
+                                    type="button">+ Add team member
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- AI CONTEXT TRAINER -->
+                <div class="db-proj-field">
+                    <label for="dbProjAiRuleInput">🤖 AI Context Rules <span class="optional">(optional)</span></label>
+                    <div class="db-proj-ai-warning">
+                        <strong>⚠️ Proceed with caution.</strong> These rules are hints passed to AI tools when working
+                        in the context of this project. AI models do not always follow instructions precisely —
+                        hallucinations happen. Always verify AI outputs before acting on them.
+                    </div>
+                    <div class="db-proj-ai-note">Examples: "Prefers window seat on flights" · "No shows after 02:00" ·
+                        "Requires 2h soundcheck" · "Vegetarian rider only"
+                    </div>
+                    <div class="db-proj-ai-chips" id="dbProjAiChips"></div>
+                    <div class="db-proj-ai-input-row">
+                        <input class="db-proj-input" id="dbProjAiRuleInput" maxlength="120"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();addAiContextRule();}" placeholder="Type a rule and press Enter or Add"
+                               type="text"/>
+                        <button class="db-proj-inline-btn" onclick="addAiContextRule()" type="button">Add</button>
+                    </div>
+                </div>
+            </div><!-- /db-proj-modal-body -->
+            <div class="db-proj-modal-footer">
+                <button class="db-proj-cancel" onclick="closeProjectModal()">Cancel</button>
+                <button class="db-proj-confirm" id="dbProjConfirmBtn" onclick="submitCreateProject()">Create Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PROJECTS MANAGER MODAL ─────────────── -->
+    <div class="db-manager-modal-overlay" id="dbProjectsManagerOverlay">
+        <div class="db-manager-modal-backdrop" onclick="closeProjectsManagerModal()"></div>
+        <div class="db-manager-modal">
+            <div class="db-manager-modal-header">
+                <h3 class="db-manager-modal-title">Projects Management</h3>
+                <button aria-label="Close" class="db-proj-modal-close" onclick="closeProjectsManagerModal()"
+                        type="button">×
+                </button>
+            </div>
+            <div class="db-manager-modal-body">
+                <p class="db-manager-modal-copy">Central view for all projects. Use quick add to create Artist, Band,
+                    Theatre Company, Venue, Festival, Production House, or Agency projects.</p>
+                <div class="db-manager-modal-list" id="dbProjectsManagerList"></div>
+            </div>
+            <div class="db-manager-modal-footer">
+                <button class="db-proj-cancel" onclick="closeProjectsManagerModal()" type="button">Close</button>
+                <button class="db-projects-add-btn" onclick="closeProjectsManagerModal(); openProjectModal();"
+                        type="button">+ New Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── COLLABORATORS MANAGER MODAL ────────── -->
+
+
+    <!-- ─── APP CONNECTOR MODAL ────────────────── -->
+    <div class="db-manager-modal-overlay" id="dbAppConnectorOverlay">
+        <div class="db-manager-modal-backdrop" onclick="closeAppConnectorModal()"></div>
+        <div class="db-manager-modal">
+            <div class="db-manager-modal-header">
+                <h3 class="db-manager-modal-title">APP Connector</h3>
+                <button aria-label="Close" class="db-proj-modal-close" onclick="closeAppConnectorModal()" type="button">
+                    ×
+                </button>
+            </div>
+            <div class="db-manager-modal-body">
+                <p class="db-manager-modal-copy">Choose which apps appear in your "Your Apps" block, whether currently
+                    active or not.</p>
+                <div class="db-app-connector-list" id="dbAppConnectorList"></div>
+            </div>
+            <div class="db-manager-modal-footer">
+                <button class="db-proj-cancel" onclick="closeAppConnectorModal()" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── AUDIT LOG MODAL ────────────────────── -->
+    <div class="db-manager-modal-overlay" id="dbAuditLogOverlay">
+        <div class="db-manager-modal-backdrop" onclick="closeAuditLogModal()"></div>
+        <div class="db-manager-modal">
+            <div class="db-manager-modal-header">
+                <h3 class="db-manager-modal-title">Audit Log</h3>
+                <button aria-label="Close" class="db-proj-modal-close" onclick="closeAuditLogModal()" type="button">×
+                </button>
+            </div>
+            <div class="db-manager-modal-body">
+                <p class="db-manager-modal-copy">Workspace-wide activity timeline with filters by app and
+                    user/collab.</p>
+                <div class="db-audit-toolbar">
+                    <select aria-label="Filter by app" class="db-audit-select" id="dbAuditFilterApp"
+                            onchange="renderAuditLog()" title="Filter by app">
+                        <option value="all">All apps</option>
+
+                        <option value="feeme">FeeME</option>
+                        <option value="merchclick">MerchClick</option>
+                        <option value="moshly">Moshly Core</option>
+                    </select>
+                    <label for="dbAuditFilterActor"></label>
+                    <input class="db-audit-input" id="dbAuditFilterActor" oninput="renderAuditLog()"
+                                                                   placeholder="Filter by user/collab" type="text"/>
+                    <button class="db-audit-refresh" onclick="refreshAuditLog()" type="button">Refresh</button>
+                </div>
+                <div class="db-audit-note" id="dbAuditDataHint">Showing latest events available from connected
+                    sources.
+                </div>
+                <div class="db-audit-list" id="dbAuditLogList"></div>
+            </div>
+            <div class="db-manager-modal-footer">
+                <button class="db-proj-cancel" onclick="closeAuditLogModal()" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PROJECT CONTEXT MODAL ───────────────── -->
+    <div class="db-ctx-overlay" id="dbProjectContextOverlay">
+        <div class="db-ctx-modal" id="dbProjectContextModal"></div>
+    </div>
+
+</div>
+
+<script src="auth-client.js"></script>
+<script src="moshly-ui.js"></script>
+<script src="dashboard-logic.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── FAQ Accordion ── */
+    .faq-group {
+      margin-bottom: 48px;
+    }
+    .faq-group-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-accent-primary);
+      margin: 0 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--color-text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+    .faq-question:hover {
+      color: var(--color-accent-primary);
+    }
+    .faq-icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s ease, background 0.2s ease;
+    }
+    .faq-item--open .faq-icon {
+      transform: rotate(45deg);
+      background: rgba(107, 92, 255, 0.12);
+      border-color: rgba(107, 92, 255, 0.3);
+    }
+    .faq-icon svg {
+      color: var(--color-text-tertiary);
+    }
+    .faq-item--open .faq-icon svg {
+      color: var(--color-accent-primary);
+    }
+    .faq-answer {
+      display: none;
+      padding: 0 0 20px;
+    }
+    .faq-item--open .faq-answer {
+      display: block;
+    }
+    .faq-answer p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--color-text-secondary);
+      margin: 0 0 10px;
+    }
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+    .faq-answer ul {
+      margin: 8px 0 10px 0;
+      padding-left: 18px;
+    }
+    .faq-answer ul li {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--color-text-secondary);
+      margin-bottom: 4px;
+    }
+    .faq-answer strong {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+    .faq-answer a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+    }
+    .faq-answer a:hover {
+      text-decoration: underline;
+    }
+    .faq-table-wrap {
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+    .faq-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .faq-table th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .faq-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--color-border-subtle);
+      color: var(--color-text-secondary);
+      vertical-align: top;
+    }
+    .faq-table tr:last-child td {
+      border-bottom: none;
+    }
+    .faq-table td strong {
+      color: var(--color-text-primary);
+    }
+    .tag-purple {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 100px;
+      background: rgba(107, 92, 255, 0.1);
+      border: 1px solid rgba(107, 92, 255, 0.25);
+      color: #a78bfa;
+      vertical-align: middle;
+    }
+    .tag-green {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 100px;
+      background: rgba(74, 222, 128, 0.08);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+      vertical-align: middle;
+    }
+    .info-box {
+      background: rgba(107, 92, 255, 0.06);
+      border: 1px solid rgba(107, 92, 255, 0.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: 13.5px;
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+    }
+    .info-box strong {
+      color: var(--color-text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+      <div class="nav-links">
+        <a href="/home#apps" class="nav-link">Apps</a>
+        <a href="/home#roadmap" class="nav-link">Roadmap</a>
+        <a href="pricing.html" class="nav-link">Pricing</a>
+      </div>
+      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="/home#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+        <a href="/home#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+    </div>
+  </nav>
+
+  <!-- FAQ CONTENT -->
+  <section class="apps-section" style="padding-top: 100px;">
+    <div class="section-inner" style="max-width: 840px;">
+      <a href="pricing.html" class="app-cta" style="margin-bottom: 20px; display:inline-flex;">← Back to Pricing</a>
+      <div class="section-label">Help &amp; Transparency</div>
+      <h1 class="section-title">Frequently Asked Questions</h1>
+      <p class="section-subtitle" style="max-width: 100%; margin-bottom: 40px;">
+        Everything you need to know about credits, top-ups, and how Moshly works.
+      </p>
+
+      <div class="app-card" style="display:block;">
+
+        <!-- GROUP 1: Credits basics -->
+        <div class="faq-group">
+          <p class="faq-group-title">Credits — The Basics</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is a Moshly credit?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>A credit is the unit Moshly uses to measure and fairly distribute AI-powered feature usage. Instead of charging per action (which would be arbitrary), Moshly credits are <strong>indexed to the real cost of AI</strong> — meaning 1 credit roughly represents a small, defined amount of compute cost.</p>
+              <p>This model keeps things transparent: when you use more expensive operations (like longer AI-generated text), more credits are consumed. Lightweight operations cost fewer credits.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              How many credits does each plan include?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-table-wrap">
+                <table class="faq-table">
+                  <thead>
+                    <tr>
+                      <th>Plan</th>
+                      <th>App Slots</th>
+                      <th>Monthly credits</th>
+                      <th>Daily bonus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>Solo</strong></td><td>2</td><td>500</td><td>+25 / day</td></tr>
+                    <tr><td><strong>Collective</strong></td><td>4</td><td>1,000</td><td>+25 / day</td></tr>
+                    <tr><td><strong>Business</strong></td><td>10</td><td>2,500</td><td>+25 / day</td></tr>
+                    <tr><td><strong>Major</strong></td><td>Unlimited</td><td>5,000</td><td>+50 / day</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Every plan has two separate credit pools: a <strong>monthly pool</strong> and a <strong>daily bonus pool</strong>. They work independently of each other.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is the difference between monthly credits and daily credits?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p><strong>Monthly credits</strong> are the base allocated with your subscription. They are available on the first day of your billing cycle and are gradually consumed as you use AI features throughout the month. They do <strong>not</strong> expire on a daily basis.</p>
+              <p><strong>Daily bonus credits</strong> are a separate small top-up added automatically every day — think of them as a daily allowance to keep things moving even if your monthly pool is running low. The unused portion of a day's bonus does <strong>not</strong> carry over to the next day.</p>
+              <div class="info-box">
+                <strong>Example:</strong> You're on the Solo plan. On day 10 of your cycle you still have 420 monthly credits left. At midnight, your daily 25-credit bonus is added. You now have 420 monthly + 25 daily = 445 usable credits. The system spends the daily bonus first.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Do unused credits roll over to the next month?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p><strong>Monthly credits do not roll over.</strong> At the end of each billing cycle, any unused monthly credits expire and your pool is refreshed to the plan's full allocation.</p>
+              <p><strong>Daily bonus credits also do not carry over.</strong> Any unused daily credits at midnight (Lisbon) are discarded and a fresh daily bonus is added.</p>
+              <p>Credits purchased via <a href="#topup">Top-Up</a> are the exception — they remain in your account until used and do not expire with your billing cycle.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              When exactly do daily credits reset?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Daily bonus credits reset every day at <strong>midnight, Europe/Lisbon time</strong> (WET / WEST, depending on DST). This is <strong>UTC+0 in winter</strong> and <strong>UTC+1 in summer</strong>.</p>
+              <p>The reset is automatic and instantaneous — no action is required on your part.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 2: App Slots & Peek Access -->
+        <div class="faq-group">
+          <p class="faq-group-title">App Slots &amp; Peek Access</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is an "App Slot"?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Moshly uses a <strong>Slot System</strong> to manage access to the apps in our ecosystem. Depending on your plan, you have a fixed number of "Permanent Slots" that can be used at any given time.</p>
+              <p>When you move an app (like FeeMe or BrainRoom) into a slot, it becomes ready to use. You can swap apps in and out of slots as your workflow needs change.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is a "Peek Slot"?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>A <strong>Peek Slot</strong> allows you to temporarily access any app without committing it to one of your permanent slots. It’s perfect for testing a new tool or handling a one-off task.</p>
+              <ul>
+                <li><strong>Initial Duration:</strong> 24 hours.</li>
+                <li><strong>Rotation:</strong> You can only have one Peek active at a time. Requesting a Peek for a different app replaces the current one.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              How do Peek Extensions work?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>If you need more time with an app in your Peek Slot, you can extend it twice. Each extension adds <strong>+24 hours</strong> to the expiration time.</p>
+              <ul>
+                <li><strong>Max Duration:</strong> 72 hours (Initial 24h + 2 extensions).</li>
+                <li><strong>Cost:</strong> Each extension costs <strong>50 AI Credits</strong>, deducted from your usage pool.</li>
+              </ul>
+              <div class="info-box">
+                <strong>Tip:</strong> If you find yourself extending a Peek frequently, it might be more cost-effective to move that app into one of your permanent slots.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 3: Consuming credits -->
+        <div class="faq-group">
+          <p class="faq-group-title">Consuming Credits</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Which features consume credits?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Any action that triggers an AI model — whether to generate text, analyse data, or produce structured content — consumes credits. Examples include:</p>
+              <ul>
+                <li><strong>WizeRank</strong> — SEO analysis, keyword suggestions, content scoring (coming soon)</li>
+                <li>Any future AI-powered feature across the Moshly suite</li>
+              </ul>
+              <p>Standard non-AI actions — browsing, editing forms, managing projects, exporting PDFs (within your PDF quota) — <strong>do not consume credits</strong>.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              How many credits does each AI action cost?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Credit costs are calculated dynamically based on the <strong>actual token usage</strong> of each AI call — the same way cloud AI providers charge Moshly. Longer prompts or longer outputs cost more credits; short operations cost fewer.</p>
+              <p>Each feature will display its estimated credit cost before you confirm the action, so there are never any surprises.</p>
+              <div class="info-box">
+                <strong>Transparency promise:</strong> Moshly does not inflate credit costs. 1 credit = a fixed fraction of Moshly's real AI spend. You pay for what we use, nothing more.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Which credit pool is spent first — daily or monthly?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Moshly spends credits in this order:</p>
+              <ul>
+                <li><strong>1st:</strong> Daily bonus credits (these don't carry over, so they're used up first)</li>
+                <li><strong>2nd:</strong> Peek Extensions (if you extend an app's temporary access)</li>
+                <li><strong>3rd:</strong> Top-Up credits (if any were purchased)</li>
+                <li><strong>4th:</strong> Monthly subscription credits</li>
+              </ul>
+              <p>This order ensures you get the most value from short-lived credits before touching your main monthly pool.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What happens when I run out of credits?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>AI-powered features are temporarily paused until your credit pool is replenished. Non-AI features (editing, projects, exports within quota) remain fully available — your work is never blocked.</p>
+              <p>You can regain access to AI features by:</p>
+              <ul>
+                <li>Waiting for tomorrow's daily bonus credits (resets at midnight Lisbon)</li>
+                <li>Purchasing a credit Top-Up pack</li>
+                <li>Upgrading to a higher plan</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 3: Top-Up -->
+        <div class="faq-group" id="topup">
+          <p class="faq-group-title">Credit Top-Up</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is a credit Top-Up?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>A Top-Up is a one-time purchase of additional credits that are added to your account immediately. They are useful when you need to handle a surge in AI usage — a big project, a deadline, or a high-volume period — without upgrading your entire plan.</p>
+              <p>Top-Up credits are <strong>available to all paid plans</strong> and are consumed after your daily bonus credits but before your monthly allocation.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Do Top-Up credits expire?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p><strong>No.</strong> Top-Up credits do not expire with your billing cycle or with daily resets. They remain in your account until fully consumed, regardless of how long that takes.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              How do I purchase a Top-Up?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Top-Up packs are available from your dashboard under <strong>Account → Credits</strong>. The feature will be live once credit management is enabled in the platform. You can also reach us at <a href="mailto:support@moshly.io">support@moshly.io</a> to arrange a manual top-up in the meantime.</p>
+              <div class="info-box">
+                <strong>Note:</strong> Top-Up pricing and available pack sizes will be published when the feature launches. We will notify all users.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Can I share Top-Up credits with collaborators?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>On the <strong>Collective, Business, and Major</strong> plans, credits (including Top-Up credits) are shared across the workspace. All collaborators draw from the same pool, so project leads can manage usage centrally.</p>
+              <p>On the <strong>Solo</strong> plan, credits are personal and not shareable.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 5: App Slots & Peek Access -->
+        <div class="faq-group">
+          <p class="faq-group-title">App Slots &amp; Peek Access</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is an "App Slot"?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>Moshly uses a <strong>Slot System</strong> to manage access to the apps in our ecosystem. Depending on your plan, you have a fixed number of "Permanent Slots" that can be used at any given time.</p>
+              <p>When you move an app (like FeeMe or BrainRoom) into a slot, it becomes ready to use. You can swap apps in and out of slots as your workflow needs change.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What is a "Peek Slot"?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>A <strong>Peek Slot</strong> allows you to temporarily access any app without committing it to one of your permanent slots. It’s perfect for testing a new tool or handling a one-off task.</p>
+              <ul>
+                <li><strong>Initial Duration:</strong> 24 hours.</li>
+                <li><strong>Rotation:</strong> You can only have one Peek active at a time. Requesting a Peek for a different app replaces the current one.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              How do Peek Extensions work?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>If you need more time with an app in your Peek Slot, you can extend it twice. Each extension adds <strong>+24 hours</strong> to the expiration time.</p>
+              <ul>
+                <li><strong>Max Duration:</strong> 72 hours (Initial 24h + 2 extensions).</li>
+                <li><strong>Cost:</strong> Each extension costs <strong>50 AI Credits</strong>, deducted from your usage pool.</li>
+              </ul>
+              <div class="info-box">
+                <strong>Tip:</strong> If you find yourself extending a Peek frequently, it might be more cost-effective to move that app into one of your permanent slots.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 6: Plans & upgrades -->
+        <div class="faq-group">
+          <p class="faq-group-title">Plans, Upgrades &amp; Other Questions</p>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What happens to my credits if I upgrade my plan mid-cycle?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>When you upgrade, your monthly credit pool is immediately updated to the new plan's allocation, pro-rated from the upgrade date. Any credits already consumed in the current cycle count towards the new plan's quota.</p>
+              <p>Top-Up credits are never lost during a plan change.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              What happens to my credits if I downgrade or cancel?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>If you downgrade, the remaining monthly credits will be adjusted to the lower plan's limit at the start of the next billing cycle. Any excess is not refunded or carried over.</p>
+              <p>If you cancel, your plan remains active until the end of the paid period, then access to AI features is suspended. <strong>Top-Up credits are preserved</strong> for 12 months after cancellation in case you reactivate.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              Are PDF exports counted as credits?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p><strong>No.</strong> PDF exports are tracked separately via each plan's monthly export quota (12, 24, 100, or 500 depending on your plan). They do not consume credits.</p>
+              <p>Only AI-powered features consume credits.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+              I have more questions. Who can I contact?
+              <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            </button>
+            <div class="faq-answer">
+              <p>We're happy to help. Reach us at <a href="mailto:support@moshly.io">support@moshly.io</a> — we reply within 24 hours on business days. You can also use the <a href="pricing.html#contact">contact form on the pricing page</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /app-card -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
+        <span>Moshly.io</span>
+      </div>
+      <p class="footer-tagline">Micro-tools for the music industry.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
+        <span class="theme-toggle-icon theme-toggle-icon--sun">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="theme-toggle-icon theme-toggle-icon--moon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth-client.js"></script>
+  <script src="moshly-ui.js"></script>
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('faq-item--open');
+      // Close all open items
+      document.querySelectorAll('.faq-item--open').forEach(el => el.classList.remove('faq-item--open'));
+      // Open clicked one unless it was already open
+      if (!isOpen) item.classList.add('faq-item--open');
+    }
+
+    // Open item if anchor points to #topup
+    if (window.location.hash === '#topup') {
+      const topupGroup = document.getElementById('topup');
+      if (topupGroup) {
+        const first = topupGroup.querySelector('.faq-item');
+        if (first) first.classList.add('faq-item--open');
+      }
+    }
+  </script>
+
+</body>
+</html>

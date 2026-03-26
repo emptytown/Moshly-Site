@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#070a14" />
+  <title>Moshly Apps</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070a14;
+      --panel: rgba(18, 22, 43, 0.92);
+      --panel-border: rgba(107, 92, 255, 0.28);
+      --text: #e8ecff;
+      --muted: #9aa0be;
+      --accent: #6b5cff;
+      --accent-2: #00d1ff;
+      --ok: #4ade80;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(107, 92, 255, 0.2), transparent 35%),
+        radial-gradient(circle at 85% 90%, rgba(0, 209, 255, 0.12), transparent 40%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(71, 84, 153, 0.22) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(980px, 92vw);
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--panel-border);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: rgba(107, 92, 255, 0.6); }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-color: transparent;
+      box-shadow: 0 10px 24px rgba(107, 92, 255, 0.32);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      background: rgba(16, 20, 40, 0.75);
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+    }
+
+    .hero p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #launcher-live-datetime {
+      margin: 10px 0 0;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 22px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(107, 92, 255, 0.25);
+      background: rgba(15, 20, 42, 0.55);
+      color: #aab0ce;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    .launcher-time {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: #f2f5ff;
+      text-shadow: 0 0 14px rgba(107, 92, 255, 0.38);
+    }
+
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .launcher-pending-alert {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(107,92,255,.42);
+      background: linear-gradient(180deg, rgba(107,92,255,.15), rgba(107,92,255,.07));
+      color: #c4b8ff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color .16s, background .16s;
+    }
+    .launcher-pending-alert[hidden] { display: none !important; }
+    .launcher-pending-alert:hover { border-color: rgba(107,92,255,.7); background: rgba(107,92,255,.22); }
+    .launcher-pending-alert-icon { font-size: 16px; flex-shrink: 0; }
+    .launcher-pending-alert-cta { margin-left: auto; font-size: 11px; font-weight: 700; white-space: nowrap; opacity: .7; }
+
+    .app-card {
+      position: relative;
+      border: 1px solid rgba(107, 92, 255, 0.24);
+      background: var(--panel);
+      border-radius: 18px;
+      margin: 15px;
+      padding: 11px;
+      text-decoration: none;
+      color: inherit;
+      min-height: 192px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(107, 92, 255, 0.6);
+      box-shadow: 0 14px 28px rgba(10, 14, 35, 0.55);
+    }
+
+    /* App visível mas não activado — shaded */
+    .app-card.shown-inactive {
+      opacity: 0.42;
+      filter: saturate(0.3);
+      pointer-events: none;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      color: var(--ok);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      width: fit-content;
+      background: rgba(74, 222, 128, 0.08);
+    }
+
+    .pill-muted {
+      color: #a6abca;
+      border-color: rgba(107, 113, 150, 0.34);
+      background: rgba(44, 49, 74, 0.4);
+    }
+
+    .pill-active {
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--ok);
+      border-color: rgba(74, 222, 128, 0.2);
+    }
+
+    .pill-inactive {
+      background: rgba(154, 160, 190, 0.1);
+      color: #9aa0be;
+      border-color: rgba(154, 160, 190, 0.2);
+    }
+
+    .app-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 8px;
+    }
+
+    .app-head img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .app-title { font-weight: 800; letter-spacing: -0.02em; }
+    .app-sub { color: var(--muted); font-size: 12px; }
+
+    .cta {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid rgba(107, 92, 255, 0.34);
+      background: rgba(17, 21, 45, 0.75);
+    }
+
+    .app-card.live .cta { color: #dfe4ff; }
+    .app-card.coming .cta { color: #9fa7cb; }
+
+    .footer-cta {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 860px) {
+      .wrap { width: min(700px, 92vw); }
+      .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topbar { margin-bottom: 14px; }
+      .hero { flex-direction: column; align-items: flex-start; }
+      .hero h1 { font-size: clamp(24px, 9vw, 36px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
+        <span>Moshly Apps</span>
+      </div>
+      <a class="btn btn-ghost" href="dashboard.html" id="launcherBackToDashboardTop">View Full Dashboard</a>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Welcome, <span data-first-name>UserName</span></h1>
+        <p id="launcher-live-datetime" aria-live="polite"><span>--/--/----</span><span class="launcher-time">--:--:--</span></p>
+      </div>
+    </section>
+
+    <section class="apps" aria-label="Apps" id="launcherAppsGrid"></section>
+    <a class="launcher-pending-alert" id="launcherPendingAlert" href="connect-more.html" hidden aria-live="polite">
+      <span class="launcher-pending-alert-icon">🕐</span>
+      <span id="launcherPendingAlertText">App change pending…</span>
+      <span class="launcher-pending-alert-cta">Manage →</span>
+    </a>
+
+    <div class="footer-cta">
+      <a class="btn btn-primary" href="dashboard.html" id="launcherBackToDashboardBottom">View Full Dashboard</a>
+    </div>
+  </div>
+
+  <script src="app-manifest.js"></script>
+  <script src="auth-client.js"></script>
+  <script src="moshly-ui.js"></script>
+  <script>
+    // Guard: redirect to login if no session.
+    // Bypass on localhost (dev mock mode) — same pattern as dashboard.html.
+    (async () => {
+      const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
+      if (!useDevMock) {
+        const ok = await window.MoshlyAuth.requireSession('/?auth=login');
+        if (!ok) return;
+      }
+    })();
+
+    const DASH_RETURN_STORAGE_KEY = 'moshly_dash_return_dashboard_v1';
+
+    (function syncBackToDashboardLinks() {
+      const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const knownDevPlans = new Set(['free', 'solo', 'collective', 'business', 'major', 'god', 'semi_god']);
+      const resolveTarget = () => {
+        const params = new URLSearchParams(window.location.search);
+        const returnDashFromQuery = (params.get('return_dashboard') || '').trim();
+        const returnDashFromStorage = (localStorage.getItem(DASH_RETURN_STORAGE_KEY) || '').trim();
+        const returnDash = returnDashFromQuery || returnDashFromStorage;
+
+        if (returnDash) {
+          try {
+            const parsed = new URL(returnDash, window.location.origin);
+            if (parsed.origin === window.location.origin && /\/dashboard\.html$/.test(parsed.pathname)) {
+              const target = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+              localStorage.setItem(DASH_RETURN_STORAGE_KEY, target);
+              return target;
+            }
+          } catch {
+            // Ignore malformed values and try localhost fallback.
+          }
+        }
+
+        if (isLocalDevHost) {
+          try {
+            const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+            const plan = String(user?.plan || '').toLowerCase();
+            if (knownDevPlans.has(plan)) {
+              return `dashboard.html?dev_plan=${encodeURIComponent(plan)}&dev_mock=1`;
+            }
+          } catch {
+            // Ignore parse errors and use default target.
+          }
+        }
+
+        return 'dashboard.html';
+      };
+
+      const target = resolveTarget();
+      const top = document.getElementById('launcherBackToDashboardTop');
+      const bottom = document.getElementById('launcherBackToDashboardBottom');
+      [top, bottom].forEach((btn) => {
+        if (!btn) return;
+        btn.setAttribute('href', target);
+        btn.onclick = function () {
+          this.setAttribute('href', resolveTarget());
+        };
+      });
+    })();
+
+    (function renderLauncherApps() {
+      const grid = document.getElementById('launcherAppsGrid');
+      if (!grid) return;
+
+      const user = (() => {
+        try { return JSON.parse(localStorage.getItem('moshly_user') || 'null'); } catch { return null; }
+      })();
+
+      function getLauncherAppCatalog() {
+        const manifest = window.MoshlyAppManifest;
+        if (manifest && typeof manifest.apps === 'function') {
+          return manifest.apps().map(app => ({
+            slug: String(app.slug || '').trim().toLowerCase(),
+            name: app.name || (app.slug ? app.slug.charAt(0).toUpperCase() + app.slug.slice(1) : ''),
+            description: app.description || '',
+            status: String(app.status || 'soon').toLowerCase() === 'live' ? 'live' : 'soon',
+            iconAsset: app.iconAsset || '',
+            url: app.url || '#'
+          })).filter(app => app.slug);
+        }
+        return [
+          { slug: 'feeme', name: 'FeeMe', description: 'Financial hub', status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'https://feeme.moshly.io' },
+          { slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', status: 'live', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://brainroom.moshly.io' },
+          { slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io' },
+          { slug: 'merchclick', name: 'MerchClick', description: 'Merch management', status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io' }
+        ];
+      }
+
+      function getSuggestedApps(user, catalog) {
+        const allSlugs = catalog.map(a => a.slug);
+        const profile = `${user?.job_title || ''} ${user?.skills || ''}`.toLowerCase();
+        const rules = [
+          { keywords: ['tour', 'routing', 'logistics', 'venue', 'festival'], order: ['rbapp', 'merchclick'] },
+          { keywords: ['booking', 'promoter', 'agent', 'promotora'], order: ['rbapp', 'merchclick'] },
+          { keywords: ['merch', 'retail', 'store', 'merchandise'], order: ['merchclick', 'rbapp'] },
+          { keywords: ['seo', 'marketing', 'digital', 'social'], order: ['merchclick', 'rbapp'] },
+          { keywords: ['sound', 'audio', 'tech', 'production'], order: ['rbapp', 'merchclick'] },
+          { keywords: ['manager', 'artist', 'band', 'music'], order: ['rbapp', 'merchclick'] }
+        ];
+        for (const rule of rules) {
+          if (rule.keywords.some(kw => profile.includes(kw))) {
+            return rule.order.filter(slug => allSlugs.includes(slug)).slice(0, 3);
+          }
+        }
+        return allSlugs.slice(0, 3);
+      }
+
+      function getRepresentedApps(user, catalog) {
+        const all = catalog.map(a => a.slug);
+        const fromState = Array.isArray(user?.represented_apps) ? user.represented_apps : null;
+        
+        // Onboarding: if no apps are explicitly configured (null) and user has no active apps, suggest some.
+        // If fromState is [] (empty array), it means the user explicitly opted to show NO apps.
+        if (fromState === null && (!Array.isArray(user?.apps) || user.apps.length === 0)) {
+          return getSuggestedApps(user, catalog);
+        }
+
+        if (fromState === null) return all; // Default: show all if never configured but has apps or not in strict onboarding
+        
+        return fromState.filter(slug => all.includes(slug));
+      }
+
+      const catalog = getLauncherAppCatalog();
+      const represented = new Set(getRepresentedApps(user, catalog));
+      const active = new Set(Array.isArray(user?.apps) ? user.apps.map(s => String(s).toLowerCase()) : []);
+      const token = localStorage.getItem('moshly_token');
+
+      grid.innerHTML = catalog
+        .filter(app => represented.has(app.slug))
+        .map(app => {
+          const isLive = app.status === 'live';
+          const isActive = active.has(app.slug);
+          const isSoon = app.status === 'soon';
+          const shouldShade = isSoon || (represented.has(app.slug) && !isActive);
+          
+          const cardClass = [
+            isLive ? 'app-card live' : 'app-card coming',
+            shouldShade ? 'shown-inactive' : ''
+          ].join(' ').trim();
+
+          let href = (isLive && isActive) ? (app.url || '#') : 'javascript:void(0)';
+          
+          // Append token for identity handover
+          if (href !== '#' && href !== 'javascript:void(0)' && token) {
+              const url = new URL(href);
+              url.searchParams.set('token', token);
+              href = url.toString();
+          }
+          const targetAttr = (isLive && isActive) ? ' target="_blank" rel="noopener noreferrer"' : ' aria-disabled="true"';
+          
+          const pill = isLive
+            ? '<span class="pill">Live</span>'
+            : '<span class="pill pill-muted">Coming Soon</span>';
+            
+          const statusPill = isLive
+            ? `<span class="pill ${isActive ? 'pill-active' : 'pill-inactive'}">${isActive ? 'Active' : 'Inactive'}</span>`
+            : '';
+
+          const cta = isLive ? (isActive ? 'Open App' : 'Inactive') : 'Coming Soon';
+
+          return `<a class="${cardClass}" href="${href}"${targetAttr}>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              ${pill}${statusPill}
+            </div>
+            <div>
+              <div class="app-head">
+                <img src="${app.iconAsset || ''}" alt="${app.name || ''}" />
+                <div>
+                  <div class="app-title">${app.name || ''}</div>
+                  <div class="app-sub">${app.description || ''}</div>
+                </div>
+              </div>
+            </div>
+            <span class="cta">${cta}</span>
+          </a>`;
+        }).join('');
+    })();
+
+    (function syncLauncherName() {
+      const params = new URLSearchParams(window.location.search);
+      let firstName = (params.get('first') || '').trim();
+
+      if (!firstName) {
+        try {
+          const cachedUser = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+          if (cachedUser && typeof cachedUser.name === 'string') {
+            firstName = cachedUser.name.split(' ')[0] || '';
+          }
+        } catch (_) {
+          // Ignore parse errors and keep fallback value.
+        }
+      }
+
+      const safeName = firstName || 'UserName';
+      document.querySelectorAll('[data-first-name]').forEach((el) => {
+        el.textContent = safeName;
+      });
+    })();
+
+    (async function syncLauncherPendingAlert() {
+      const el = document.getElementById('launcherPendingAlert');
+      const textEl = document.getElementById('launcherPendingAlertText');
+      if (!el || !textEl) return;
+      const formatPendingIn = (effectiveAt) => {
+        const diff = new Date(effectiveAt) - Date.now();
+        if (diff <= 0) return null;
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const parts = [];
+        if (d) parts.push(`${d}d`);
+        if (h) parts.push(`${h}h`);
+        parts.push(`${m}m`);
+        return parts.join(' ');
+      };
+      try {
+        const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
+        let pending = null;
+        if (useDevMock) {
+          const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+          pending = user?.pending_change ?? null;
+        } else {
+          const res = await window.MoshlyAuth.authFetch('/apps/state');
+          if (res.ok && res.data) pending = res.data.pending_change ?? null;
+        }
+        if (!pending?.effective_at) return;
+        const label = formatPendingIn(pending.effective_at);
+        if (!label) return;
+        textEl.textContent = `App change effective in ${label}`;
+        el.hidden = false;
+        setInterval(() => {
+          const l = formatPendingIn(pending.effective_at);
+          if (!l) { el.hidden = true; return; }
+          textEl.textContent = `App change effective in ${l}`;
+        }, 30000);
+      } catch (_) { /* silent */ }
+    })();
+
+    (function syncLauncherClock() {
+      const el = document.getElementById('launcher-live-datetime');
+      if (!el) return;
+
+      const locale = navigator.language || 'pt-PT';
+      const formatNow = () => {
+        const now = new Date();
+        const dateText = now.toLocaleDateString(locale, {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        const timeText = now.toLocaleTimeString(locale, {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        return { dateText, timeText };
+      };
+
+      const paint = () => {
+        const { dateText, timeText } = formatNow();
+        el.innerHTML = '<span>' + dateText + '</span><span class="launcher-time">' + timeText + '</span>';
+      };
+
+      paint();
+      setInterval(() => {
+        paint();
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>

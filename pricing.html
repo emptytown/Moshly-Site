@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pricing.css" />
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>
+    // ⚠️  PRODUCTION: remove the sandbox line below and replace token with live client token
+    // Paddle.Environment.set('sandbox');
+    Paddle.Initialize({ token: 'test_e896b1cfda4634cc9d1b24bd930' }); // TODO: replace with live token
+  </script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+      <div class="nav-links">
+        <a href="/home#apps" class="nav-link">Apps</a>
+        <a href="/home#roadmap" class="nav-link">Roadmap</a>
+        <a href="pricing.html" class="nav-link nav-link--active">Pricing</a>
+        <button class="nav-login-btn" id="nav-login-btn" onclick="openModal('login');return false;">Log In</button>
+        <a id="nav-dash-btn" href="/dashboard.html" class="nav-login-btn u-hidden">Dashboard →</a>
+      </div>
+      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="/home#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+        <a href="/home#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <button class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu();openModal('login');return false;">Log In</button>
+      <a id="mobile-nav-dash-btn" href="/dashboard.html" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+    </div>
+  </nav>
+
+  <!-- PRICING HERO -->
+  <section class="pricing-hero">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="pricing-hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Simple, transparent pricing
+      </div>
+      <h1 class="pricing-hero-title">
+        Pick your <span class="gradient-text">plan.</span><br />
+        Own your workflow.
+      </h1>
+      <p class="pricing-hero-subtitle">
+        Start with one app, scale to the full Moshly universe. No hidden fees, no lock-ins — just the tools you need, when you need them.
+      </p>
+
+      <!-- Billing toggle -->
+      <div class="billing-toggle">
+        <span class="billing-label" id="label-monthly">Monthly</span>
+        <button class="toggle-btn" id="billingToggle" aria-pressed="false" title="Toggle billing period" onclick="toggleBilling()">
+          <span class="toggle-thumb"></span>
+        </button>
+        <span class="billing-label" id="label-yearly">
+          Yearly
+          <span class="save-badge">Save ~17%</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING CARDS -->
+  <section class="pricing-section">
+    <div class="pricing-inner">
+      <div class="pricing-grid">
+
+        <!-- SOLO -->
+        <div class="pricing-card reveal">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon--solo">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" fill="currentColor"/><path d="M3 19c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+            </div>
+            <div>
+              <h3 class="plan-name">Solo</h3>
+              <p class="plan-tagline">One tool. Zero noise.</p>
+            </div>
+          </div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="4.99" data-yearly="4.17">€4.99</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-yearly-note u-hidden" id="yearly-note-solo">Billed as <strong>€49.99/year</strong></p>
+          <p class="plan-pitch">The sharpest tool in the room — yours. Pick the one tool that solves your biggest daily problem and run with it. Fully featured, no compromises, no distractions.</p>
+          <ul class="plan-features"><p></p>
+            <li><span class="feat-check">✓</span> Pick <strong>2 tools</strong> of your choice</li>
+            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
+            <li><span class="feat-check">✓</span> <strong>12 PDF exports</strong> per month</li>
+            <li><span class="feat-check">✓</span> <strong>500 AI credits</strong> / month</li>
+            <li><span class="feat-check">✓</span> <strong>1 project</strong></li><p></p><p></p><p></p><p></p>
+          </ul>
+          <div class="plan-apps">
+            <p class="plan-apps-label">Coming Soon</p>
+            <div class="plan-app-list">
+              <span class="plan-app-tag">Suite Access</span>
+               </div>
+          </div>
+          <button type="button" class="btn-plan" onclick="checkoutSolo()">Get Started</button>
+        </div>
+
+        <!-- COLLECTIVE -->
+        <div class="pricing-card pricing-card--featured reveal">
+          <div class="pricing-card-glow"></div>
+          <div class="plan-badge-popular">Most Popular</div>
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon--collective">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="7" cy="8" r="3" fill="currentColor" opacity="0.7"/><circle cx="15" cy="8" r="3" fill="currentColor"/><path d="M1 19c0-3.3 2.7-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/><path d="M9 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+            </div>
+            <div>
+              <h3 class="plan-name">Collective</h3>
+              <p class="plan-tagline">Your crew, your toolkit.</p>
+            </div>
+          </div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="9.99" data-yearly="8.33">€9.99</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-yearly-note u-hidden" id="yearly-note-collective">Billed as <strong>€99.99/year</strong></p>
+          <p class="plan-pitch">Built for the band, the team, the agency. Four powerful tools, a shared workspace, and room for your collabs — so everyone moves in sync, all the time.</p><p></p>
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> Pick <strong>4 tools</strong> of your choice</li>
+            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
+            <li><span class="feat-check">✓</span> <strong>50 PDF exports</strong> per month</li>
+            <li><span class="feat-check">✓</span> <strong>1,250 AI credits</strong> / month</li>
+            <li><span class="feat-check">✓</span> <strong>3 projects</strong></li><p></p><p></p><p></p>
+          </ul>
+          <div class="plan-apps">
+            <p class="plan-apps-label">Coming Soon</p>
+            <div class="plan-app-list">
+              <span class="plan-app-tag">Suite Access</span>
+            </div>
+          </div>
+          <button type="button" class="btn-plan btn-plan--featured" onclick="checkoutCollective()">Get Started</button>
+        </div>
+
+        <!-- BUSINESS -->
+        <div class="pricing-card reveal">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon--business">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="10" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M7 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><circle cx="11" cy="15" r="1.5" fill="currentColor"/></svg>
+            </div>
+            <div>
+              <h3 class="plan-name">Business</h3>
+              <p class="plan-tagline">Scale your operation.</p>
+            </div>
+          </div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="24.99" data-yearly="20.83">€24.99</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-yearly-note u-hidden" id="yearly-note-business">Billed as <strong>€249.99/year</strong></p>
+          <p class="plan-pitch">For the professionals running the show. Ten tools, and 100 exports a month — everything you need to manage bigger operations without the enterprise price tag.</p><p></p>
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> Pick <strong>10 tools</strong> of your choice</li>
+            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
+            <li><span class="feat-check">✓</span> <strong>100 PDF exports</strong> per month</li>
+            <li><span class="feat-check">✓</span> <strong>2,500 AI credits</strong> / month</li>
+            <li><span class="feat-check">✓</span> <strong>6 projects</strong></li>
+            <li><span class="feat-check">✓</span> priority support line</li>
+          </ul>
+          <div class="plan-apps">
+            <p class="plan-apps-label">Coming Soon</p>
+            <div class="plan-app-list">
+              <span class="plan-app-tag">Suite Access</span>
+            </div>
+          </div>
+         
+          <button type="button" class="btn-plan" onclick="checkoutBusiness()">Get Started</button>
+        </div>
+
+        <!-- MAJOR -->
+        <div class="pricing-card pricing-card--major reveal">
+          <div class="pricing-card-glow pricing-card-glow--major"></div>
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon--major">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.5 8.5H20L14.5 12.5L16.5 19L11 15L5.5 19L7.5 12.5L2 8.5H8.5L11 2Z" fill="currentColor"/></svg>
+            </div>
+            <div>
+              <h3 class="plan-name">Major</h3>
+              <p class="plan-tagline">Maximum Moshly power.</p>
+            </div>
+          </div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="79.99" data-yearly="66.66">€79.99</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-yearly-note u-hidden" id="yearly-note-major">Billed as <strong>€799.99/year</strong></p>
+          <p class="plan-pitch">This is the whole Moshly Universe in your hands. Every tool, every feature the moment it drops — maximum power, zero waiting. For those who make the industry.</p><p></p>
+          <ul class="plan-features">
+            <li><span class="feat-check">✓</span> <strong>All Moshly tools</strong> — every single one</li>
+            <li><span class="feat-check">✓</span> <strong>250 PDF exports</strong> per month</li>
+            <li><span class="feat-check">✓</span> <strong>6,000 AI credits</strong> / month</li>
+            <li><span class="feat-check">✓</span> <strong>15 projects</strong></li>
+            <li><span class="feat-check">✓</span> Max priority support line</li><p></p><p></p><p></p>
+          </ul>
+          <div class="plan-apps">
+            <p class="plan-apps-label">Coming Soon</p>
+            <div class="plan-app-list">
+              <span class="plan-app-tag">Full Suite</span>
+            </div>
+          </div>
+          
+          <button type="button" class="btn-plan btn-plan--major" onclick="checkoutMajor()">Go Major</button>
+        </div>
+
+      </div><!-- /pricing-grid -->
+
+      <!-- EXPLORE FREE STRIP -->
+      <div class="explore-strip">
+        <div class="explore-strip-inner">
+          <div class="explore-strip-text">
+            <p class="explore-strip-eyebrow">Not ready to commit?</p>
+            <h3 class="explore-strip-title">Sign up free and explore Moshly's universe.</h3>
+            <p class="explore-strip-desc">1 project, access to future free tools and topable AI features. No credit card, no activation required.</p>
+          </div>
+          <button type="button" class="btn-ghost explore-strip-btn" onclick="openModal('register')">Start Exploring →</button>
+        </div>
+      </div>
+
+      <!-- CREDITS FOOTNOTE -->
+      <p class="credits-footnote">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Daily credits reset at midnight (Lisbon time). Monthly credits do not expire daily.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- THE SUITE SECTION -->
+  <section class="apps-desc-section">
+    <div class="section-inner">
+      <div class="section-label">Coming Soon</div>
+      <h2 class="section-title">What's inside <span class="gradient-text">the suite</span></h2>
+      
+      <div class="suite-announcement-box reveal">
+        <div class="suite-announcement-content">
+          <p class="suite-text">We’re just a small crew of builders making simple, effective tools that actually help your day-to-day. No big corporate machine, just us refining a collection of instruments for people who appreciate the details as much as we do.</p>
+          <p class="suite-text">We’re currently polishing the last bits of the suite, making sure everything is exactly where it needs to be before we let it out into the world. It’s taking a little time, but we want it to be right.</p>
+          <p class="suite-text-highlight">Major members get to try it all first.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-glow"></div>
+    <div class="section-inner cta-inner">
+      <h2 class="cta-title">Not sure which plan?<br /><span class="gradient-text">Start now.</span></h2>
+      <p class="cta-subtitle">Sign up for a free account and explore the ecosystem. No credit card required.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="openModal('register');return false;">Create Free Account</a>
+        <a href="#contact" class="btn-ghost">Talk to Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="contact-section" id="contact">
+    <div class="section-inner">
+      <div class="contact-wrapper reveal">
+        <div class="contact-left">
+          <div class="section-label">Get in Touch</div>
+          <h2 class="contact-title">Questions?<br /><span class="gradient-text">We're here.</span></h2>
+          <p class="contact-desc">Not sure which plan fits your workflow? Need a custom deal for your label or agency? Drop us a line — we reply fast.</p>
+          <div class="contact-info-list">
+            <div class="contact-info-item">
+              <div class="contact-info-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 4h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 5l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <a href="mailto:emptytown@proton.me">emptytown@proton.me</a>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 5v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span>We reply within 24 hours</span>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
+          <div class="contact-form-row">
+            <div class="contact-field">
+              <label class="contact-label" for="cf-name">Name</label>
+              <input class="contact-input" type="text" id="cf-name" placeholder="Your name" required />
+            </div>
+            <div class="contact-field">
+              <label class="contact-label" for="cf-email">Email</label>
+              <input class="contact-input" type="email" id="cf-email" placeholder="your@email.com" required />
+            </div>
+          </div>
+          <div class="contact-field">
+            <label class="contact-label" for="cf-subject">Subject</label>
+            <select class="contact-input contact-select" id="cf-subject">
+              <option value="">Select a topic…</option>
+              <option value="plan">Plan question</option>
+              <option value="custom">Custom / Enterprise deal</option>
+              <option value="account">Account question</option>
+              <option value="partnership">Partnership</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+          <div class="contact-field">
+            <label class="contact-label" for="cf-message">Message</label>
+            <textarea class="contact-input contact-textarea" id="cf-message" placeholder="Tell us what you need…" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn-primary contact-submit">Send Message</button>
+          <div class="contact-success u-hidden" id="contactSuccess">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Message sent! We'll be in touch shortly.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
+        <span>Moshly.io</span>
+      </div>
+      <p class="footer-tagline">Micro-tools for the music industry.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
+        <span class="theme-toggle-icon theme-toggle-icon--sun">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="theme-toggle-icon theme-toggle-icon--moon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth-client.js"></script>
+  <script src="moshly-ui.js"></script>
+  <script>
+    let isYearly = false;
+
+    function toggleBilling() {
+      isYearly = !isYearly;
+      const btn = document.getElementById('billingToggle');
+      if (!btn) return;
+      btn.setAttribute('aria-pressed', isYearly);
+      btn.classList.toggle('active', isYearly);
+
+      const amounts = document.querySelectorAll('.price-amount');
+      amounts.forEach(el => {
+        const monthly = parseFloat(el.dataset.monthly);
+        const yearly = parseFloat(el.dataset.yearly);
+        el.textContent = '€' + (isYearly ? yearly.toFixed(2) : monthly.toFixed(2));
+      });
+
+      const notes = document.querySelectorAll('.price-yearly-note');
+      notes.forEach(el => {
+        el.style.display = isYearly ? 'block' : 'none';
+      });
+
+      const labelMonthly = document.getElementById('label-monthly');
+      const labelYearly = document.getElementById('label-yearly');
+      if (labelMonthly) labelMonthly.classList.toggle('billing-label--active', !isYearly);
+      if (labelYearly) labelYearly.classList.toggle('billing-label--active', isYearly);
+    }
+
+    // Init billing labels
+    document.addEventListener('DOMContentLoaded', () => {
+      const labelMonthly = document.getElementById('label-monthly');
+      if (labelMonthly) labelMonthly.classList.add('billing-label--active');
+    });
+
+    function closeModalOnOverlay(e) {
+      if (e.target === document.getElementById('authOverlay')) closeModal();
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.contact-submit');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById('contactForm').style.opacity = '0.4';
+        document.getElementById('contactForm').style.pointerEvents = 'none';
+        document.getElementById('contactSuccess').style.display = 'flex';
+        btn.textContent = 'Sent!';
+      }, 900);
+    }
+  </script>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authOverlay" onclick="closeModalOnOverlay(event)" aria-hidden="true">
+    <div class="auth-modal" role="dialog" aria-modal="true">
+      <button class="auth-close" onclick="closeModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="auth-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="auth-logo-img" />
+        <span>Moshly</span>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab auth-tab--active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register</button>
+      </div>
+      <div class="auth-panel" id="panelLogin">
+        <form class="auth-form" autocomplete="on" onsubmit="handleAuth(event,'login')">
+          <div class="auth-field">
+            <label class="auth-label" for="login-email">Email</label>
+            <input class="auth-input" type="email" id="login-email" placeholder="your@email.com" required autocomplete="username" />
+          </div>
+          <div class="auth-field">
+            <div class="auth-label-row">
+              <label class="auth-label" for="login-password">Password</label>
+              <a href="#" class="auth-forgot" onclick="switchTab('forgot');return false;">Forgot password?</a>
+            </div>
+            <input class="auth-input" type="password" id="login-password" data-pw="1" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Log In</button>
+          <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('register');return false;">Register</a></p>
+        </form>
+      </div>
+      <div class="auth-panel auth-panel--hidden" id="panelRegister">
+        <form class="auth-form" onsubmit="handleAuth(event,'register')">
+          <div class="auth-form-row">
+            <div class="auth-field">
+              <label class="auth-label" for="reg-fname">First Name</label>
+              <input class="auth-input" type="text" id="reg-fname" placeholder="First" required autocomplete="given-name" />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="reg-lname">Last Name</label>
+              <input class="auth-input" type="text" id="reg-lname" placeholder="Last" required autocomplete="family-name" />
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-email">Email</label>
+            <input class="auth-input" type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email" />
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-phone">Phone</label>
+            <div class="auth-phone-wrap">
+              <select class="auth-dial" id="reg-dial" required>
+                <option value="" disabled selected>Country</option>
+                <option value="+355">🇦🇱 +355 Albania</option>
+                <option value="+376">🇦🇩 +376 Andorra</option>
+                <option value="+54">🇦🇷 +54 Argentina</option>
+                <option value="+61">🇦🇺 +61 Australia</option>
+                <option value="+43">🇦🇹 +43 Austria</option>
+                <option value="+32">🇧🇪 +32 Belgium</option>
+                <option value="+55">🇧🇷 +55 Brazil</option>
+                <option value="+1-CA">🇨🇦 +1 Canada</option>
+                <option value="+56">🇨🇱 +56 Chile</option>
+                <option value="+57">🇨🇴 +57 Colombia</option>
+                <option value="+385">🇭🇷 +385 Croatia</option>
+                <option value="+357">🇨🇾 +357 Cyprus</option>
+                <option value="+420">🇨🇿 +420 Czech Republic</option>
+                <option value="+45">🇩🇰 +45 Denmark</option>
+                <option value="+372">🇪🇪 +372 Estonia</option>
+                <option value="+358">🇫🇮 +358 Finland</option>
+                <option value="+33">🇫🇷 +33 France</option>
+                <option value="+49">🇩🇪 +49 Germany</option>
+                <option value="+30">🇬🇷 +30 Greece</option>
+                <option value="+36">🇭🇺 +36 Hungary</option>
+                <option value="+354">🇮🇸 +354 Iceland</option>
+                <option value="+353">🇮🇪 +353 Ireland</option>
+                <option value="+39">🇮🇹 +39 Italy</option>
+                <option value="+81">🇯🇵 +81 Japan</option>
+                <option value="+371">🇱🇻 +371 Latvia</option>
+                <option value="+423">🇱🇮 +423 Liechtenstein</option>
+                <option value="+370">🇱🇹 +370 Lithuania</option>
+                <option value="+352">🇱🇺 +352 Luxembourg</option>
+                <option value="+356">🇲🇹 +356 Malta</option>
+                <option value="+52">🇲🇽 +52 Mexico</option>
+                <option value="+377">🇲🇨 +377 Monaco</option>
+                <option value="+31">🇳🇱 +31 Netherlands</option>
+                <option value="+64">🇳🇿 +64 New Zealand</option>
+                <option value="+47">🇳🇴 +47 Norway</option>
+                <option value="+48">🇵🇱 +48 Poland</option>
+                <option value="+351">🇵🇹 +351 Portugal</option>
+                <option value="+40">🇷🇴 +40 Romania</option>
+                <option value="+378">🇸🇲 +378 San Marino</option>
+                <option value="+381">🇷🇸 +381 Serbia</option>
+                <option value="+421">🇸🇰 +421 Slovakia</option>
+                <option value="+386">🇸🇮 +386 Slovenia</option>
+                <option value="+27">🇿🇦 +27 South Africa</option>
+                <option value="+82">🇰🇷 +82 South Korea</option>
+                <option value="+34">🇪🇸 +34 Spain</option>
+                <option value="+46">🇸🇪 +46 Sweden</option>
+                <option value="+41">🇨🇭 +41 Switzerland</option>
+                <option value="+886">🇹🇼 +886 Taiwan</option>
+                <option value="+44">🇬🇧 +44 United Kingdom</option>
+              </select>
+              <input class="auth-input" type="tel" id="reg-phone" placeholder="Mobile number" required pattern="[0-9\s\-]{6,15}" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-password">Password</label>
+            <input class="auth-input" type="password" id="reg-password" data-pw="1" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password" />
+          </div>
+          <div id="invite-code-field" class="u-hidden">
+            <div class="auth-field">
+              <label class="auth-label" for="reg-invite-code">Invite Code</label>
+              <input class="auth-input auth-input--invite" type="text" id="reg-invite-code" placeholder="MOSH-XXXX" autocomplete="off" oninput="this.value=this.value.toUpperCase()" />
+            </div>
+          </div>
+          <button type="button" class="auth-invite-toggle" onclick="const f=document.getElementById('invite-code-field');const h=f.classList.toggle('u-hidden');this.textContent=h?'Have an invite code?':'Hide invite code'">Have an invite code?</button>
+          <div class="auth-field auth-field--sm-top">
+            <label class="auth-consent-label">
+              <input type="checkbox" id="reg-terms" class="auth-consent-check" required />
+              <span>I agree to the <a href="/terms.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Privacy Policy</a>.</span>
+            </label>
+          </div>
+          <div class="auth-field auth-field--sm-top">
+            <label class="auth-consent-label">
+              <input type="checkbox" id="reg-marketing" class="auth-consent-check" />
+              <span>I'd like to receive Moshly updates, early access news, and feature announcements by email.</span>
+            </label>
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Create Account</button>
+        </form>
+        <div class="auth-forgot-header">
+          <button class="auth-back" type="button" onclick="switchTab('login')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to Log In
+          </button>
+          <h3 class="auth-panel-title">Reset your password</h3>
+          <p class="auth-panel-desc">Enter your email and we'll send you a reset link.</p>
+        </div>
+        <form class="auth-form" onsubmit="handleAuth(event,'forgot')">
+          <div class="auth-field">
+            <label class="auth-label" for="forgot-email">Email</label>
+            <input class="auth-input" type="email" id="forgot-email" placeholder="your@email.com" required autocomplete="email" />
+          </div>
+          <button type="submit" class="btn-primary auth-submit">Send Reset Link</button>
+        </form>
+        <div class="auth-success u-hidden" id="forgotSuccess">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Check your inbox — reset link sent!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paddle Checkout Functions -->
+  <script>
+    async function openCheckoutForPlan(monthlyPriceId, yearlyPriceId) {
+      const selectedPriceId = isYearly ? yearlyPriceId : monthlyPriceId;
+
+      // Pre-fill logged-in user email and pass userId for webhook attribution
+      let customerEmail = null;
+      let customData = {};
+      try {
+        const session = localStorage.getItem('moshly_user');
+        if (session) {
+          const u = JSON.parse(session);
+          if (u?.email) customerEmail = u.email;
+          if (u?.id) customData.moshly_user_id = u.id;
+        }
+      } catch {}
+
+      try {
+        const opts = {
+          items: [{ priceId: selectedPriceId, quantity: 1 }],
+          settings: { displayMode: 'overlay', theme: 'dark' },
+        };
+        if (customerEmail) opts.customer = { email: customerEmail };
+        if (Object.keys(customData).length) opts.customData = customData;
+        Paddle.Checkout.open(opts);
+      } catch (err) {
+        console.error('Paddle checkout failed:', err);
+        alert('Checkout could not start. Please try again.');
+      }
+    }
+
+    function checkoutSolo() {
+      openCheckoutForPlan('pri_01kjwe0jg5ks7kr8njaghykrq6', 'pri_01kjwe4f0s7494j16q0spw9q57');
+    }
+
+    function checkoutCollective() {
+      openCheckoutForPlan('pri_01kjwh1zsmdb636v0p08hpsmq5', 'pri_01kjwh609n7fsza1wkghwhtacz');
+    }
+
+    function checkoutBusiness() {
+      openCheckoutForPlan('pri_01kjwhc1h6znh28qey5shw91w0', 'pri_01kjwhg75dt7whbzfpkxhfc3yj');
+    }
+
+    function checkoutMajor() {
+      openCheckoutForPlan('pri_01kjwhn82fzs6apcmtdc70myym', 'pri_01kjwhrwd3grrzj0cvfyz46mjj');
+    }
+  </script>
+</body>
+</html>

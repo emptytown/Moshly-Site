@@ -1,0 +1,18 @@
+# Wrangler local dev state — never commit
+.wrangler/state/
+.wrangler/cache/
+.wrangler/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# Local tooling + build artifacts
+.npm/
+Library/
+node_modules/
+node_modules/.cache/

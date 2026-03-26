@@ -1,0 +1,7 @@
+name = "moshly-site"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "MOSHLY_DB"
+database_name = "moshly-db"
+database_id = "078bb103-ae9b-4975-9e21-66877f480333"

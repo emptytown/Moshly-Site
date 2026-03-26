@@ -1,0 +1,23 @@
+{
+  "name": "moshly-site",
+  "version": "1.0.0",
+  "description": "Frontend website for the Moshly universe.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.1",
+    "serve": "^14.2.4",
+    "wrangler": "^4.77.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.2"
+  }
+}
