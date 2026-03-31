@@ -7,6 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 binding = "MOSHLY_DB"
 database_name = "moshly-db"
 database_id = "078bb103-ae9b-4975-9e21-66877f480333"
+migrations_dir = "drizzle/migrations"
 
 # KV namespace for auth state: rate-limit counters + refresh tokens.
 # Create with: wrangler kv:namespace create AUTH_KV
