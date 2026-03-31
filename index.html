@@ -22,8 +22,9 @@
       <div class="nav-links">
         <a href="#apps" class="nav-link">Apps</a>
         <a href="#roadmap" class="nav-link">Roadmap</a>
+        <a href="app-tour.html" class="nav-link">Tour</a>
         <a href="pricing.html" class="nav-link">Pricing</a>
-        <button class="nav-login-btn" id="nav-login-btn" onclick="openModal('login');return false;">Log In</button>
+        <a href="/login.html" class="nav-login-btn" id="nav-login-btn">Log In</a>
         <a id="nav-dash-btn" href="/dashboard.html" class="nav-login-btn u-hidden">Dashboard →</a>
       </div>
       <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
@@ -35,8 +36,9 @@
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
       <a href="#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="app-tour.html" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
       <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
-      <button class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu();openModal('login');return false;">Log In</button>
+      <a href="/login.html" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
       <a id="mobile-nav-dash-btn" href="/dashboard.html" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
     </div>
   </nav>
@@ -456,9 +458,9 @@
     </div>
   </footer>
 
-  <!-- AUTH MODAL -->
-  <div class="auth-overlay" id="authOverlay" onclick="closeModalOnOverlay(event)" aria-hidden="true">
-    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <!-- AUTH MODAL REMOVED — see /login.html /signup.html /join.html -->
+  <div style="display:none" aria-hidden="true">
+    <div>
 
       <!-- Close -->
       <button class="auth-close" onclick="closeModal()" aria-label="Close">
@@ -646,6 +648,7 @@
             <label class="auth-label" for="forgot-email">Email</label>
             <input class="auth-input" type="email" id="forgot-email" placeholder="your@email.com" required autocomplete="email" />
           </div>
+          <div id="forgot-feedback" class="auth-feedback error" style="display:none; margin-bottom: 12px; font-size: 0.85rem;"></div>
           <button type="submit" class="btn-primary auth-submit">Send Reset Link</button>
         </form>
         <div class="auth-success" id="forgotSuccess" style="display:none;">
@@ -660,23 +663,13 @@
   <script src="auth-client.js"></script>
   <script src="moshly-ui.js"></script>
   <script>
-    function closeModalOnOverlay(e) {
-      if (e.target === document.getElementById('authOverlay')) closeModal();
-    }
-
-    // Auto-open login modal if redirected from a protected page or via collab invite
+    // Handle URL params that previously opened the modal — now redirect to dedicated pages
     (function() {
       const p = new URLSearchParams(location.search);
       const collabInvite = p.get('collab_invite');
       if (collabInvite) {
-        window.addEventListener('DOMContentLoaded', () => {
-          openModal('insertCode');
-          const inp = document.getElementById('insert-code-input');
-          if (inp) inp.value = collabInvite.toUpperCase();
-        }, { once: true });
+        window.location.replace('/join.html?code=' + encodeURIComponent(collabInvite.toUpperCase()));
       } else if (p.get('error') === 'hub_token_expired' && p.get('auth') === 'login') {
-        // Token handoff expired — if user already has a session, retry the app launch
-        // instead of forcing them to log in again.
         const cachedUser = (() => {
           try { return JSON.parse(localStorage.getItem('moshly_user')); } catch { return null; }
         })();
@@ -699,104 +692,29 @@
 
         if (canRetry) {
           try { sessionStorage.setItem(retryKey, String(retryCount + 1)); } catch {}
-          // Short backoff before re-launch to let KV propagate
           setTimeout(() => window.location.replace(redirect), 450);
         } else {
           if (retryKey) sessionStorage.removeItem(retryKey);
-          window.addEventListener('DOMContentLoaded', () => openModal('login'), { once: true });
+          window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(redirect) : ''));
         }
       } else if (p.get('auth') === 'login') {
-        window.addEventListener('DOMContentLoaded', () => openModal('login'), { once: true });
+        window.location.replace('/login.html');
+      } else if (p.get('auth') === 'register') {
+        window.location.replace('/signup.html');
       }
     })();
 
-    async function handleInsertCode() {
-      const input = document.getElementById('insert-code-input');
-      const feedback = document.getElementById('insert-code-feedback');
-      const banner = document.getElementById('insert-code-banner');
-      const code = (input?.value || '').trim().toUpperCase();
-
-      feedback.style.display = 'none';
-      feedback.textContent = '';
-      banner.style.display = 'none';
-
-      if (!code || !code.startsWith('MOSH-B')) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#f87171';
-        feedback.textContent = 'Please enter a valid invite code (starts with MOSH-B).';
-        return;
-      }
-
-      const btn = document.querySelector('#panelInsertCode .auth-submit');
-      if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
-
-      try {
-        const AUTH_URL =
-          (window.MoshlyAuth && window.MoshlyAuth.baseUrl)
-          || window.AUTH_URL
-          || window.MOSHLY_API_URL
-          || '/api';
-        const res = await fetch(`${AUTH_URL}/invite/check?code=${encodeURIComponent(code)}`);
-        const data = await res.json();
-
-        if (!data.valid) {
-          feedback.style.display = 'block';
-          feedback.style.color = '#f87171';
-          feedback.textContent = 'This invite code is invalid or has expired.';
-          return;
-        }
-
-        const ownerLabel = data.owner_name ? `${data.owner_name}'s workspace` : 'the workspace';
-
-        if (data.user_exists) {
-          // User already has an account — store invite and go to login
-          sessionStorage.setItem('moshly_pending_collab_invite', code);
-          banner.style.display = 'block';
-          banner.textContent = `✓ Code accepted! Log in to join ${ownerLabel}.`;
-          switchTab('login');
-        } else {
-          // New user — pre-fill invite on register tab
-          const invField = document.getElementById('invite-code-field');
-          const invInput = document.getElementById('reg-invite-code');
-          if (invInput) invInput.value = code;
-          if (invField) invField.style.display = 'block';
-          // Autofill email from invite hint
-          const emailEl = document.getElementById('reg-email');
-          if (emailEl && data.email_hint) {
-            emailEl.value = data.email_hint;
-            emailEl.readOnly = true;
-          }
-          switchTab('register');
-          // Show banners inside register panel (after tab switch)
-          const hintEl = document.getElementById('reg-email-hint');
-          if (hintEl && data.email_hint) hintEl.style.display = 'block';
-          const regBanner = document.getElementById('reg-invite-banner');
-          if (regBanner) {
-            regBanner.style.display = 'block';
-            regBanner.textContent = `✓ Code accepted! Create an account to join ${ownerLabel}.`;
-          }
-          banner.style.display = 'none';
-        }
-
-      } catch {
-        feedback.style.display = 'block';
-        feedback.style.color = '#f87171';
-        feedback.textContent = 'Could not verify code. Please try again.';
-      } finally {
-        if (btn) { btn.disabled = false; btn.textContent = 'Continue'; }
-      }
-    }
 
     function handleEarlyAccess(e) {
       e.preventDefault();
-      const btn = document.querySelector('.cta-submit-btn');
+      const btn = e.target.querySelector('.cta-submit-btn');
       const original = btn.textContent;
       btn.textContent = 'Sending…';
       btn.disabled = true;
       setTimeout(() => {
-        document.getElementById('earlyAccessForm').style.display = 'none';
+        e.target.style.display = 'none';
         const success = document.getElementById('earlyAccessSuccess');
-        success.style.display = 'flex';
+        if (success) success.style.display = 'flex';
       }, 900);
     }
   </script>
