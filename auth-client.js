@@ -50,7 +50,7 @@ const MoshlyAuth = {
         return MoshlyAuth.getUser();
     },
 
-    requireSession: async (redirectUrl = '/?auth=login') => {
+    requireSession: async (redirectUrl = '/login.html') => {
         const user = await MoshlyAuth.getSession();
         if (!user) {
             const current = encodeURIComponent(window.location.href);
@@ -64,7 +64,7 @@ const MoshlyAuth = {
 
     requireGod: async () => {
         const user = await MoshlyAuth.getSessionRobust();
-        if (!user || user.privilege !== 'god') {
+        if (!user || user.role !== 'god') {
             window.location.href = '/dashboard.html';
             return null;
         }
@@ -75,8 +75,32 @@ const MoshlyAuth = {
         localStorage.removeItem('moshly_user');
         localStorage.removeItem('moshly_token');
         localStorage.removeItem('moshly_session_token');
+        localStorage.removeItem('moshly_refresh_token');
         if (window.syncAuthUI) window.syncAuthUI();
         window.location.href = '/';
+    },
+
+    silentRefresh: async () => {
+        const refreshToken = localStorage.getItem('moshly_refresh_token');
+        if (!refreshToken) return false;
+
+        try {
+            const response = await fetch(`${AUTH_URL}/refresh`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refreshToken })
+            });
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('moshly_token', data.token);
+                localStorage.setItem('moshly_refresh_token', data.refreshToken);
+                return true;
+            }
+        } catch (e) {
+            console.error('Silent refresh failed:', e);
+        }
+        return false;
     },
 
     // A helper for authenticated API calls
@@ -94,6 +118,17 @@ const MoshlyAuth = {
                 headers
             });
             const data = await response.json();
+
+            // On 401, attempt one silent refresh then retry
+            if (response.status === 401 && !options._retry) {
+                const refreshed = await MoshlyAuth.silentRefresh();
+                if (refreshed) {
+                    return MoshlyAuth.authFetch(endpoint, { ...options, _retry: true });
+                }
+                MoshlyAuth.logout();
+                return { ok: false, status: 401, data };
+            }
+
             return { ok: response.ok, status: response.status, data };
         } catch (e) {
             return { ok: false, status: 0, data: { error: 'Network error' } };
@@ -131,11 +166,20 @@ const MoshlyAuth = {
                 if (ok && data.success) {
                     localStorage.setItem('moshly_user', JSON.stringify(data.user));
                     localStorage.setItem('moshly_token', data.token);
+                    if (data.refreshToken) localStorage.setItem('moshly_refresh_token', data.refreshToken);
                     if (window.syncAuthUI) window.syncAuthUI();
                     
                     // Handle redirect
                     const params = new URLSearchParams(window.location.search);
-                    const dest = params.get('redirect') || '/dashboard.html';
+                    let dest = params.get('redirect');
+                    
+                    if (localStorage.getItem('moshly_is_new_signup') === 'true') {
+                        dest = '/setup-profile.html';
+                        localStorage.removeItem('moshly_is_new_signup');
+                    } else if (!dest) {
+                        dest = '/dashboard.html';
+                    }
+
                     window.location.href = dest;
                 } else {
                     if (feedback) {
@@ -159,7 +203,9 @@ const MoshlyAuth = {
         if (type === 'register') {
             const email = document.getElementById('reg-email')?.value;
             const password = document.getElementById('reg-password')?.value;
-            const name = document.getElementById('reg-name')?.value;
+            const firstName = document.getElementById('reg-fname')?.value || '';
+            const lastName = document.getElementById('reg-lname')?.value || '';
+            const name = `${firstName} ${lastName}`.trim();
             const feedback = document.getElementById('reg-feedback');
             const btn = document.querySelector('#panelRegister .auth-submit');
 
@@ -183,13 +229,25 @@ const MoshlyAuth = {
                 });
 
                 if (ok && data.success) {
-                    // Pre-fill login email after registration
-                    const loginEmail = document.getElementById('login-email');
-                    if (loginEmail) loginEmail.value = email;
-                    // Auto-switch to login tab
-                    if (window.switchTab) window.switchTab('login');
-                    // Trigger login handler directly
-                    return MoshlyAuth.handleAuth(null, 'login');
+                    // Auto-login with same credentials passed directly (not via DOM)
+                    const loginResult = await MoshlyAuth.authFetch('/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    if (loginResult.ok && loginResult.data.success) {
+                        localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
+                        localStorage.setItem('moshly_token', loginResult.data.token);
+                        if (loginResult.data.refreshToken) {
+                            localStorage.setItem('moshly_refresh_token', loginResult.data.refreshToken);
+                        }
+                        window.location.href = '/setup-profile.html';
+                        return;
+                    }
+
+                    // Registration worked but auto-login failed — send to login
+                    window.location.href = '/login.html?registered=true&email=' + encodeURIComponent(email);
+                    return;
                 } else {
                     if (feedback) {
                         feedback.textContent = data.error || 'Registration failed.';
@@ -205,6 +263,61 @@ const MoshlyAuth = {
                 if (btn) {
                     btn.disabled = false;
                     btn.textContent = 'Create Account';
+                }
+            }
+        }
+
+        if (type === 'forgot') {
+            const email = document.getElementById('forgot-email')?.value;
+            const feedback = document.getElementById('forgot-feedback');
+            const btn = document.querySelector('#panelForgot .auth-submit');
+
+            if (!email) {
+                if (feedback) {
+                    feedback.textContent = 'Please enter your email address.';
+                    feedback.style.display = 'block';
+                    feedback.className = 'auth-feedback error';
+                }
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Sending...';
+            }
+
+            try {
+                const { ok, data } = await MoshlyAuth.authFetch('/forgot-password', {
+                    method: 'POST',
+                    body: JSON.stringify({ email })
+                });
+
+                if (ok) {
+                    if (feedback) {
+                        feedback.textContent = data.message || 'If an account exists, a reset link has been sent.';
+                        feedback.style.display = 'block';
+                        feedback.className = 'auth-feedback success';
+                        // Optionally clear the input
+                        const input = document.getElementById('forgot-email');
+                        if (input) input.value = '';
+                    }
+                } else {
+                    if (feedback) {
+                        feedback.textContent = data.error || 'Request failed. Please try again.';
+                        feedback.style.display = 'block';
+                        feedback.className = 'auth-feedback error';
+                    }
+                }
+            } catch (error) {
+                if (feedback) {
+                    feedback.textContent = 'An error occurred. Please try again later.';
+                    feedback.style.display = 'block';
+                    feedback.className = 'auth-feedback error';
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Reset Password';
                 }
             }
         }

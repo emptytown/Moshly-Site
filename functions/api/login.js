@@ -2,10 +2,12 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
+import { eq } from 'drizzle-orm';
+import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
-  
+
   try {
     const { email, password } = await request.json();
 
@@ -16,31 +18,50 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Find user
-    const user = await db.select().from(schema.users).where(schema.users.email.eq(email)).get();
-    if (!user) {
+    // Rate limit: by IP and by email (dual-keyed per OWASP-RATELIMIT-001)
+    const clientIp = getClientIp(request);
+    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `ip:${clientIp}`);
+    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
+
+    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `email:${email.toLowerCase()}`);
+    if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
+
+    // Find user with workspace and subscription using JOINs
+    const loginResult = await db.select({
+      user: schema.users,
+      workspace: schema.workspaces,
+      subscription: schema.subscriptions
+    })
+    .from(schema.users)
+    .leftJoin(schema.workspaces, eq(schema.workspaces.ownerId, schema.users.id))
+    .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
+    .where(eq(schema.users.email, email))
+    .get();
+
+    if (!loginResult || !loginResult.user) {
       return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    const { user, subscription } = loginResult;
 
     // Verify password
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) {
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
       return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Fetch workspace and plan
-    const workspace = await db.select().from(schema.workspaces).where(schema.workspaces.ownerId.eq(user.id)).get();
-    const subscription = workspace ? await db.select().from(schema.subscriptions).where(schema.subscriptions.workspaceId.eq(workspace.id)).get() : null;
-
-    // Generate JWT
-    const secret = new TextEncoder().encode(env.JWT_SECRET || 'dev_secret_moshly');
-    const token = await new SignJWT({ 
+    // Generate JWT access token (30 min) with iss + aud claims
+    if (!env.JWT_SECRET) {
+      throw new Error('CRITICAL: JWT_SECRET environment variable is not set');
+    }
+    const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const accessToken = await new SignJWT({
         userId: user.id,
         email: user.email,
         role: user.role,
@@ -48,11 +69,23 @@ export async function onRequestPost({ request, env }) {
       })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
-      .setExpirationTime('72h')
+      .setIssuer('moshly')
+      .setAudience('moshly-api')
+      .setExpirationTime('15m')
       .sign(secret);
 
-    return new Response(JSON.stringify({ 
-      success: true, 
+    // Issue refresh token (7 days) stored in KV
+    const refreshToken = crypto.randomUUID();
+    if (env.AUTH_KV) {
+      await env.AUTH_KV.put(
+        `rt:${refreshToken}`,
+        JSON.stringify({ userId: user.id }),
+        { expirationTtl: 7 * 24 * 3600 }
+      );
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
       user: {
         id: user.id,
         email: user.email,
@@ -60,14 +93,15 @@ export async function onRequestPost({ request, env }) {
         role: user.role,
         plan: subscription?.plan || 'free'
       },
-      token 
+      token: accessToken,
+      refreshToken,
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error:', error.message);
     return new Response(JSON.stringify({ error: 'Server error during login' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

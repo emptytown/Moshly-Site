@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Log In — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+    </div>
+  </nav>
+
+  <section class="auth-section">
+    <div class="auth-modal">
+
+      <div class="auth-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="auth-logo-img" />
+      </div>
+
+      <h2 class="auth-panel-title" style="margin-bottom:6px;">Welcome back</h2>
+      <p class="auth-panel-desc" style="margin-bottom:24px;">Log in to your Moshly account.</p>
+
+      <form class="auth-form" id="loginForm" autocomplete="on" onsubmit="handleLogin(event)">
+        <div class="auth-field">
+          <label class="auth-label" for="login-email">Email</label>
+          <input class="auth-input" type="email" id="login-email" placeholder="your@email.com" required autocomplete="username" />
+        </div>
+
+        <div id="login-feedback" class="auth-feedback auth-feedback--error" style="display:none;"></div>
+
+        <div class="auth-field">
+          <div class="auth-label-row">
+            <label class="auth-label" for="login-password">Password</label>
+            <a href="/forgot-password.html" class="auth-forgot">Forgot password?</a>
+          </div>
+          <div class="auth-pw-wrap">
+            <input class="auth-input" type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" />
+            <button type="button" class="auth-pw-toggle" aria-label="Show password" onclick="togglePw(this)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" id="loginBtn">Log In</button>
+      </form>
+
+      <p class="auth-switch" style="margin-top:20px;">Don't have an account? <a href="/signup.html">Sign Up</a></p>
+      <p class="auth-switch" style="margin-top:8px;">Have an invite code? <a href="/join.html">Join a workspace</a></p>
+
+    </div>
+  </section>
+
+  <script src="auth-client.js"></script>
+  <script>
+    // Redirect already-authenticated users
+    (async () => {
+      if (MoshlyAuth.isAuthenticated()) {
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = params.get('redirect') || '/dashboard.html';
+      }
+    })();
+
+    // Show confirmation message if redirected after signup
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('registered') === 'true') {
+        const fb = document.getElementById('login-feedback');
+        fb.textContent = 'Account created! Please log in.';
+        fb.className = 'auth-feedback auth-feedback--success';
+        fb.style.display = 'block';
+      }
+      // Pre-fill email if passed via query param
+      const email = params.get('email');
+      if (email) document.getElementById('login-email').value = decodeURIComponent(email);
+    });
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const feedback = document.getElementById('login-feedback');
+      const btn      = document.getElementById('loginBtn');
+
+      feedback.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Logging in…';
+
+      const { ok, data } = await MoshlyAuth.authFetch('/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
+
+      if (ok && data.success) {
+        localStorage.setItem('moshly_user', JSON.stringify(data.user));
+        localStorage.setItem('moshly_token', data.token);
+        if (data.refreshToken) localStorage.setItem('moshly_refresh_token', data.refreshToken);
+
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = params.get('redirect') || '/dashboard.html';
+      } else {
+        feedback.textContent = data.error || 'Login failed. Please try again.';
+        feedback.className = 'auth-feedback auth-feedback--error';
+        feedback.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Log In';
+      }
+    }
+
+    function togglePw(btn) {
+      const input = btn.previousElementSibling;
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

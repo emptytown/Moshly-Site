@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Sign Up — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+    </div>
+  </nav>
+
+  <section class="auth-section">
+    <div class="auth-modal">
+
+      <div class="auth-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="auth-logo-img" />
+      </div>
+
+      <h2 class="auth-panel-title" style="margin-bottom:6px;">Create your account</h2>
+      <p class="auth-panel-desc" style="margin-bottom:24px;">Join Moshly and get started today.</p>
+
+      <form class="auth-form" id="signupForm" autocomplete="on" onsubmit="handleSignup(event)">
+
+        <div class="auth-form-row">
+          <div class="auth-field">
+            <label class="auth-label" for="reg-fname">First Name</label>
+            <input class="auth-input" type="text" id="reg-fname" placeholder="First" required autocomplete="given-name" />
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-lname">Last Name</label>
+            <input class="auth-input" type="text" id="reg-lname" placeholder="Last" required autocomplete="family-name" />
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="reg-email">Email</label>
+          <input class="auth-input" type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email" />
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="reg-password">Password</label>
+          <div class="auth-pw-wrap">
+            <input class="auth-input" type="password" id="reg-password" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password" />
+            <button type="button" class="auth-pw-toggle" aria-label="Show password" onclick="togglePw(this)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-field" id="inviteCodeField">
+          <label class="auth-label" for="reg-invite-code">Invite Code <span style="color:var(--color-text-tertiary);font-weight:400;">(optional)</span></label>
+          <input class="auth-input" type="text" id="reg-invite-code" placeholder="MOSH-XXXX" autocomplete="off"
+            style="text-transform:uppercase;letter-spacing:.1em;"
+            oninput="this.value=this.value.toUpperCase()" />
+        </div>
+
+        <div id="reg-feedback" class="auth-feedback auth-feedback--error" style="display:none;"></div>
+
+        <div class="auth-field" style="margin-top:4px;">
+          <label class="auth-consent-label">
+            <input type="checkbox" id="reg-terms" class="auth-consent-check" required />
+            I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>
+          </label>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-consent-label">
+            <input type="checkbox" id="reg-marketing" class="auth-consent-check" />
+            I'm happy to receive product updates and news from Moshly
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" id="signupBtn">Create Account</button>
+      </form>
+
+      <p class="auth-switch" style="margin-top:20px;">Already have an account? <a href="/login.html">Log In</a></p>
+
+    </div>
+  </section>
+
+  <script src="auth-client.js"></script>
+  <script>
+    // Redirect already-authenticated users
+    (async () => {
+      if (MoshlyAuth.isAuthenticated()) {
+        window.location.href = '/dashboard.html';
+      }
+    })();
+
+    // Pre-fill invite code from URL param
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code') || params.get('invite');
+      if (code) document.getElementById('reg-invite-code').value = code.toUpperCase();
+    });
+
+    async function handleSignup(event) {
+      event.preventDefault();
+
+      const firstName  = document.getElementById('reg-fname').value.trim();
+      const lastName   = document.getElementById('reg-lname').value.trim();
+      const name       = `${firstName} ${lastName}`.trim();
+      const email      = document.getElementById('reg-email').value.trim();
+      const password   = document.getElementById('reg-password').value;
+      const inviteCode = document.getElementById('reg-invite-code').value.trim() || null;
+      const feedback   = document.getElementById('reg-feedback');
+      const btn        = document.getElementById('signupBtn');
+
+      feedback.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Creating Account…';
+
+      const payload = { email, password, name };
+      if (inviteCode) payload.inviteCode = inviteCode;
+
+      const { ok, data } = await MoshlyAuth.authFetch('/register', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      if (ok && data.success) {
+        // Auto-login with same credentials — pass them directly (not via DOM)
+        const loginResult = await MoshlyAuth.authFetch('/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+
+        if (loginResult.ok && loginResult.data.success) {
+          localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
+          localStorage.setItem('moshly_token', loginResult.data.token);
+          if (loginResult.data.refreshToken) {
+            localStorage.setItem('moshly_refresh_token', loginResult.data.refreshToken);
+          }
+          window.location.href = '/setup-profile.html';
+        } else {
+          // Registration worked but auto-login failed — send to login page
+          window.location.href = '/login.html?registered=true&email=' + encodeURIComponent(email);
+        }
+      } else {
+        feedback.textContent = data.error || 'Registration failed. Please try again.';
+        feedback.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    }
+
+    function togglePw(btn) {
+      const input = btn.previousElementSibling;
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>
