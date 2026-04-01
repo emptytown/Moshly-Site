@@ -113,6 +113,14 @@ npx serve .
 - **Paddle Token**: Currently hardcoded in `pricing.html` as a test token.
 - **TODO**: Move API keys and configuration to a centralized config or environment variables.
 
+## 🔄 Spoke App System (Architecture)
+
+Moshly follows a **Spoke Architecture** for its suite of tools, ensuring a unified experience across different specialized applications.
+
+- **Central Hub**: The main dashboard (at `moshly.io`) acts as the central authority, handling Authentication, Profile Management, and Subscription state.
+- **Isolated Spokes**: Specialized tools (e.g., `feeme.moshly.io`) operate as independent "spokes." They focus on their specific functionality while "checking in" with the Hub for session verification.
+- **Unified Authentication**: All spokes communicate with the same backend API and share session state via secure `postMessage` or shared `localStorage` patterns, allowing users to move seamlessly between tools without re-authenticating.
+
 ## 🧪 Tests
 - **TODO**: No automated tests found. 
 - Recommendation: Implement Playwright or Cypress for E2E testing of the checkout flow.

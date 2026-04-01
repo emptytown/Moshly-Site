@@ -8,6 +8,27 @@
       "when": 1774529610762,
       "tag": "0000_wealthy_sister_grimm",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1774615575191,
+      "tag": "0001_perpetual_outlaw_kid",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1774661630978,
+      "tag": "0002_abandoned_chronomancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1774661747285,
+      "tag": "0003_spicy_dark_phoenix",
+      "breakpoints": true
     }
   ]
 }

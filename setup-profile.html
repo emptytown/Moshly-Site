@@ -267,17 +267,17 @@
 
         <div class="sp-field">
           <label class="sp-label" for="sp-jobtitle">Role / Job Title</label>
-          <input class="sp-input" id="sp-jobtitle" name="job_title" type="text" placeholder="e.g. Tour Manager, Production Designer" maxlength="80" />
+          <input class="sp-input" id="sp-jobtitle" name="job_title" type="text" placeholder="e.g. Tour Manager, Production Designer" maxlength="80" required />
         </div>
 
         <div class="sp-field">
           <label class="sp-label" for="sp-org">Organisation</label>
-          <input class="sp-input" id="sp-org" name="org" type="text" placeholder="e.g. Empty Town, Self-employed" maxlength="80" />
+          <input class="sp-input" id="sp-org" name="org" type="text" placeholder="e.g. Empty Town, Self-employed" maxlength="80" required />
         </div>
 
         <div class="sp-field">
           <label class="sp-label" for="sp-location">Location</label>
-          <input class="sp-input" id="sp-location" name="location" type="text" placeholder="e.g. Lisbon, Portugal" maxlength="80" />
+          <input class="sp-input" id="sp-location" name="location" type="text" placeholder="e.g. Lisbon, Portugal" maxlength="80" required />
         </div>
 
         <div class="sp-field">
@@ -288,8 +288,8 @@
         <div class="sp-divider"></div>
 
         <div class="sp-actions">
-          <button type="button" class="sp-skip" id="sp-skip-btn">Skip for now</button>
-          <button type="submit" class="sp-save" id="sp-save-btn">Save &amp; Continue →</button>
+          <!-- Mandatory profile setup: skip removed -->
+          <button type="submit" class="sp-save" id="sp-save-btn" style="flex: 1;">Save &amp; Continue →</button>
         </div>
 
         <div class="sp-msg" id="sp-msg"></div>
@@ -363,8 +363,8 @@
         skills:    document.getElementById('sp-skills').value.trim(),
       };
 
-      if (!body.name) {
-        setMsg('Display name is required.', 'error');
+      if (!body.name || !body.job_title || !body.org || !body.location) {
+        setMsg('Please fill in all mandatory fields.', 'error');
         btn.disabled = false; btn.textContent = 'Save & Continue →';
         return;
       }

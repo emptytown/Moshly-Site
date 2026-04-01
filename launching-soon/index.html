@@ -157,6 +157,7 @@
     html {
       scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
       text-size-adjust: 100%;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -570,55 +571,6 @@
     .launch-tag-dot--cyan   { background: #00E5FF; }
     .launch-tag-dot--magenta { background: #C026D3; }
 
-    /* App cards row */
-    .launch-apps {
-      display: flex;
-      gap: var(--space-md);
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: var(--space-2xl);
-      animation: slide-up 0.7s var(--ease-out) 0.7s both;
-    }
-
-    .launch-app-card {
-      background: var(--color-bg-surface);
-      border: 1px solid var(--color-border-strong);
-      border-radius: var(--radius-lg);
-      padding: var(--space-md) var(--space-lg);
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      transition: border-color var(--duration-fast), transform var(--duration-fast),
-                  box-shadow var(--duration-fast);
-      min-width: 160px;
-    }
-    .launch-app-card:hover {
-      border-color: var(--color-accent-opacity-30);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(107, 92, 255, 0.12);
-    }
-
-    .launch-app-icon {
-      width: 36px; height: 36px; border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; overflow: hidden;
-    }
-    .launch-app-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .launch-app-icon--rbapp   { background: rgba(167, 24, 218, 0.12); }
-    .launch-app-icon--merch   { background: rgba(167, 24, 218, 0.12); }
-
-    .launch-app-info { text-align: left; }
-    .launch-app-name {
-      font-size: var(--font-size-small);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-    }
-    .launch-app-desc {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      margin-top: 2px;
-    }
-
     /* Footer bar */
     .launch-footer {
       position: relative;
@@ -679,9 +631,6 @@
       }
       .launch-email-input { padding: 8px var(--space-sm); }
       .launch-submit { border-radius: var(--radius-lg); padding: 12px; width: 100%; font-size: var(--font-size-base); }
-
-      .launch-apps { flex-direction: column; align-items: center; }
-      .launch-app-card { width: 100%; max-width: 320px; }
 
       .launch-footer {
         flex-direction: column;
@@ -815,25 +764,6 @@
         </span>
       </div>
 
-      <!-- App cards -->
-      <div class="launch-apps">
-        
-        <div class="launch-app-card">
-          <div class="launch-app-icon launch-app-icon--rbapp"><img src="/assets/rbapp-logo-icon.svg" alt="RBapp" /></div>
-          <div class="launch-app-info">
-            <div class="launch-app-name">RiderBuilder</div>
-            <div class="launch-app-desc">Tech specs & riders</div>
-          </div>
-        </div>
-        <div class="launch-app-card">
-          <div class="launch-app-icon launch-app-icon--merch"><img src="/assets/merchclick-logo-icon.svg" alt="MerchClick" /></div>
-          <div class="launch-app-info">
-            <div class="launch-app-name">MerchClick</div>
-            <div class="launch-app-desc">Merch & catalog</div>
-          </div>
-        </div>
-      </div>
-
     </section>
   </main>
 
@@ -843,9 +773,6 @@
       &copy; 2026 Moshly. All rights reserved.
     </span>
     <nav class="launch-footer-links" aria-label="Footer links">
-      <a href="/faq.html" class="launch-footer-link">FAQ</a>
-      <a href="/privacy.html" class="launch-footer-link">Privacy</a>
-      <a href="/terms.html" class="launch-footer-link">Terms</a>
       <a href="/contact.html" class="launch-footer-link">Contact</a>
     </nav>
   </footer>
@@ -855,8 +782,8 @@
   <!-- ========================================================== -->
   <script>
     // ── Countdown timer ──────────────────────────────────────────
-    // Target: April 25, 2026 00:00 UTC
-    const LAUNCH_DATE = new Date('2026-04-25T00:00:00Z');
+    // Target: May 1, 2026 00:00 UTC
+    const LAUNCH_DATE = new Date('2026-05-01T00:00:00Z');
 
     function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -918,8 +845,6 @@
       showMsg('', '');
 
       try {
-        // Store locally + optionally post to worker
-        // If no backend endpoint exists yet, we gracefully degrade
         const stored = JSON.parse(localStorage.getItem('moshly_early_access') || '[]');
         const lowerEmail = email.toLowerCase();
 
@@ -927,41 +852,36 @@
           submitBtn.disabled = false;
           submitBtn.classList.remove('loading');
           submitBtn.textContent = 'Notify Me';
-          showMsg("You're already on the list — we'll be in touch soon.", 'success');
+          showMsg("You're already on the list — check your inbox for confirmation.", 'success');
           return;
+        }
+
+        const response = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: lowerEmail, source: 'launching-soon' }),
+          signal: AbortSignal.timeout(8000),
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Waitlist signup failed');
         }
 
         stored.push(lowerEmail);
         localStorage.setItem('moshly_early_access', JSON.stringify(stored));
 
-        // Attempt to send to worker if available (non-blocking)
-        try {
-          const isLocalHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-          const forceLocalAuth = new URLSearchParams(location.search).get('auth') === 'local';
-          const workerUrl = (isLocalHost && forceLocalAuth)
-            ? 'http://localhost:8787'
-            : 'https://auth.moshly.io';
-
-          await fetch(workerUrl + '/waitlist', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: lowerEmail, source: 'launching-soon' }),
-            signal: AbortSignal.timeout(4000),
-          });
-        } catch (_) {
-          // Silently fail — local storage already captured the lead
-        }
-
         submitBtn.textContent = '✓ You\'re in!';
         submitBtn.style.background = 'linear-gradient(135deg, #4ADE80, #22c55e)';
         emailInput.value = '';
-        showMsg("🎉 You're on the list! We'll notify you the moment we launch.", 'success');
+        showMsg("🎉 You're on the list! Check your inbox for confirmation.", 'success');
 
       } catch (err) {
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
         submitBtn.textContent = 'Notify Me';
-        showMsg('Something went wrong — please try again.', 'error');
+        showMsg(err.message || 'Something went wrong — please try again.', 'error');
         console.error('[early-access]', err);
       }
     });

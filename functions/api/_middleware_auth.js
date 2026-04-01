@@ -8,11 +8,18 @@ export async function verifyJWT(request, env) {
 
   const token = authHeader.split(' ')[1];
   try {
-    const secret = new TextEncoder().encode(env.JWT_SECRET || 'dev_secret_moshly');
-    const { payload } = await jwtVerify(token, secret);
+    if (!env.JWT_SECRET) {
+      throw new Error('CRITICAL: JWT_SECRET environment variable is not configured');
+    }
+    const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret, {
+      algorithms: ['HS256'],
+      issuer: 'moshly',
+      audience: 'moshly-api',
+    });
     return payload;
   } catch (err) {
-    console.error('JWT verification failed:', err);
+    console.error('JWT verification failed:', err.message);
     return null;
   }
 }

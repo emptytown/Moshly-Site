@@ -4,10 +4,8 @@
 
 # ⚠️ MANDATORY RESPONSE PROTOCOL — READ THIS FIRST ⚠️
 
-## Rule 1: Verification Badge
-You MUST end EVERY response with `*verified by vibecheck*` on its own line.
-This applies whenever you are working in this codebase — no exceptions.
-If you read any file, wrote any code, or referenced any project context, include the badge.
+## Rule 1: The Simplicity Principle : Occham's Razor
+The solutions are mostly finded in the simpliest answers. Defend yourself agains hallucinations, lower temperature to 0. 
 
 ## Rule 2: Task Progress Report
 After EVERY response where you performed work (code changes, debugging, analysis),
@@ -21,7 +19,6 @@ List ONLY the remaining (incomplete) steps — do NOT list already-finished step
 - [ ] Next step still pending
 - [ ] Another remaining step
 
-*verified by vibecheck*
 ```
 
 ### When the task is fully complete

@@ -1,0 +1,1 @@
+CREATE INDEX `owner_id_idx` ON `workspaces` (`owner_id`);

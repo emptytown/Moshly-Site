@@ -15,17 +15,27 @@ export async function onRequestGet({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
   
   try {
-    const user = await db.select().from(schema.users).where(eq(schema.users.id, payload.userId)).get();
-    if (!user) {
+    const result = await db.select({
+      user: schema.users,
+      profile: schema.profiles,
+      workspace: schema.workspaces,
+      subscription: schema.subscriptions
+    })
+    .from(schema.users)
+    .leftJoin(schema.profiles, eq(schema.profiles.userId, schema.users.id))
+    .leftJoin(schema.workspaces, eq(schema.workspaces.ownerId, schema.users.id))
+    .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
+    .where(eq(schema.users.id, payload.userId))
+    .get();
+
+    if (!result || !result.user) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    const profile = await db.select().from(schema.profiles).where(eq(schema.profiles.userId, user.id)).get();
-    const workspace = await db.select().from(schema.workspaces).where(eq(schema.workspaces.ownerId, user.id)).get();
-    const subscription = workspace ? await db.select().from(schema.subscriptions).where(eq(schema.subscriptions.workspaceId, workspace.id)).get() : null;
+    const { user, profile, workspace, subscription } = result;
 
     return new Response(JSON.stringify({ 
       success: true, 
