@@ -1,135 +1,127 @@
 # Moshly Site
 
-Moshly is a suite of tools designed for touring artists, managers, and creative professionals. This repository contains the frontend website for the Moshly universe.
+Moshly is a suite of micro-tools for touring artists, managers, and creative professionals. This repository is the main marketing + auth site for the Moshly platform.
 
-## 🚀 Overview
+## Tech Stack
 
-Moshly is on the verge of dropping a super-fine suite of wonderful mini-tools that every industry professional wishes they had in their back pocket. Built for the industry's pace, these tools focus on:
-- **Efficiency**: No bloat, no friction — just sharp, focused tools.
-- **Flexibility**: Tools that adapt to your workflow, from touring logistics to creative management.
-- **Exclusive Access**: Major plan members get first-day access to everything in the pipeline.
-
-## 🛠️ Tech Stack
-
-- **Language**: HTML5, Vanilla JavaScript
-- **Styling**: CSS3 (Modern features like CSS Variables, Grid, and Flexbox)
-- **Payments**: [Paddle](https://paddle.com/) Integration
+- **Frontend**: HTML5, Vanilla JavaScript, CSS3
+- **Backend**: Cloudflare Pages Functions (`functions/api/`)
+- **Database**: Cloudflare D1 (SQLite) via Drizzle ORM
+- **Session Store**: Cloudflare KV (`AUTH_KV`) — refresh tokens + rate limiting
+- **Payments**: [Paddle](https://paddle.com/) — billing and subscription management (integration pending)
+- **Email**: Resend API — transactional email from `noreply@moshly.io`
+- **Auth**: JWT HS256 (15 min access tokens), rotating 7-day refresh tokens
 - **Fonts**: Google Fonts (Inter)
-- **Deployment**: Static site hosting (e.g., Netlify, Vercel, or GitHub Pages)
 
-## 📦 Project Structure
+## Project Structure
 
-```text
+```
 .
-├── admin.html          # Admin dashboard interface
-├── assets/             # Images, icons, and logos
-├── contact.html        # Contact page
-├── dashboard.html      # User dashboard
-├── faq.html            # Frequently Asked Questions
-├── feeme.html          # FeeMe app landing page
-├── index.html          # Main landing page
-├── launcher.html       # App launcher interface
-├── launching-soon/     # Splash page for upcoming features
-├── pricing.html        # Pricing and plans
-├── privacy.html        # Privacy policy
-├── style.css           # Global stylesheet
-├── pricing.css         # Pricing page specific styles
-└── terms.html          # Terms of service
+├── index.html                  # Landing page
+├── pricing.html                # Plans + contact form
+├── contact.html                # About + contact form
+├── login.html                  # Dedicated login page
+├── signup.html                 # Dedicated signup page
+├── join.html                   # Invite code entry
+├── forgot-password.html        # Password reset request
+├── reset-password.html         # Password reset (token)
+├── setup-profile.html          # Post-signup profile setup
+├── admin.html                  # God-tier admin (invite codes)
+├── faq.html                    # FAQ
+├── privacy.html                # Privacy policy
+├── terms.html                  # Terms of service
+├── style.css                   # Global styles
+├── pricing.css                 # Pricing + contact form styles
+├── auth-client.js              # Auth helpers (requireSession, requireGod, authFetch)
+├── auth-sync.js                # Lightweight session sync (nav state)
+├── moshly-ui.js                # UI utilities (theme toggle, mobile nav, reveal)
+├── assets/                     # Images, icons, logos
+├── functions/
+│   ├── api/
+│   │   ├── _middleware_auth.js         # JWT verification middleware
+│   │   ├── _rate-limit.js             # KV-backed rate limiter
+│   │   ├── login.js                   # POST /api/login
+│   │   ├── register.js                # POST /api/register
+│   │   ├── refresh.js                 # POST /api/refresh
+│   │   ├── me.js                      # GET /api/me
+│   │   ├── forgot-password.js         # POST /api/forgot-password
+│   │   ├── reset-password.js          # POST /api/reset-password
+│   │   ├── contact.js                 # POST /api/contact
+│   │   ├── waitlist.js                # POST /api/waitlist
+│   │   └── admin/
+│   │       ├── invite-codes.js        # GET/POST /api/admin/invite-codes
+│   │       └── invite-codes/[code].js # DELETE /api/admin/invite-codes/:code
+│   └── db/
+│       └── schema.ts                  # Drizzle schema
+├── drizzle/migrations/                # D1 migration SQL files
+├── wrangler.toml                      # Cloudflare config
+└── .dev.vars                          # Local secrets (gitignored)
 ```
 
-## 💰 Pricing Plans
+## Local Development
 
-Moshly offers flexible plans to scale with your career:
+Requires [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/).
 
-### 0. Free
-- **Note**: This plan is available by exploring the Moshly universe without a paid commitment.
-- **Key Features**:
-  - **1 project**
-  - Access to future free tools
-  - Topable AI features
-
-### 1. Solo
-- **Price**: €4.99/month (or €49.99/year)
-- **Key Features**:
-  - Pick **2 tools** of your choice
-  - Fully functional — no feature limits
-  - **12 PDF exports** per month
-  - **500 AI credits** / month
-  - **1 project**
-
-### 2. Collective
-- **Price**: €9.99/month (or €99.99/year)
-- **Key Features**:
-  - Pick **4 tools** of your choice
-  - **50 PDF exports** per month
-  - **1,250 AI credits** / month
-  - **3 projects**
-
-### 3. Business
-- **Price**: €24.99/month (or €249.99/year)
-- **Key Features**:
-  - Pick **10 tools** of your choice
-  - **100 PDF exports** per month
-  - **2,500 AI credits** / month
-  - **6 projects**
-  - Priority support line
-
-### 4. Major
-- **Price**: €79.99/month (or €799.99/year)
-- **Key Features**:
-  - **All Moshly tools** — every single one
-  - **250 PDF exports** per month
-  - **6,000 AI credits** / month
-  - **15 projects**
-  - Max priority support line
-
-*Note: Daily credits reset at midnight (Lisbon time).*
-
-## ⚙️ Setup & Development
-
-### Requirements
-- A modern web browser.
-- A local web server (optional, for development).
-
-### Run Locally
-Since this is a static site, you can simply open `index.html` in your browser. For better experience with modules and routing, use a local server:
-
-**Using Python:**
 ```bash
-python3 -m http.server 8000
+npm install
+wrangler pages dev . --port 8788
 ```
 
-**Using Node.js (serve):**
+Site runs at `http://localhost:8788`.
+
+### Environment Variables
+
+Create `.dev.vars` in the project root:
+
+```
+RESEND_API_KEY=your_resend_key
+JWT_SECRET=your_local_dev_secret
+RESEND_FROM_EMAIL=noreply@moshly.io
+CONTACT_NOTIFY_TO=hello@moshly.io
+```
+
+For production, set `RESEND_API_KEY` and `JWT_SECRET` as **Secrets** in the Cloudflare Pages dashboard.
+
+## Database
+
+Migrations live in `drizzle/migrations/`. To apply remotely:
+
 ```bash
-npx serve .
+wrangler d1 migrations apply moshly-db --remote
 ```
 
-## 📜 Scripts & Automation
-- **Start**: Run `npm start` to launch a local development server.
-- **Dev**: Run `npm run dev` to launch a local development server.
-- **Dependencies**: Managed via `package.json`. Run `npm install` to install dev dependencies.
+## Deployment
 
-## 🔑 Environment Variables
-- **Paddle Token**: Currently hardcoded in `pricing.html` as a test token.
-- **TODO**: Move API keys and configuration to a centralized config or environment variables.
+Pushing to `main` triggers automatic deployment via Cloudflare Pages CI.
 
-## 🔄 Spoke App System (Architecture)
+For manual deploy:
 
-Moshly follows a **Spoke Architecture** for its suite of tools, ensuring a unified experience across different specialized applications.
+```bash
+wrangler login
+wrangler pages deploy . --project-name moshly-site
+```
 
-- **Central Hub**: The main dashboard (at `moshly.io`) acts as the central authority, handling Authentication, Profile Management, and Subscription state.
-- **Isolated Spokes**: Specialized tools (e.g., `feeme.moshly.io`) operate as independent "spokes." They focus on their specific functionality while "checking in" with the Hub for session verification.
-- **Unified Authentication**: All spokes communicate with the same backend API and share session state via secure `postMessage` or shared `localStorage` patterns, allowing users to move seamlessly between tools without re-authenticating.
+## Pricing Plans
 
-## 🧪 Tests
-- **TODO**: No automated tests found. 
-- Recommendation: Implement Playwright or Cypress for E2E testing of the checkout flow.
+| Plan | Price | Notes |
+|---|---|---|
+| Free | €0 | 1 project, future free tools |
+| Solo | €4.99/mo | 2 tools, 12 PDF exports, 500 AI credits |
+| Collective | €9.99/mo | 4 tools, 50 PDF exports, 1,250 AI credits |
+| Business | €24.99/mo | 10 tools, 100 PDF exports, 2,500 AI credits |
+| Major | €79.99/mo | All tools, 250 PDF exports, 6,000 AI credits |
 
-## 📄 License
-- **TODO**: No LICENSE file found. Please add appropriate licensing information.
+Yearly billing available at ~2 months free.
 
-### What's left
-✅ Task complete — nothing remaining.
+## Auth Flow
 
-*verified by vibecheck*
-*,filename:
+All auth is page-based — no modals.
+
+- `/login.html` → `/signup.html` → `/setup-profile.html`
+- `/join.html` for invite code redemption
+- `/forgot-password.html` + `/reset-password.html` for recovery
+- Nav login buttons link to `/login.html` site-wide
+
+## License
+
+© 2026 Moshly — Contrastdetails Lda. All rights reserved.
