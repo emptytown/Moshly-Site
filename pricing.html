@@ -311,13 +311,13 @@
           </div>
           <div class="contact-field">
             <label class="contact-label" for="cf-subject">Subject</label>
-            <select class="contact-input contact-select" id="cf-subject">
-              <option value="">Select a topic…</option>
-              <option value="plan">Plan question</option>
-              <option value="custom">Custom / Enterprise deal</option>
-              <option value="account">Account question</option>
-              <option value="partnership">Partnership</option>
-              <option value="other">Something else</option>
+            <select class="contact-input contact-select" id="cf-subject" required>
+              <option value="" disabled selected>Select a topic…</option>
+              <option value="Plan question">Plan question</option>
+              <option value="Custom deal">Custom deal</option>
+              <option value="Technical support">Technical support</option>
+              <option value="Partnership">Partnership</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           <div class="contact-field">
@@ -397,17 +397,40 @@
       if (labelMonthly) labelMonthly.classList.add('billing-label--active');
     });
 
-    function handleContactSubmit(e) {
+    async function handleContactSubmit(e) {
       e.preventDefault();
-      const btn = e.target.querySelector('.contact-submit');
+      const btn    = e.target.querySelector('.contact-submit');
+      const name    = document.getElementById('cf-name').value.trim();
+      const email   = document.getElementById('cf-email').value.trim();
+      const subject = document.getElementById('cf-subject').value;
+      const message = document.getElementById('cf-message').value.trim();
+
       btn.textContent = 'Sending…';
       btn.disabled = true;
-      setTimeout(() => {
-        document.getElementById('contactForm').style.opacity = '0.4';
-        document.getElementById('contactForm').style.pointerEvents = 'none';
-        document.getElementById('contactSuccess').style.display = 'flex';
-        btn.textContent = 'Sent!';
-      }, 900);
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, subject, message }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          document.getElementById('contactForm').style.opacity = '0.4';
+          document.getElementById('contactForm').style.pointerEvents = 'none';
+          document.getElementById('contactSuccess').style.display = 'flex';
+          btn.textContent = 'Sent!';
+        } else {
+          btn.textContent = 'Send Message';
+          btn.disabled = false;
+          alert(data.error || 'Something went wrong. Please try again.');
+        }
+      } catch {
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+        alert('Network error — please check your connection and try again.');
+      }
     }
   </script>
 
