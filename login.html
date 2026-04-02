@@ -85,12 +85,23 @@
       if (email) document.getElementById('login-email').value = decodeURIComponent(email);
     });
 
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+    }
+
     async function handleLogin(event) {
       event.preventDefault();
       const email    = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
       const feedback = document.getElementById('login-feedback');
       const btn      = document.getElementById('loginBtn');
+
+      if (!isValidEmail(email)) {
+        feedback.textContent = 'Please enter a valid email address.';
+        feedback.className = 'auth-feedback auth-feedback--error';
+        feedback.style.display = 'block';
+        return;
+      }
 
       feedback.style.display = 'none';
       btn.disabled = true;

@@ -1,4 +1,5 @@
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { getAllowedOrigin } from './_cors';
 
 const RESEND_API = 'https://api.resend.com/emails';
 const MAX_MESSAGE_LENGTH = 2000;
@@ -158,11 +159,11 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-export async function onRequestOptions() {
+export async function onRequestOptions({ request }) {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': getAllowedOrigin(request),
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },

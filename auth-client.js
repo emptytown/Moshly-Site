@@ -3,6 +3,10 @@
  */
 const AUTH_URL = '/api';
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+}
+
 const MoshlyAuth = {
     baseUrl: AUTH_URL,
 
@@ -152,6 +156,14 @@ const MoshlyAuth = {
                 return;
             }
 
+            if (!isValidEmail(email)) {
+                if (feedback) {
+                    feedback.textContent = 'Please enter a valid email address.';
+                    feedback.style.display = 'block';
+                }
+                return;
+            }
+
             if (btn) {
                 btn.disabled = true;
                 btn.textContent = 'Logging in...';
@@ -217,6 +229,14 @@ const MoshlyAuth = {
                 return;
             }
 
+            if (!isValidEmail(email)) {
+                if (feedback) {
+                    feedback.textContent = 'Please enter a valid email address.';
+                    feedback.style.display = 'block';
+                }
+                return;
+            }
+
             if (btn) {
                 btn.disabled = true;
                 btn.textContent = 'Creating Account...';
@@ -272,9 +292,11 @@ const MoshlyAuth = {
             const feedback = document.getElementById('forgot-feedback');
             const btn = document.querySelector('#panelForgot .auth-submit');
 
-            if (!email) {
+            if (!email || !isValidEmail(email)) {
                 if (feedback) {
-                    feedback.textContent = 'Please enter your email address.';
+                    feedback.textContent = !email
+                        ? 'Please enter your email address.'
+                        : 'Please enter a valid email address.';
                     feedback.style.display = 'block';
                     feedback.className = 'auth-feedback error';
                 }

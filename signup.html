@@ -106,6 +106,10 @@
       if (code) document.getElementById('reg-invite-code').value = code.toUpperCase();
     });
 
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+    }
+
     async function handleSignup(event) {
       event.preventDefault();
 
@@ -117,6 +121,12 @@
       const inviteCode = document.getElementById('reg-invite-code').value.trim() || null;
       const feedback   = document.getElementById('reg-feedback');
       const btn        = document.getElementById('signupBtn');
+
+      if (!isValidEmail(email)) {
+        feedback.textContent = 'Please enter a valid email address.';
+        feedback.style.display = 'block';
+        return;
+      }
 
       feedback.style.display = 'none';
       btn.disabled = true;

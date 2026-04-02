@@ -157,6 +157,10 @@
   <script src="auth-client.js"></script>
   <script src="moshly-ui.js"></script>
   <script>
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+    }
+
     async function handleContactSubmit(e) {
       e.preventDefault();
       const btn     = e.target.querySelector('.contact-submit');
@@ -164,6 +168,12 @@
       const email   = document.getElementById('cf-email').value.trim();
       const subject = document.getElementById('cf-subject').value;
       const message = document.getElementById('cf-message').value.trim();
+
+      if (!isValidEmail(email)) {
+        alert('Please enter a valid email address.');
+        document.getElementById('cf-email').focus();
+        return;
+      }
 
       btn.textContent = 'Sending…';
       btn.disabled = true;

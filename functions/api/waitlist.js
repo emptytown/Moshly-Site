@@ -1,11 +1,13 @@
+import { getAllowedOrigin } from './_cors';
+
 const RESEND_API_BASE = 'https://api.resend.com';
 
-function json(data, status = 200) {
+function json(data, status = 200, origin = 'https://moshly.io') {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
@@ -114,17 +116,18 @@ function buildSubscriberEmailText() {
   ].join('\n');
 }
 
-export async function onRequestOptions() {
-  return json({}, 204);
+export async function onRequestOptions({ request }) {
+  return json({}, 204, getAllowedOrigin(request));
 }
 
 export async function onRequestPost({ request, env }) {
+  const origin = getAllowedOrigin(request);
   try {
     const { email, source = 'launching-soon' } = await request.json();
     const normalizedEmail = String(email || '').trim().toLowerCase();
 
     if (!isValidEmail(normalizedEmail)) {
-      return json({ error: 'Please enter a valid email address.' }, 400);
+      return json({ error: 'Please enter a valid email address.' }, 400, origin);
     }
 
     const apiKey = env.WAITLIST_API_KEY;
@@ -133,7 +136,7 @@ export async function onRequestPost({ request, env }) {
     const audienceId = env.RESEND_AUDIENCE_ID;
 
     if (!apiKey || !fromEmail || !notifyTo) {
-      return json({ error: 'Waitlist email service is not configured yet.' }, 500);
+      return json({ error: 'Waitlist email service is not configured yet.' }, 500, origin);
     }
 
     await addToAudience(apiKey, audienceId, normalizedEmail, source);
@@ -161,9 +164,9 @@ export async function onRequestPost({ request, env }) {
       text: `New waitlist signup\nEmail: ${normalizedEmail}\nSource: ${source}\nTime: ${new Date().toISOString()}`,
     });
 
-    return json({ success: true });
+    return json({ success: true }, 200, origin);
   } catch (error) {
     console.error('Waitlist signup error:', error);
-    return json({ error: 'Could not add you to the waitlist right now.' }, 500);
+    return json({ error: 'Could not add you to the waitlist right now.' }, 500, origin);
   }
 }

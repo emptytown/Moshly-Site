@@ -35,43 +35,38 @@ export async function onRequestPost({ request, env }) {
     // Rotate: delete old token immediately before issuing new one
     await env.AUTH_KV.delete(`rt:${refreshToken}`);
 
-    // Fetch fresh user + subscription data
+    // Fetch fresh user + profile + subscription in a single JOIN
     const db = drizzle(env.MOSHLY_DB);
 
-    const userRecord = await db
-      .select({ id: schema.users.id, email: schema.users.email, role: schema.users.role })
+    const refreshResult = await db
+      .select({
+        user: schema.users,
+        profile: schema.profiles,
+        subscription: schema.subscriptions,
+      })
       .from(schema.users)
+      .leftJoin(schema.profiles, eq(schema.profiles.userId, schema.users.id))
+      .leftJoin(schema.workspaces, eq(schema.workspaces.ownerId, schema.users.id))
+      .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
       .where(eq(schema.users.id, userId))
       .get();
 
-    if (!userRecord) {
+    if (!refreshResult?.user) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const workspaceRecord = await db
-      .select({ id: schema.workspaces.id })
-      .from(schema.workspaces)
-      .where(eq(schema.workspaces.ownerId, userId))
-      .get();
-
-    const subscriptionRecord = workspaceRecord
-      ? await db
-          .select({ plan: schema.subscriptions.plan })
-          .from(schema.subscriptions)
-          .where(eq(schema.subscriptions.workspaceId, workspaceRecord.id))
-          .get()
-      : null;
+    const { user, profile, subscription } = refreshResult;
 
     // Issue new access token (15 min — per OWASP-JWT-001)
     const secret = new TextEncoder().encode(env.JWT_SECRET);
     const newAccessToken = await new SignJWT({
-      userId: userRecord.id,
-      email: userRecord.email,
-      role: userRecord.role,
-      plan: subscriptionRecord?.plan || 'free',
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      plan: subscription?.plan || 'free',
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
@@ -84,12 +79,25 @@ export async function onRequestPost({ request, env }) {
     const newRefreshToken = crypto.randomUUID();
     await env.AUTH_KV.put(
       `rt:${newRefreshToken}`,
-      JSON.stringify({ userId: userRecord.id }),
+      JSON.stringify({ userId: user.id }),
       { expirationTtl: 7 * 24 * 3600 }
     );
 
     return new Response(
-      JSON.stringify({ success: true, token: newAccessToken, refreshToken: newRefreshToken }),
+      JSON.stringify({
+        success: true,
+        token: newAccessToken,
+        refreshToken: newRefreshToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          plan: subscription?.plan || 'free',
+          jobTitle: profile?.jobTitle || null,
+          organization: profile?.organization || null,
+        },
+      }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 

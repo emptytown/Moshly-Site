@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import { eq, desc } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { verifyJWT } from '../_middleware_auth';
+import { getAllowedOrigin } from '../_cors';
 
 const ALLOWED_PLANS = ['free', 'solo', 'collective', 'business', 'major', 'semi_god', 'god'];
 const ALLOWED_DURATIONS = [0, 3, 6, 12]; // months; 0 = eternal
@@ -151,11 +152,11 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-export async function onRequestOptions() {
+export async function onRequestOptions({ request }) {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': getAllowedOrigin(request),
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
