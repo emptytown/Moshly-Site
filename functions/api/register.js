@@ -1,10 +1,11 @@
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import bcrypt from 'bcryptjs';
-import { eq } from 'drizzle-orm';
+import { eq, and, gt, sql } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { validatePassword } from './_password';
 import { corsOptionsResponse } from './_cors';
+import { PLAN_LIMITS, GOD_TIER_PLANS, SUBSCRIPTION_PLANS } from './_plans';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -15,9 +16,9 @@ export async function onRequestPost({ request, env }) {
     const retryAfter = await applyRateLimit(env.AUTH_KV, 'register', `ip:${clientIp}`);
     if (retryAfter) return rateLimitedResponse(retryAfter);
 
-    let email, password, name;
+    let email, password, name, inviteCode;
     try {
-      ({ email, password, name } = await request.json());
+      ({ email, password, name, inviteCode } = await request.json());
     } catch {
       return new Response(JSON.stringify({ error: 'Invalid request body' }), {
         status: 400,
@@ -48,6 +49,51 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
+    // Validate invite code if provided
+    let resolvedCode = null;
+    if (inviteCode) {
+      const normalizedCode = String(inviteCode).toUpperCase().trim();
+      const codeRecord = await db.select()
+        .from(schema.inviteCodes)
+        .where(eq(schema.inviteCodes.code, normalizedCode))
+        .get();
+
+      if (!codeRecord) {
+        return new Response(JSON.stringify({ error: 'Invalid invite code' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      if (codeRecord.expiresAt && codeRecord.expiresAt < new Date()) {
+        return new Response(JSON.stringify({ error: 'This invite code has expired' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      if (codeRecord.usesCount >= codeRecord.maxUses) {
+        return new Response(JSON.stringify({ error: 'This invite code has reached its maximum uses' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      resolvedCode = codeRecord;
+    }
+
+    // Determine plan from invite code; default to free
+    const isGodTier = resolvedCode && GOD_TIER_PLANS.has(resolvedCode.plan);
+    const subscriptionPlan = resolvedCode
+      ? (SUBSCRIPTION_PLANS.has(resolvedCode.plan) ? resolvedCode.plan : 'major')
+      : 'free';
+    const userRole = isGodTier ? 'god' : 'user';
+    const limits = PLAN_LIMITS[subscriptionPlan];
+
+    // Compute subscription expiry from invite code durationMonths (0 = eternal)
+    let subscriptionExpiresAt = null;
+    if (resolvedCode?.durationMonths > 0) {
+      subscriptionExpiresAt = new Date();
+      subscriptionExpiresAt.setMonth(subscriptionExpiresAt.getMonth() + resolvedCode.durationMonths);
+    }
+
     // Check if user exists — return same response as success to prevent user enumeration
     const existing = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, email)).get();
     if (existing) {
@@ -66,13 +112,14 @@ export async function onRequestPost({ request, env }) {
     const workspaceId = crypto.randomUUID();
     const slug = email.split('@')[0].toLowerCase() + '-' + crypto.randomUUID().substring(0, 6);
 
-    // Create user, workspace, and subscription in a single batch
-    await db.batch([
+    // Create user, workspace, and subscription atomically
+    const batchOps = [
       db.insert(schema.users).values({
         id: userId,
         email,
         passwordHash,
         name,
+        role: userRole,
       }),
       db.insert(schema.workspaces).values({
         id: workspaceId,
@@ -82,11 +129,23 @@ export async function onRequestPost({ request, env }) {
       }),
       db.insert(schema.subscriptions).values({
         workspaceId,
-        plan: 'free',
-        pdfExportsLimit: 1,
-        aiCreditsLimit: 100,
-      })
-    ]);
+        plan: subscriptionPlan,
+        pdfExportsLimit: limits.pdfExportsLimit,
+        aiCreditsLimit: limits.aiCreditsLimit,
+        expiresAt: subscriptionExpiresAt,
+      }),
+    ];
+
+    // Increment invite code usage atomically with user creation
+    if (resolvedCode) {
+      batchOps.push(
+        db.update(schema.inviteCodes)
+          .set({ usesCount: sql`${schema.inviteCodes.usesCount} + 1` })
+          .where(eq(schema.inviteCodes.code, resolvedCode.code))
+      );
+    }
+
+    await db.batch(batchOps);
 
     // Send Welcome Email via Resend
     const apiKey = env.RESEND_API_KEY;
@@ -124,7 +183,7 @@ export async function onRequestPost({ request, env }) {
         });
       } catch (emailError) {
         console.error('Failed to send welcome email:', emailError);
-        // We don't fail the registration if email fails
+        // Registration succeeds even if welcome email fails
       }
     }
 
