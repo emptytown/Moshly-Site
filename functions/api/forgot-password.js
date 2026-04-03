@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { corsOptionsResponse } from './_cors';
 
 const RESEND_API_BASE = 'https://api.resend.com';
 
@@ -14,7 +15,20 @@ export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
-    const { email } = await request.json();
+    // IP rate limit first — before body parse — so malformed requests still count (F-11)
+    const clientIp = getClientIp(request);
+    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `ip:${clientIp}`);
+    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
+
+    let email;
+    try {
+      ({ email } = await request.json());
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (!email) {
       return new Response(JSON.stringify({ error: 'Email is required' }), {
@@ -23,11 +37,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Rate limit by IP and by email to prevent email bombing
-    const clientIp = getClientIp(request);
-    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `ip:${clientIp}`);
-    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
-
+    // Email rate limit — after parsing, to prevent email bombing
     const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `email:${email.toLowerCase()}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
@@ -64,7 +74,7 @@ export async function onRequestPost({ request, env }) {
 
     if (apiKey) {
       const resetLink = `${new URL(request.url).origin}/reset-password.html?token=${resetToken}`;
-      
+
       await fetch(`${RESEND_API_BASE}/emails`, {
         method: 'POST',
         headers: {
@@ -96,9 +106,9 @@ export async function onRequestPost({ request, env }) {
       console.warn('RESEND_API_KEY not found, email not sent');
     }
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      message: 'If an account exists with that email, a reset link has been sent.' 
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'If an account exists with that email, a reset link has been sent.'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
@@ -112,3 +122,5 @@ export async function onRequestPost({ request, env }) {
     });
   }
 }
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'POST, OPTIONS');

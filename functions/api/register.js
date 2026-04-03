@@ -3,17 +3,27 @@ import * as schema from '../db/schema';
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { validatePassword } from './_password';
+import { corsOptionsResponse } from './_cors';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
-    const { email, password, name } = await request.json();
-
-    // Rate limit by IP to prevent mass account creation
+    // Rate limit by IP first — before body parse — so malformed requests still count (F-11)
     const clientIp = getClientIp(request);
     const retryAfter = await applyRateLimit(env.AUTH_KV, 'register', `ip:${clientIp}`);
     if (retryAfter) return rateLimitedResponse(retryAfter);
+
+    let email, password, name;
+    try {
+      ({ email, password, name } = await request.json());
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (!email || !password) {
       return new Response(JSON.stringify({ error: 'Email and password are required' }), {
@@ -30,8 +40,9 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    if (password.length < 8) {
-      return new Response(JSON.stringify({ error: 'Password must be at least 8 characters long' }), {
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return new Response(JSON.stringify({ error: passwordError }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -133,3 +144,5 @@ export async function onRequestPost({ request, env }) {
     });
   }
 }
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'POST, OPTIONS');

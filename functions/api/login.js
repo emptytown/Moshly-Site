@@ -4,13 +4,26 @@ import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
-import { getAllowedOrigin } from './_cors';
+import { getAllowedOrigin, corsOptionsResponse } from './_cors';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
-    const { email, password } = await request.json();
+    // IP rate limit first — before body parse — so malformed requests still count (F-11)
+    const clientIp = getClientIp(request);
+    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `ip:${clientIp}`);
+    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
+
+    let email, password;
+    try {
+      ({ email, password } = await request.json());
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (!email || !password) {
       return new Response(JSON.stringify({ error: 'Email and password are required' }), {
@@ -19,11 +32,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Rate limit: by IP and by email (dual-keyed per OWASP-RATELIMIT-001)
-    const clientIp = getClientIp(request);
-    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `ip:${clientIp}`);
-    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
-
+    // Email rate limit — after parsing, dual-keyed per OWASP-RATELIMIT-001
     const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `email:${email.toLowerCase()}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
@@ -57,7 +66,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Generate JWT access token (30 min) with iss + aud claims
+    // Generate JWT access token (15 min) with iss + aud claims
     if (!env.JWT_SECRET) {
       throw new Error('CRITICAL: JWT_SECRET environment variable is not set');
     }
@@ -75,14 +84,15 @@ export async function onRequestPost({ request, env }) {
       .setExpirationTime('15m')
       .sign(secret);
 
-    // Issue refresh token (7 days) stored in KV
+    // Issue refresh token (7 days) stored in KV.
+    // Also write a reverse-index key so password reset can invalidate it (F-12).
     const refreshToken = crypto.randomUUID();
+    const RT_TTL = 7 * 24 * 3600;
     if (env.AUTH_KV) {
-      await env.AUTH_KV.put(
-        `rt:${refreshToken}`,
-        JSON.stringify({ userId: user.id }),
-        { expirationTtl: 7 * 24 * 3600 }
-      );
+      await Promise.all([
+        env.AUTH_KV.put(`rt:${refreshToken}`, JSON.stringify({ userId: user.id }), { expirationTtl: RT_TTL }),
+        env.AUTH_KV.put(`rt:user:${user.id}`, refreshToken, { expirationTtl: RT_TTL }),
+      ]);
     }
 
     const isSecure = new URL(request.url).protocol === 'https:';

@@ -3,6 +3,8 @@ import * as schema from '../db/schema';
 import { eq, and, gt } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { validatePassword } from './_password';
+import { corsOptionsResponse } from './_cors';
 
 async function sha256Hex(input) {
   const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
@@ -13,7 +15,20 @@ export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
-    const { token, password } = await request.json();
+    // Rate limit by IP first — before body parse — so malformed requests still count (F-11)
+    const clientIp = getClientIp(request);
+    const retryAfter = await applyRateLimit(env.AUTH_KV, 'reset-password', `ip:${clientIp}`);
+    if (retryAfter) return rateLimitedResponse(retryAfter);
+
+    let token, password;
+    try {
+      ({ token, password } = await request.json());
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (!token || !password) {
       return new Response(JSON.stringify({ error: 'Token and password are required' }), {
@@ -22,17 +37,13 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    if (password.length < 8) {
-      return new Response(JSON.stringify({ error: 'Password must be at least 8 characters long' }), {
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return new Response(JSON.stringify({ error: passwordError }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
-
-    // Rate limit by IP to prevent token brute-forcing
-    const clientIp = getClientIp(request);
-    const retryAfter = await applyRateLimit(env.AUTH_KV, 'reset-password', `ip:${clientIp}`);
-    if (retryAfter) return rateLimitedResponse(retryAfter);
 
     // Hash the incoming token — DB stores sha256(token), never the plain token
     const tokenHash = await sha256Hex(token);
@@ -81,6 +92,17 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
+    // Invalidate active refresh token so existing sessions cannot persist after a password reset (F-12)
+    if (env.AUTH_KV) {
+      const activeRefreshToken = await env.AUTH_KV.get(`rt:user:${existing.id}`);
+      if (activeRefreshToken) {
+        await Promise.all([
+          env.AUTH_KV.delete(`rt:${activeRefreshToken}`),
+          env.AUTH_KV.delete(`rt:user:${existing.id}`),
+        ]);
+      }
+    }
+
     return new Response(JSON.stringify({
       success: true,
       message: 'Password reset successful'
@@ -97,3 +119,5 @@ export async function onRequestPost({ request, env }) {
     });
   }
 }
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'POST, OPTIONS');

@@ -23,10 +23,8 @@ function requireGod(payload) {
 function generateCode(custom) {
   if (custom) return custom.toUpperCase().trim();
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let suffix = '';
-  for (let i = 0; i < CODE_SUFFIX_LENGTH; i++) {
-    suffix += chars[Math.floor(Math.random() * chars.length)];
-  }
+  const randomBytes = crypto.getRandomValues(new Uint8Array(CODE_SUFFIX_LENGTH));
+  const suffix = Array.from(randomBytes, b => chars[b % chars.length]).join('');
   return `${CODE_PREFIX}${suffix}`;
 }
 

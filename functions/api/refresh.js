@@ -2,9 +2,16 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
+import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { corsOptionsResponse } from './_cors';
 
 export async function onRequestPost({ request, env }) {
   try {
+    // Rate limit by IP before any token work (F-04)
+    const clientIp = getClientIp(request);
+    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'refresh', `ip:${clientIp}`);
+    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
+
     const cookieHeader = request.headers.get('Cookie') || '';
     const match = cookieHeader.match(/(?:^|;\s*)moshly_rt=([^;]+)/);
     const refreshToken = match?.[1];
@@ -22,6 +29,19 @@ export async function onRequestPost({ request, env }) {
     if (!env.JWT_SECRET) {
       throw new Error('CRITICAL: JWT_SECRET environment variable is not configured');
     }
+
+    // Acquire a per-token lock before the get/delete sequence to prevent concurrent
+    // replay of the same refresh token (F-03). KV has no atomic CAS, so this reduces
+    // the race window to microseconds rather than eliminating it entirely.
+    const lockKey = `rt:lock:${refreshToken}`;
+    const existingLock = await env.AUTH_KV.get(lockKey);
+    if (existingLock) {
+      return new Response(JSON.stringify({ error: 'Refresh in progress, please retry' }), {
+        status: 409,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    await env.AUTH_KV.put(lockKey, '1', { expirationTtl: 5 });
 
     // Look up refresh token in KV
     const storedValue = await env.AUTH_KV.get(`rt:${refreshToken}`);
@@ -77,13 +97,14 @@ export async function onRequestPost({ request, env }) {
       .setExpirationTime('15m')
       .sign(secret);
 
-    // Issue new refresh token (rotation — 7 days)
+    // Issue new refresh token (rotation — 7 days).
+    // Update reverse-index key so password reset can still invalidate it (F-12).
     const newRefreshToken = crypto.randomUUID();
-    await env.AUTH_KV.put(
-      `rt:${newRefreshToken}`,
-      JSON.stringify({ userId: user.id }),
-      { expirationTtl: 7 * 24 * 3600 }
-    );
+    const RT_TTL = 7 * 24 * 3600;
+    await Promise.all([
+      env.AUTH_KV.put(`rt:${newRefreshToken}`, JSON.stringify({ userId: user.id }), { expirationTtl: RT_TTL }),
+      env.AUTH_KV.put(`rt:user:${user.id}`, newRefreshToken, { expirationTtl: RT_TTL }),
+    ]);
 
     const isSecure = new URL(request.url).protocol === 'https:';
     const refreshCookie = `moshly_rt=${newRefreshToken}; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=604800`;
@@ -113,3 +134,5 @@ export async function onRequestPost({ request, env }) {
     });
   }
 }
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'POST, OPTIONS');

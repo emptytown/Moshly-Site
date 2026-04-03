@@ -37,9 +37,8 @@
 
 ## 🟠 NEW ISSUE — MEDIUM
 
-**DB-N01 — N+1 in `refresh.js`** (`functions/api/refresh.js:41-66`)
-`refresh.js` was added after Friday's N+1 fix and was not covered. Makes 2 sequential D1 queries (user lookup → workspace/subscription) instead of a single JOIN. Same pattern that was fixed in `login.js` and `me.js`.
-> Source: ViberLogs/2703FridayTODO.md — "New issue found"
+**DB-N01 — N+1 in `refresh.js`** ✅ RESOLVED (2026-04-03)
+`refresh.js` was rewritten in commit `35aaa1a` (HttpOnly cookie migration) and now uses a single LEFT JOIN across `users`, `profiles`, `workspaces`, and `subscriptions` at lines 43–54. Verified by code review.
 
 ---
 
@@ -52,10 +51,9 @@ Infrastructure ID `078bb103-ae9b-4975-9e21-66877f480333` committed to source. Sh
 
 ## Priority for Next Session
 
-1. **DB-N01** — Fix `refresh.js` N+1 (single JOIN, mirrors `login.js` pattern — quick win)
-2. **DB-L02** — Move D1 ID to env var in `drizzle.config.ts`
-3. **DB-M05** — Define `skills` format when skill-filtering feature is scoped
+1. **DB-L02** — Move D1 ID to env var in `drizzle.config.ts`
+2. **DB-M05** — Define `skills` format when skill-filtering feature is scoped
 
 ---
 
-**Audit Score:** 9.0/10 (per Saturday ViberLog) — 10/12 original issues resolved, 1 new issue identified.
+**Audit Score:** 9.5/10 (updated 2026-04-03) — 11/12 original issues resolved, DB-N01 confirmed resolved.

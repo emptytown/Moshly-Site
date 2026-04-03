@@ -2,6 +2,8 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { verifyJWT } from './_middleware_auth';
 import { eq } from 'drizzle-orm';
+import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
+import { corsOptionsResponse } from './_cors';
 
 const MAX_FIELD_LENGTH = 200;
 
@@ -39,16 +41,29 @@ export async function onRequestGet({ request, env }) {
 
     const { user, profile, workspace, subscription } = result;
 
-    return new Response(JSON.stringify({ 
-      success: true, 
+    return new Response(JSON.stringify({
+      success: true,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
         role: user.role,
         avatarUrl: user.avatarUrl,
-        profile,
-        subscription
+        profile: profile ? {
+          jobTitle: profile.jobTitle,
+          organization: profile.organization,
+          bio: profile.bio,
+          skills: profile.skills,
+          location: profile.location,
+        } : null,
+        subscription: subscription ? {
+          plan: subscription.plan,
+          pdfExportsLimit: subscription.pdfExportsLimit,
+          pdfExportsUsed: subscription.pdfExportsUsed,
+          aiCreditsLimit: subscription.aiCreditsLimit,
+          aiCreditsUsed: subscription.aiCreditsUsed,
+          expiresAt: subscription.expiresAt,
+        } : null,
       }
     }), {
       status: 200,
@@ -72,6 +87,11 @@ export async function onRequestPatch({ request, env }) {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+
+  // Rate limit by IP after auth (F-05)
+  const clientIp = getClientIp(request);
+  const patchRetryAfter = await applyRateLimit(env.AUTH_KV, 'me-patch', `ip:${clientIp}`);
+  if (patchRetryAfter) return rateLimitedResponse(patchRetryAfter);
 
   let body;
   try {
@@ -126,3 +146,5 @@ export async function onRequestPatch({ request, env }) {
     });
   }
 }
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'GET, PATCH, OPTIONS');
