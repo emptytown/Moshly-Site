@@ -85,6 +85,9 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
+    const isSecure = new URL(request.url).protocol === 'https:';
+    const refreshCookie = `moshly_rt=${refreshToken}; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=604800`;
+
     return new Response(JSON.stringify({
       success: true,
       user: {
@@ -95,10 +98,12 @@ export async function onRequestPost({ request, env }) {
         plan: subscription?.plan || 'free'
       },
       token: accessToken,
-      refreshToken,
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        'Set-Cookie': refreshCookie,
+      }
     });
 
   } catch (error) {

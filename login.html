@@ -115,7 +115,6 @@
       if (ok && data.success) {
         localStorage.setItem('moshly_user', JSON.stringify(data.user));
         localStorage.setItem('moshly_token', data.token);
-        if (data.refreshToken) localStorage.setItem('moshly_refresh_token', data.refreshToken);
 
         const params = new URLSearchParams(window.location.search);
         window.location.href = params.get('redirect') || '/dashboard.html';

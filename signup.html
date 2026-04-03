@@ -150,9 +150,6 @@
         if (loginResult.ok && loginResult.data.success) {
           localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
           localStorage.setItem('moshly_token', loginResult.data.token);
-          if (loginResult.data.refreshToken) {
-            localStorage.setItem('moshly_refresh_token', loginResult.data.refreshToken);
-          }
           window.location.href = '/setup-profile.html';
         } else {
           // Registration worked but auto-login failed — send to login page

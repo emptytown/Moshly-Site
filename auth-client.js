@@ -75,30 +75,34 @@ const MoshlyAuth = {
         return user;
     },
 
-    logout: () => {
+    logout: async () => {
+        try {
+            await fetch(`${AUTH_URL}/logout`, {
+                method: 'POST',
+                credentials: 'same-origin',
+            });
+        } catch (e) {
+            console.error('Logout request failed:', e);
+        }
         localStorage.removeItem('moshly_user');
         localStorage.removeItem('moshly_token');
         localStorage.removeItem('moshly_session_token');
-        localStorage.removeItem('moshly_refresh_token');
         if (window.syncAuthUI) window.syncAuthUI();
         window.location.href = '/';
     },
 
     silentRefresh: async () => {
-        const refreshToken = localStorage.getItem('moshly_refresh_token');
-        if (!refreshToken) return false;
-
         try {
             const response = await fetch(`${AUTH_URL}/refresh`, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ refreshToken })
             });
             const data = await response.json();
 
             if (response.ok && data.token) {
                 localStorage.setItem('moshly_token', data.token);
-                localStorage.setItem('moshly_refresh_token', data.refreshToken);
+                if (data.user) localStorage.setItem('moshly_user', JSON.stringify(data.user));
                 return true;
             }
         } catch (e) {
@@ -119,6 +123,7 @@ const MoshlyAuth = {
         try {
             const response = await fetch(`${AUTH_URL}${endpoint}`, {
                 ...options,
+                credentials: 'same-origin',
                 headers
             });
             const data = await response.json();
@@ -178,7 +183,6 @@ const MoshlyAuth = {
                 if (ok && data.success) {
                     localStorage.setItem('moshly_user', JSON.stringify(data.user));
                     localStorage.setItem('moshly_token', data.token);
-                    if (data.refreshToken) localStorage.setItem('moshly_refresh_token', data.refreshToken);
                     if (window.syncAuthUI) window.syncAuthUI();
                     
                     // Handle redirect
@@ -258,9 +262,6 @@ const MoshlyAuth = {
                     if (loginResult.ok && loginResult.data.success) {
                         localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
                         localStorage.setItem('moshly_token', loginResult.data.token);
-                        if (loginResult.data.refreshToken) {
-                            localStorage.setItem('moshly_refresh_token', loginResult.data.refreshToken);
-                        }
                         window.location.href = '/setup-profile.html';
                         return;
                     }

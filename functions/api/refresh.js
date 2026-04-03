@@ -5,11 +5,13 @@ import { eq } from 'drizzle-orm';
 
 export async function onRequestPost({ request, env }) {
   try {
-    const { refreshToken } = await request.json();
+    const cookieHeader = request.headers.get('Cookie') || '';
+    const match = cookieHeader.match(/(?:^|;\s*)moshly_rt=([^;]+)/);
+    const refreshToken = match?.[1];
 
     if (!refreshToken) {
       return new Response(JSON.stringify({ error: 'Refresh token is required' }), {
-        status: 400,
+        status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
@@ -83,11 +85,13 @@ export async function onRequestPost({ request, env }) {
       { expirationTtl: 7 * 24 * 3600 }
     );
 
+    const isSecure = new URL(request.url).protocol === 'https:';
+    const refreshCookie = `moshly_rt=${newRefreshToken}; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=604800`;
+
     return new Response(
       JSON.stringify({
         success: true,
         token: newAccessToken,
-        refreshToken: newRefreshToken,
         user: {
           id: user.id,
           email: user.email,
@@ -98,7 +102,7 @@ export async function onRequestPost({ request, env }) {
           organization: profile?.organization || null,
         },
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { 'Content-Type': 'application/json', 'Set-Cookie': refreshCookie } }
     );
 
   } catch (error) {
