@@ -38,6 +38,13 @@ const MoshlyAuth = {
   // Returns the in-memory access token only — never reads localStorage
   getToken: () => _accessToken,
 
+  // Sets session state after an inline login (e.g. post-registration auto-login).
+  // Prefer silentRefresh() for page-load hydration.
+  setSession: (user, token) => {
+    _accessToken = token;
+    if (user) localStorage.setItem('moshly_user', JSON.stringify(user));
+  },
+
   isAuthenticated: () => {
     const user = MoshlyAuth.getUser();
     return !!(user && _accessToken);

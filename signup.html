@@ -52,10 +52,28 @@
         <div class="auth-field">
           <label class="auth-label" for="reg-password">Password</label>
           <div class="auth-pw-wrap">
-            <input class="auth-input" type="password" id="reg-password" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password" />
+            <input class="auth-input" type="password" id="reg-password"
+              placeholder="Min. 12 characters" required minlength="12"
+              autocomplete="new-password" oninput="updateMeter('reg-password','pwMeter')" />
             <button type="button" class="auth-pw-toggle" aria-label="Show password" onclick="togglePw(this)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
+          </div>
+          <!-- Password strength meter -->
+          <div id="pwMeter" style="display:none;margin-top:8px;">
+            <div style="display:flex;gap:4px;margin-bottom:6px;">
+              <div id="pwMeter-s0" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
+              <div id="pwMeter-s1" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
+              <div id="pwMeter-s2" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
+              <div id="pwMeter-s3" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <span id="pwMeter-hLen"  style="font-size:11px;color:#9ca3af;">○ At least 12 characters</span>
+                <span id="pwMeter-hSym"  style="font-size:11px;color:#9ca3af;">○ At least one number or symbol</span>
+              </div>
+              <span id="pwMeter-lbl" style="font-size:11px;font-weight:600;color:#9ca3af;"></span>
+            </div>
           </div>
         </div>
 
@@ -106,6 +124,57 @@
       if (code) document.getElementById('reg-invite-code').value = code.toUpperCase();
     });
 
+    // ── Password strength meter ───────────────────────────────────────────────
+
+    const METER_COLORS = ['#ef4444', '#f97316', '#6b5cff', '#22c55e'];
+    const METER_LABELS = ['Weak', 'Fair', 'Good', 'Strong'];
+
+    function scorePassword(pw) {
+      const hasMinLength  = pw.length >= 12;
+      const hasNonLetter  = /[^a-zA-Z]/.test(pw);
+      if (!hasMinLength || !hasNonLetter) return 0;   // fails requirements → Weak
+      const hasLongLength = pw.length >= 16;
+      const hasMixedCase  = /[A-Z]/.test(pw) && /[a-z]/.test(pw);
+      const hasSymbol     = /[^a-zA-Z0-9]/.test(pw);
+      const hasNumber     = /[0-9]/.test(pw);
+      const bonuses = [hasLongLength, hasMixedCase, hasSymbol, hasNumber].filter(Boolean).length;
+      if (bonuses >= 3) return 3;   // Strong
+      if (bonuses >= 1) return 2;   // Good
+      return 1;                      // Fair
+    }
+
+    function updateMeter(inputId, meterId) {
+      const pw      = document.getElementById(inputId).value;
+      const wrap    = document.getElementById(meterId);
+      const hLen    = document.getElementById(meterId + '-hLen');
+      const hSym    = document.getElementById(meterId + '-hSym');
+      const lbl     = document.getElementById(meterId + '-lbl');
+
+      if (!pw.length) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+
+      const score       = scorePassword(pw);
+      const activeColor = METER_COLORS[score];
+      const filledSegs  = score + 1;
+
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(meterId + '-s' + i).style.background =
+          i < filledSegs ? activeColor : '#e5e7eb';
+      }
+
+      lbl.textContent  = METER_LABELS[score];
+      lbl.style.color  = activeColor;
+
+      const okLen = pw.length >= 12;
+      const okSym = /[^a-zA-Z]/.test(pw);
+      hLen.textContent = (okLen ? '✓' : '○') + ' At least 12 characters';
+      hLen.style.color = okLen ? '#22c55e' : '#9ca3af';
+      hSym.textContent = (okSym ? '✓' : '○') + ' At least one number or symbol';
+      hSym.style.color = okSym ? '#22c55e' : '#9ca3af';
+    }
+
+    // ── Form submission ───────────────────────────────────────────────────────
+
     function isValidEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
     }
@@ -141,15 +210,14 @@
       });
 
       if (ok && data.success) {
-        // Auto-login with same credentials — pass them directly (not via DOM)
+        // Auto-login with the same credentials
         const loginResult = await MoshlyAuth.authFetch('/login', {
           method: 'POST',
           body: JSON.stringify({ email, password })
         });
 
         if (loginResult.ok && loginResult.data.success) {
-          localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
-          localStorage.setItem('moshly_token', loginResult.data.token);
+          MoshlyAuth.setSession(loginResult.data.user, loginResult.data.token);
           window.location.href = '/setup-profile.html';
         } else {
           // Registration worked but auto-login failed — send to login page
