@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Account — Moshly</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- CONFIRM SECTION -->
+  <section class="auth-section">
+    <div class="auth-modal">
+      <div class="auth-panel auth-panel--active">
+        <div class="auth-forgot-header">
+          <h3 class="auth-panel-title">Confirming your account...</h3>
+          <p class="auth-panel-desc" id="statusMessage">Please wait while we verify your email address.</p>
+        </div>
+        
+        <div id="loadingSpinner" style="text-align: center; margin: 20px 0;">
+          <!-- Simple CSS spinner could go here -->
+          <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6b5cff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        </div>
+
+        <div class="auth-success" id="confirmSuccess" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Email verified successfully! You can now <a href="/login.html">log in</a>.
+        </div>
+        
+        <div class="auth-error" id="confirmError" style="display:none;"></div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+          <a href="/login.html" class="auth-back-link">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      
+      const statusMessage = document.getElementById('statusMessage');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const successDiv = document.getElementById('confirmSuccess');
+      const errorDiv = document.getElementById('confirmError');
+
+      if (!token) {
+        loadingSpinner.style.display = 'none';
+        statusMessage.textContent = 'Invalid verification link.';
+        errorDiv.textContent = 'No verification token provided. Please check your email and try again.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/verify-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+        loadingSpinner.style.display = 'none';
+
+        if (response.ok) {
+          statusMessage.textContent = 'Verification complete!';
+          successDiv.style.display = 'block';
+        } else {
+          statusMessage.textContent = 'Verification failed.';
+          errorDiv.textContent = data.error || 'An error occurred during verification.';
+          errorDiv.style.display = 'block';
+        }
+      } catch (err) {
+        loadingSpinner.style.display = 'none';
+        statusMessage.textContent = 'Verification failed.';
+        errorDiv.textContent = 'A network error occurred. Please try again later.';
+        errorDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

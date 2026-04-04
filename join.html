@@ -71,7 +71,8 @@
       }
 
       // If logged in, apply the code directly; otherwise send to signup with code pre-filled
-      if (MoshlyAuth.isAuthenticated()) {
+      const user = await MoshlyAuth.getSession();
+      if (user) {
         btn.disabled = true;
         btn.textContent = 'Checking…';
 

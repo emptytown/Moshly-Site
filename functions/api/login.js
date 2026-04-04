@@ -36,13 +36,15 @@ export async function onRequestPost({ request, env }) {
     const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `email:${email.toLowerCase()}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
-    // Find user with workspace and subscription using JOINs
+    // Find user with profile, workspace, and subscription using JOINs
     const loginResult = await db.select({
       user: schema.users,
+      profile: schema.profiles,
       workspace: schema.workspaces,
       subscription: schema.subscriptions
     })
     .from(schema.users)
+    .leftJoin(schema.profiles, eq(schema.profiles.userId, schema.users.id))
     .leftJoin(schema.workspaces, eq(schema.workspaces.ownerId, schema.users.id))
     .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
     .where(eq(schema.users.email, email))
@@ -55,7 +57,15 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const { user, subscription } = loginResult;
+    const { user, profile, subscription } = loginResult;
+    
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return new Response(JSON.stringify({ error: 'Please confirm your email before logging in' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
@@ -105,7 +115,9 @@ export async function onRequestPost({ request, env }) {
         email: user.email,
         name: user.name,
         role: user.role,
-        plan: subscription?.plan || 'free'
+        plan: subscription?.plan || 'free',
+        jobTitle: profile?.jobTitle || null,
+        organization: profile?.organization || null,
       },
       token: accessToken,
     }), {

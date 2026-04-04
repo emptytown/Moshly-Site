@@ -117,13 +117,23 @@ const MoshlyAuth = {
 
   // Exchanges the HttpOnly refresh token cookie for a new access token.
   // Stores result in _accessToken — never in localStorage.
-  silentRefresh: async () => {
+  silentRefresh: async (retryCount = 0) => {
     try {
       const response = await fetch(`${AUTH_URL}/refresh`, {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
       });
+
+      if (response.status === 409 && retryCount < 2) {
+        // Collision detected, retry up to 2 times after a short delay (100-200ms)
+        const delay = 100 + Math.floor(Math.random() * 100);
+        await new Promise(r => setTimeout(r, delay));
+        return MoshlyAuth.silentRefresh(retryCount + 1);
+      }
+
+      if (response.status === 204) return true; // Valid session, no new token needed/provided
+
       const data = await response.json();
 
       if (response.ok && data.token) {
@@ -270,10 +280,14 @@ const MoshlyAuth = {
         btn.textContent = 'Creating Account...';
       }
 
+      const inviteCode = document.getElementById('reg-invite-code')?.value?.trim() || null;
+
       try {
+        const registerPayload = { email, password, name };
+        if (inviteCode) registerPayload.inviteCode = inviteCode;
         const { ok, data } = await MoshlyAuth.authFetch('/register', {
           method: 'POST',
-          body: JSON.stringify({ email, password, name })
+          body: JSON.stringify(registerPayload)
         });
 
         if (ok && data.success) {

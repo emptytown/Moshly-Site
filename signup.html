@@ -112,7 +112,9 @@
   <script>
     // Redirect already-authenticated users
     (async () => {
-      if (MoshlyAuth.isAuthenticated()) {
+      // Use getSession() instead of isAuthenticated() to allow silentRefresh to run
+      const user = await MoshlyAuth.getSession();
+      if (user) {
         window.location.href = '/dashboard.html';
       }
     })();

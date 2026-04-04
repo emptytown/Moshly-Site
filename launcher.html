@@ -447,7 +447,6 @@
       const catalog = getLauncherAppCatalog();
       const represented = new Set(getRepresentedApps(user, catalog));
       const active = new Set(Array.isArray(user?.apps) ? user.apps.map(s => String(s).toLowerCase()) : []);
-      const token = localStorage.getItem('moshly_token');
 
       grid.innerHTML = catalog
         .filter(app => represented.has(app.slug))
@@ -456,20 +455,14 @@
           const isActive = active.has(app.slug);
           const isSoon = app.status === 'soon';
           const shouldShade = isSoon || (represented.has(app.slug) && !isActive);
-          
+
           const cardClass = [
             isLive ? 'app-card live' : 'app-card coming',
             shouldShade ? 'shown-inactive' : ''
           ].join(' ').trim();
 
-          let href = (isLive && isActive) ? (app.url || '#') : 'javascript:void(0)';
-          
-          // Append token for identity handover
-          if (href !== '#' && href !== 'javascript:void(0)' && token) {
-              const url = new URL(href);
-              url.searchParams.set('token', token);
-              href = url.toString();
-          }
+          // Apps authenticate independently via the HttpOnly refresh cookie — no token in URL
+          const href = (isLive && isActive) ? (app.url || '#') : 'javascript:void(0)';
           const targetAttr = (isLive && isActive) ? ' target="_blank" rel="noopener noreferrer"' : ' aria-disabled="true"';
           
           const pill = isLive

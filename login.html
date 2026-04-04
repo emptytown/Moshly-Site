@@ -37,8 +37,6 @@
           <input class="auth-input" type="email" id="login-email" placeholder="your@email.com" required autocomplete="username" />
         </div>
 
-        <div id="login-feedback" class="auth-feedback auth-feedback--error" style="display:none;"></div>
-
         <div class="auth-field">
           <div class="auth-label-row">
             <label class="auth-label" for="login-password">Password</label>
@@ -51,6 +49,8 @@
             </button>
           </div>
         </div>
+
+        <div id="login-feedback" class="auth-feedback auth-feedback--error" style="display:none;"></div>
 
         <button type="submit" class="btn-primary auth-submit" id="loginBtn">Log In</button>
       </form>
@@ -65,9 +65,12 @@
   <script>
     // Redirect already-authenticated users
     (async () => {
-      if (MoshlyAuth.isAuthenticated()) {
+      // Use getSession() instead of isAuthenticated() to allow silentRefresh to run
+      const user = await MoshlyAuth.getSession();
+      if (user) {
         const params = new URLSearchParams(window.location.search);
-        window.location.href = params.get('redirect') || '/dashboard.html';
+        const redirectParam = params.get('redirect');
+        window.location.href = (redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')) ? redirectParam : '/dashboard.html';
       }
     })();
 
@@ -96,6 +99,8 @@
       const feedback = document.getElementById('login-feedback');
       const btn      = document.getElementById('loginBtn');
 
+      if (btn.disabled) return;
+
       if (!isValidEmail(email)) {
         feedback.textContent = 'Please enter a valid email address.';
         feedback.className = 'auth-feedback auth-feedback--error';
@@ -107,21 +112,30 @@
       btn.disabled = true;
       btn.textContent = 'Logging in…';
 
-      const { ok, data } = await MoshlyAuth.authFetch('/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password })
-      });
+      try {
+        const { ok, data } = await MoshlyAuth.authFetch('/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
 
-      if (ok && data.success) {
-        localStorage.setItem('moshly_user', JSON.stringify(data.user));
-        localStorage.setItem('moshly_token', data.token);
+        if (ok && data.success) {
+          MoshlyAuth.setSession(data.user, data.token);
 
-        const params = new URLSearchParams(window.location.search);
-        window.location.href = params.get('redirect') || '/dashboard.html';
-      } else {
+          const params = new URLSearchParams(window.location.search);
+          const redirectParam = params.get('redirect');
+          const dest = (redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')) ? redirectParam : '/dashboard.html';
+          window.location.href = dest;
+          return;
+        }
+
         feedback.textContent = data.error || 'Login failed. Please try again.';
         feedback.className = 'auth-feedback auth-feedback--error';
         feedback.style.display = 'block';
+      } catch {
+        feedback.textContent = 'An error occurred. Please try again.';
+        feedback.className = 'auth-feedback auth-feedback--error';
+        feedback.style.display = 'block';
+      } finally {
         btn.disabled = false;
         btn.textContent = 'Log In';
       }

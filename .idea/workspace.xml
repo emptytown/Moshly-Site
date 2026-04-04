@@ -5,45 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/BrainRoom-icon-svg.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Merchlick Logo JPG.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Merchlick Logo PNG.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-darkoutline-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-darkoutline.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-nofill-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-nofill.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Moshly-Main-Logo-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Rankwize-logo-icon-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Rankwize-logo-icon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/feeme-logo-icon-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/feeme-logo-icon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/merchclick-logo-icon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/rbapp-logo-icon-png.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/rbapp-logo-icon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contact.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/faq.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/feeme.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launching-soon/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pricing.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pricing.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/privacy.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reset-password.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup-profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/terms.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrangler.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cursor/rules/truthpack-first-protocol.mdc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/logout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/me.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/me.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/register.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/join.html" beforeDir="false" afterPath="$PROJECT_DIR$/join.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launching-soon-clean.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/launching-soon.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pricing.html" beforeDir="false" afterPath="$PROJECT_DIR$/pricing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/signup.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +48,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/emptytown/moshly-landing.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/emptytown/Moshly-Site.git&quot;,
     &quot;accountId&quot;: &quot;fc3fafa6-67ce-4ebd-bb7a-9976a2111ba0&quot;
   }
 }</component>
@@ -96,13 +75,14 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/megacromo/DEV/Moshly/Moshly Site&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/megacromo/DEV/Moshly/Moshly-Site&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;junie.application.models&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets/tour" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>

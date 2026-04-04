@@ -1,11 +1,16 @@
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import bcrypt from 'bcryptjs';
-import { eq, and, gt, sql } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { validatePassword } from './_password';
 import { corsOptionsResponse } from './_cors';
 import { PLAN_LIMITS, GOD_TIER_PLANS, SUBSCRIPTION_PLANS } from './_plans';
+
+async function sha256Hex(input) {
+  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -77,6 +82,25 @@ export async function onRequestPost({ request, env }) {
         });
       }
       resolvedCode = codeRecord;
+
+      // Atomically claim one use: only succeeds if usesCount is still below maxUses.
+      // This closes the TOCTOU window between the check above and the batch insert below.
+      // sql`uses_count < max_uses` compares the two DB columns so the guard is evaluated
+      // inside the same atomic UPDATE statement.
+      const claimResult = await db.update(schema.inviteCodes)
+        .set({ usesCount: sql`${schema.inviteCodes.usesCount} + 1` })
+        .where(and(
+          eq(schema.inviteCodes.code, normalizedCode),
+          sql`uses_count < max_uses`
+        ))
+        .run();
+
+      if (!claimResult.meta.changes) {
+        return new Response(JSON.stringify({ error: 'This invite code has reached its maximum uses' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     }
 
     // Determine plan from invite code; default to free
@@ -98,9 +122,9 @@ export async function onRequestPost({ request, env }) {
     const existing = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, email)).get();
     if (existing) {
       return new Response(JSON.stringify({
-        success: true,
-        message: 'If this email is not already registered, your account has been created.'
-      }), {
+      success: true,
+      message: 'If this email is not already registered, a confirmation link has been sent to your inbox.'
+    }), {
         status: 201,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -112,6 +136,10 @@ export async function onRequestPost({ request, env }) {
     const workspaceId = crypto.randomUUID();
     const slug = email.split('@')[0].toLowerCase() + '-' + crypto.randomUUID().substring(0, 6);
 
+    // Generate verification token
+    const verificationToken = crypto.randomUUID();
+    const verificationTokenHash = await sha256Hex(verificationToken);
+
     // Create user, workspace, and subscription atomically
     const batchOps = [
       db.insert(schema.users).values({
@@ -120,6 +148,8 @@ export async function onRequestPost({ request, env }) {
         passwordHash,
         name,
         role: userRole,
+        emailVerified: false,
+        verificationToken: verificationTokenHash,
       }),
       db.insert(schema.workspaces).values({
         id: workspaceId,
@@ -136,25 +166,18 @@ export async function onRequestPost({ request, env }) {
       }),
     ];
 
-    // Increment invite code usage atomically with user creation
-    if (resolvedCode) {
-      batchOps.push(
-        db.update(schema.inviteCodes)
-          .set({ usesCount: sql`${schema.inviteCodes.usesCount} + 1` })
-          .where(eq(schema.inviteCodes.code, resolvedCode.code))
-      );
-    }
+    // Invite code use was already claimed atomically above — do not increment again here.
 
     await db.batch(batchOps);
 
-    // Send Welcome Email via Resend
+    // Send Verification Email via Resend
     const apiKey = env.RESEND_API_KEY;
     const fromEmail = env.RESEND_FROM_EMAIL || 'Moshly <hello@moshly.io>';
 
     if (apiKey) {
       try {
         const safeName = (name || 'there').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        const dashboardUrl = `${new URL(request.url).origin}/dashboard.html`;
+        const confirmUrl = `${new URL(request.url).origin}/confirm.html?token=${verificationToken}`;
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
@@ -164,32 +187,31 @@ export async function onRequestPost({ request, env }) {
           body: JSON.stringify({
             from: fromEmail,
             to: [email],
-            subject: 'Welcome to Moshly',
+            subject: 'Confirm your Moshly account',
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
                 <h2 style="color: #333;">Welcome to Moshly!</h2>
                 <p>Hello ${safeName},</p>
-                <p>Thanks for joining Moshly. Your account is now active and your workspace is ready.</p>
+                <p>Thanks for joining Moshly. Please confirm your email address to activate your account:</p>
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${dashboardUrl}" style="background-color: #6b5cff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Go to Dashboard</a>
+                  <a href="${confirmUrl}" style="background-color: #6b5cff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Confirm Account</a>
                 </div>
-                <p>We're excited to have you on board!</p>
+                <p>If you didn't sign up for Moshly, you can safely ignore this email.</p>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                 <p style="font-size: 12px; color: #888;">&copy; 2026 Moshly. All rights reserved.</p>
               </div>
             `,
-            text: `Welcome to Moshly!\n\nHello ${name || 'there'},\n\nThanks for joining Moshly. Your account is now active and your workspace is ready.\n\nGo to your dashboard: ${dashboardUrl}\n\nWe're excited to have you on board!\n\n© 2026 Moshly.`
+            text: `Welcome to Moshly!\n\nHello ${name || 'there'},\n\nThanks for joining Moshly. Please confirm your email address to activate your account by visiting this link: ${confirmUrl}\n\nIf you didn't sign up for Moshly, you can safely ignore this email.\n\n© 2026 Moshly.`
           })
         });
       } catch (emailError) {
-        console.error('Failed to send welcome email:', emailError);
-        // Registration succeeds even if welcome email fails
+        console.error('Failed to send verification email:', emailError);
       }
     }
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'If this email is not already registered, your account has been created.'
+      message: 'If this email is not already registered, a confirmation link has been sent to your inbox.'
     }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' }

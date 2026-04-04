@@ -103,11 +103,11 @@ export async function onRequestPatch({ request, env }) {
     });
   }
 
-  const name     = String(body.name     || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const jobTitle = String(body.job_title || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const org      = String(body.org      || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const location = String(body.location || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const skills   = String(body.skills   || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
+  const name     = String(body.name                           || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
+  const jobTitle = String(body.job_title                      || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
+  const org      = String(body.organization || body.org       || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
+  const location = String(body.location                       || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
+  const skills   = String(body.skills                         || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
 
   if (!name || !jobTitle || !org || !location) {
     return new Response(JSON.stringify({ error: 'Name, job title, organisation, and location are required' }), {

@@ -12,6 +12,8 @@ export const users = sqliteTable('users', {
   resetExpires: integer('reset_expires', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
+  verificationToken: text('verification_token'),
 }, (table) => ({
   resetTokenIdx: index('reset_token_idx').on(table.resetToken),
 }));
