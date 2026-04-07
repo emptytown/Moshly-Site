@@ -69,7 +69,6 @@
     }
 
     .tour-screenshot::after {
-      content: "Screenshot Placeholder";
       position: absolute;
       inset: 0;
       display: flex;
@@ -160,10 +159,24 @@
       <div class="nav-links">
         <a href="index.html#apps" class="nav-link">Apps</a>
         <a href="index.html#roadmap" class="nav-link">Roadmap</a>
-        <a href="app-tour.html" class="nav-link">Tour</a>
+        <a href="app-tour.html" class="nav-link nav-link--active">Tour</a>
         <a href="pricing.html" class="nav-link">Pricing</a>
-        <button class="nav-login-btn" onclick="openModal('login')">Log In</button>
+        <a href="/login.html" class="nav-login-btn" id="nav-login-btn">Log In</a>
+        <a id="nav-dash-btn" href="/dashboard.html" class="nav-login-btn u-hidden">Dashboard →</a>
       </div>
+      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="index.html#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="index.html#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="app-tour.html" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
+      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <a href="/login.html" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
+      <a id="mobile-nav-dash-btn" href="/dashboard.html" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
     </div>
   </nav>
 
@@ -599,9 +612,24 @@
     </div>
   </div>
 
-  <script src="auth-client.js"></script>
   <script src="moshly-ui.js"></script>
+  <script src="auth-client.js"></script>
   <script>
+    // Navigation logic (consistent with index/pricing)
+    (async () => {
+      const user = await MoshlyAuth.getSession();
+      const loginBtn = document.getElementById('nav-login-btn');
+      const dashBtn = document.getElementById('nav-dash-btn');
+      const mLoginBtn = document.getElementById('mobile-nav-login-btn');
+      const mDashBtn = document.getElementById('mobile-nav-dash-btn');
+
+      if (user) {
+        if (loginBtn) loginBtn.classList.add('u-hidden');
+        if (dashBtn) dashBtn.classList.remove('u-hidden');
+        if (mLoginBtn) mLoginBtn.classList.add('u-hidden');
+        if (mDashBtn) mDashBtn.classList.remove('u-hidden');
+      }
+    })();
     const METER_COLORS = ['#ef4444', '#f97316', '#6b5cff', '#22c55e'];
     const METER_LABELS = ['Weak', 'Fair', 'Good', 'Strong'];
 

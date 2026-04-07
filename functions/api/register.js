@@ -177,7 +177,8 @@ export async function onRequestPost({ request, env }) {
     if (apiKey) {
       try {
         const safeName = (name || 'there').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        const confirmUrl = `${new URL(request.url).origin}/confirm.html?token=${verificationToken}`;
+        const origin = new URL(request.url).origin;
+        const confirmUrl = `${origin}/confirm.html?token=${verificationToken}`;
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {

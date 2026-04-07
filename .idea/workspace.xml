@@ -5,24 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.cursor/rules/truthpack-first-protocol.mdc" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-tour.html" beforeDir="false" afterPath="$PROJECT_DIR$/app-tour.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/logout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/me.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/me.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/confirm.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/contact.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/faq.html" beforeDir="false" afterPath="$PROJECT_DIR$/faq.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/feeme.html" beforeDir="false" afterPath="$PROJECT_DIR$/feeme.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forgot-password.html" beforeDir="false" afterPath="$PROJECT_DIR$/forgot-password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/_middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/_middleware.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/api/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/register.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/join.html" beforeDir="false" afterPath="$PROJECT_DIR$/join.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launching-soon-clean.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/launching-soon.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pricing.html" beforeDir="false" afterPath="$PROJECT_DIR$/pricing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/privacy.html" beforeDir="false" afterPath="$PROJECT_DIR$/privacy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reset-password.html" beforeDir="false" afterPath="$PROJECT_DIR$/reset-password.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/signup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terms.html" beforeDir="false" afterPath="$PROJECT_DIR$/terms.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

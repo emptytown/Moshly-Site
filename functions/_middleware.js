@@ -55,10 +55,12 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Clean-URL routes → serve the corresponding HTML asset
-  const mappedAsset = CLEAN_ROUTE_MAP[pathname];
-  if (mappedAsset) {
-    return serveAsset(env, request, mappedAsset);
+  // Clean-URL routes → let Pages serve the HTML asset natively (avoids 308 loop from ASSETS binding)
+  if (pathname === '/dashboard') {
+    return next();
+  }
+  if (pathname === '/admin') {
+    return next();
   }
 
   // Root path: serve based on whether launch date has passed
@@ -67,7 +69,6 @@ export async function onRequest({ request, next, env }) {
     if (isPreLaunch) {
       return serveAsset(env, request, '/launching-soon/index.html');
     }
-    // Post-launch: index.html is served by default Pages asset serving
     return next();
   }
 

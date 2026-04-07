@@ -20,8 +20,8 @@
         <span class="nav-logo-text">Moshly</span>
       </a>
       <div class="nav-links">
-        <a href="#apps" class="nav-link">Apps</a>
-        <a href="#roadmap" class="nav-link">Roadmap</a>
+        <a href="index.html#apps" class="nav-link">Apps</a>
+        <a href="index.html#roadmap" class="nav-link">Roadmap</a>
         <a href="app-tour.html" class="nav-link">Tour</a>
         <a href="pricing.html" class="nav-link">Pricing</a>
         <a href="/login.html" class="nav-login-btn" id="nav-login-btn">Log In</a>
@@ -34,8 +34,8 @@
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="index.html#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="index.html#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
       <a href="app-tour.html" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
       <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
       <a href="/login.html" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
@@ -700,21 +700,24 @@
           retryCount < 3 &&
           (() => {
             try {
-              const target = new URL(redirect);
+              const target = new URL(redirect, location.origin);
               const host = target.hostname || '';
-              return host.endsWith('moshly.io') || host.endsWith('pages.dev');
+              return host === 'localhost' || host.endsWith('moshly.io') || host.endsWith('pages.dev');
             } catch { return false; }
           })();
 
         if (canRetry) {
           try { sessionStorage.setItem(retryKey, String(retryCount + 1)); } catch {}
-          setTimeout(() => window.location.replace(redirect), 450);
+          const retryDest = redirect.endsWith('.html') || redirect.includes('?') ? redirect : redirect + '.html';
+          setTimeout(() => window.location.replace(retryDest), 450);
         } else {
           if (retryKey) sessionStorage.removeItem(retryKey);
-          window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(redirect) : ''));
+          const finalRedirect = redirect.endsWith('.html') || redirect.includes('?') ? redirect : redirect + '.html';
+          window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(finalRedirect) : ''));
         }
       } else if (p.get('auth') === 'login') {
-        window.location.replace('/login.html');
+        const redirect = p.get('redirect');
+        window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(redirect) : ''));
       } else if (p.get('auth') === 'register') {
         window.location.replace('/signup.html');
       }

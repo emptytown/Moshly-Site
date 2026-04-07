@@ -81,7 +81,9 @@ const MoshlyAuth = {
     const user = await MoshlyAuth.getSession();
     if (!user) {
       // Encode only the relative path — never the full absolute URL (F-14)
-      const current = encodeURIComponent(window.location.pathname + window.location.search);
+      const current = encodeURIComponent(window.location.pathname.endsWith('.html') 
+        ? window.location.pathname + window.location.search
+        : window.location.pathname + '.html' + window.location.search);
       window.location.href = redirectUrl.includes('?')
         ? `${redirectUrl}&redirect=${current}`
         : `${redirectUrl}?redirect=${current}`;
@@ -125,6 +127,8 @@ const MoshlyAuth = {
         headers: { 'Content-Type': 'application/json' },
       });
 
+      if (response.status === 401) return false;
+
       if (response.status === 409 && retryCount < 2) {
         // Collision detected, retry up to 2 times after a short delay (100-200ms)
         const delay = 100 + Math.floor(Math.random() * 100);
@@ -165,6 +169,10 @@ const MoshlyAuth = {
       const data = await response.json();
 
       if (response.status === 401 && !options._retry) {
+        // Don't auto-logout on 401 for login or refresh endpoints
+        if (endpoint === '/login' || endpoint === '/refresh') {
+          return { ok: false, status: 401, data };
+        }
         const refreshed = await MoshlyAuth.silentRefresh();
         if (refreshed) {
           return MoshlyAuth.authFetch(endpoint, { ...options, _retry: true });
@@ -291,20 +299,7 @@ const MoshlyAuth = {
         });
 
         if (ok && data.success) {
-          // Auto-login with same credentials
-          const loginResult = await MoshlyAuth.authFetch('/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password })
-          });
-
-          if (loginResult.ok && loginResult.data.success) {
-            _accessToken = loginResult.data.token;
-            localStorage.setItem('moshly_user', JSON.stringify(loginResult.data.user));
-            window.location.href = '/setup-profile.html';
-            return;
-          }
-
-          // Registration worked but auto-login failed — send to login
+          // Send to login with registered=true to show confirmation message
           window.location.href = '/login.html?registered=true&email=' + encodeURIComponent(email);
           return;
         } else {
