@@ -51,31 +51,33 @@ async function sendViaResend(apiKey, payload) {
   return result;
 }
 
-function buildUserConfirmationHtml(name, subject, message) {
+function buildUserConfirmationHtml(name, subject, message, origin) {
+  const logoUrl = `${origin}/assets/Moshly-Main-Logo-1.svg`;
   return `
-    <div style="margin:0;padding:32px 16px;background-color:#0E0F14;font-family:Arial,sans-serif;">
-      <div style="max-width:600px;margin:0 auto;background:#1B1E2E;border:1px solid #2D3048;border-radius:16px;overflow:hidden;">
-        <div style="padding:28px 32px;border-bottom:1px solid #2D3048;">
-          <div style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#7B7F93;margin-bottom:12px;">Moshly</div>
-          <div style="font-size:24px;font-weight:700;color:#E6E7EB;line-height:1.3;">We got your message.</div>
+    <div style="margin:0;padding:32px 16px;background-color:#0E0F14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+      <div style="max-width:600px;margin:0 auto;background:#1B1E2E;border:1px solid #2D3048;border-radius:16px;overflow:hidden;box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+        <div style="padding:32px;text-align:center;border-bottom:1px solid #2D3048;background:#141624;">
+          <img src="${logoUrl}" alt="Moshly" style="height:32px;margin-bottom:12px;" />
         </div>
-        <div style="padding:28px 32px;">
-          <p style="margin:0 0 16px;font-size:15px;color:#A4A7B5;line-height:1.7;">
+        <div style="padding:40px 32px;">
+          <div style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#7B7F93;margin-bottom:12px;text-align:center;">Contact Request</div>
+          <h2 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#E6E7EB;line-height:1.3;text-align:center;">We got your message.</h2>
+          <p style="margin:0 0 24px;font-size:16px;color:#A4A7B5;line-height:1.7;text-align:center;">
             Hi ${esc(name)}, thanks for reaching out. We've received your message and will get back to you shortly.
           </p>
-          <div style="background:#141624;border:1px solid #24273A;border-radius:12px;padding:20px 24px;margin:24px 0;">
+          <div style="background:#141624;border:1px solid #24273A;border-radius:12px;padding:24px;margin:32px 0;">
             <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#7B7F93;margin-bottom:10px;">Your message</div>
-            <div style="font-size:13px;color:#A4A7B5;font-weight:600;margin-bottom:8px;">${esc(subject)}</div>
+            <div style="font-size:15px;color:#A4A7B5;font-weight:600;margin-bottom:8px;">${esc(subject)}</div>
             <div style="font-size:14px;color:#E6E7EB;line-height:1.6;white-space:pre-wrap;">${esc(message)}</div>
           </div>
-          <p style="margin:0;font-size:14px;color:#7B7F93;line-height:1.7;">
+          <p style="margin:0;font-size:14px;color:#7B7F93;line-height:1.7;text-align:center;">
             We reply fast — usually within a business day.<br/>
-            In the meantime, feel free to explore <a href="https://moshly.io/pricing.html" style="color:#6B5CFF;text-decoration:none;">our plans</a>.
+            In the meantime, feel free to explore <a href="${origin}/pricing.html" style="color:#6B5CFF;text-decoration:none;">our plans</a>.
           </p>
         </div>
-        <div style="padding:20px 32px;border-top:1px solid #2D3048;">
-          <p style="margin:0;font-size:12px;color:#7B7F93;">
-            © 2026 Moshly · <a href="https://moshly.io" style="color:#6B5CFF;text-decoration:none;">moshly.io</a>
+        <div style="padding:24px 32px;border-top:1px solid #2D3048;background:#141624;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#7B7F93;letter-spacing:0.02em;">
+            © 2026 Moshly · <a href="${origin}" style="color:#6B5CFF;text-decoration:none;">moshly.io</a>
           </p>
         </div>
       </div>
@@ -124,6 +126,7 @@ export async function onRequestPost({ request, env }) {
   const apiKey    = env.RESEND_API_KEY;
   const fromEmail = env.RESEND_FROM_EMAIL || 'noreply@moshly.io';
   const notifyTo  = env.CONTACT_NOTIFY_TO || 'hello@moshly.io';
+  const origin    = new URL(request.url).origin;
 
   if (!apiKey) {
     console.error('Contact form failed: RESEND_API_KEY not configured');
@@ -137,7 +140,7 @@ export async function onRequestPost({ request, env }) {
         from: `Moshly <${fromEmail}>`,
         to: [email],
         subject: 'We got your message — Moshly',
-        html: buildUserConfirmationHtml(name, subject, message),
+        html: buildUserConfirmationHtml(name, subject, message, origin),
         text: `Hi ${name},\n\nThanks for reaching out. We've received your message and will get back to you shortly.\n\nYour message:\n${subject}\n${message}\n\n© 2026 Moshly · moshly.io`,
       }),
       sendViaResend(apiKey, {
