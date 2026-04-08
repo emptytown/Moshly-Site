@@ -298,8 +298,8 @@
     </div>
   </div>
 
-  <script src="auth-client.js"></script>
-  <script src="moshly-ui.js"></script>
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
   <script>
     // Guard: redirect to login if no session
     (async () => {
@@ -309,7 +309,7 @@
 
     const params  = new URLSearchParams(location.search);
     const noPlan  = params.get('no_plan') === '1';
-    const dest    = noPlan ? '/pricing.html?from=register' : '/dashboard.html';
+    const dest    = noPlan ? '/pricing.html?from=register' : '/dashboard';
 
     // Populate from cached user
     const cached = window.MoshlyAuth.getUser();

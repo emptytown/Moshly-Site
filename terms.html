@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 
@@ -20,9 +20,9 @@
         <span class="nav-logo-text">Moshly</span>
       </a>
       <div class="nav-links">
-        <a href="index.html#apps" class="nav-link">Apps</a>
-        <a href="index.html#roadmap" class="nav-link">Roadmap</a>
-        <a href="pricing.html" class="nav-link">Pricing</a>
+        <a href="/#apps" class="nav-link">Apps</a>
+        <a href="/#roadmap" class="nav-link">Roadmap</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
       </div>
       <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
         <span class="nav-menu-line"></span>
@@ -31,16 +31,16 @@
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="index.html#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-        <a href="index.html#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
-      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+        <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
     </div>
   </nav>
 
   <!-- TERMS CONTENT -->
   <section class="apps-section" style="padding-top: 100px;">
     <div class="section-inner" style="max-width: 840px;">
-      <a href="index.html" class="app-cta" style="margin-bottom: 20px; display:inline-flex;">← Back</a>
+      <a href="/" class="app-cta" style="margin-bottom: 20px; display:inline-flex;">← Back</a>
       <div class="section-label">Legal</div>
       <h1 class="section-title">Terms of Service</h1>
       <p class="section-subtitle" style="max-width: 100%; margin-bottom: 20px;">
@@ -99,11 +99,11 @@
       </div>
       <p class="footer-tagline">Micro-tools for the music industry.</p>
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/faq">FAQ</a>
+        <a href="/contact">Contact</a>
       </div>
       <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
       <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
@@ -117,7 +117,7 @@
     </div>
   </footer>
 
-  <script src="auth-client.js"></script>
-  <script src="moshly-ui.js"></script>
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
 </body>
 </html>

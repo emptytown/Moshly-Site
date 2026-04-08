@@ -1,0 +1,22 @@
+# 1. Force Clean URLs (Strip .html from the browser bar)
+/*.html  /:1  301
+
+# 2. Map clean URLs to their .html files (Cloudflare handles this automatically if "Pretty URLs" is enabled, but explicit is better for clarity)
+/admin              /admin.html              200
+/app-tour           /app-tour.html           200
+/confirm            /confirm.html            200
+/contact            /contact.html            200
+/dashboard          /dashboard.html          200
+/faq                /faq.html                200
+/feeme              /feeme.html              200
+/forgot-password    /forgot-password.html    200
+/index              /                        301
+/join               /join.html               200
+/launcher           /launcher.html           200
+/login              /login.html              200
+/pricing            /pricing.html            200
+/privacy            /privacy.html            200
+/reset-password     /reset-password.html     200
+/setup-profile      /setup-profile.html      200
+/signup             /signup.html             200
+/terms              /terms.html              200

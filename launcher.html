@@ -294,7 +294,7 @@
         <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
         <span>Moshly Apps</span>
       </div>
-      <a class="btn btn-ghost" href="dashboard.html" id="launcherBackToDashboardTop">View Full Dashboard</a>
+      <a class="btn btn-ghost" href="/dashboard" id="launcherBackToDashboardTop">View Full Dashboard</a>
     </header>
 
     <section class="hero">
@@ -305,20 +305,20 @@
     </section>
 
     <section class="apps" aria-label="Apps" id="launcherAppsGrid"></section>
-    <a class="launcher-pending-alert" id="launcherPendingAlert" href="connect-more.html" hidden aria-live="polite">
+    <a class="launcher-pending-alert" id="launcherPendingAlert" href="/connect-more" hidden aria-live="polite">
       <span class="launcher-pending-alert-icon">🕐</span>
       <span id="launcherPendingAlertText">App change pending…</span>
       <span class="launcher-pending-alert-cta">Manage →</span>
     </a>
 
     <div class="footer-cta">
-      <a class="btn btn-primary" href="dashboard.html" id="launcherBackToDashboardBottom">View Full Dashboard</a>
+      <a class="btn btn-primary" href="/dashboard" id="launcherBackToDashboardBottom">View Full Dashboard</a>
     </div>
   </div>
 
   <script src="app-manifest.js"></script>
-  <script src="auth-client.js"></script>
-  <script src="moshly-ui.js"></script>
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
   <script>
     // Guard: redirect to login if no session.
     // Bypass on localhost (dev mock mode) — same pattern as dashboard.html.
@@ -367,7 +367,7 @@
           }
         }
 
-        return 'dashboard.html';
+        return '/dashboard';
       };
 
       const target = resolveTarget();

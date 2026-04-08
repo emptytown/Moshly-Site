@@ -60,7 +60,7 @@
       line-height: 1.5;
     }
   </style>
-  <script src="auth-client.js"></script>
+  <script src="/auth-client.js"></script>
 </head>
 <body>
   <div class="card">
@@ -100,7 +100,7 @@
           }
 
           // Has Hub session but no SSO token — send back to dashboard to issue one
-          showError('Session found but no FeeMe token. <a href="/dashboard.html">Return to the Hub</a> and open FeeMe from there.');
+          showError('Session found but no FeeMe token. <a href="/dashboard">Return to the Hub</a> and open FeeMe from there.');
           return;
         }
 
@@ -122,7 +122,7 @@
         console.error('FeeMe callback error:', err);
         showError(
           'Session handoff failed: ' + err.message +
-          '<br />Please return to <a href="/dashboard.html">the Hub</a> and try again.'
+          '<br />Please return to <a href="/dashboard">the Hub</a> and try again.'
         );
       }
     })();

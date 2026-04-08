@@ -77,13 +77,11 @@ const MoshlyAuth = {
     return MoshlyAuth.getUser();
   },
 
-  requireSession: async (redirectUrl = '/login.html') => {
+  requireSession: async (redirectUrl = '/login') => {
     const user = await MoshlyAuth.getSession();
     if (!user) {
       // Encode only the relative path — never the full absolute URL (F-14)
-      const current = encodeURIComponent(window.location.pathname.endsWith('.html') 
-        ? window.location.pathname + window.location.search
-        : window.location.pathname + '.html' + window.location.search);
+      const current = encodeURIComponent(window.location.pathname + window.location.search);
       window.location.href = redirectUrl.includes('?')
         ? `${redirectUrl}&redirect=${current}`
         : `${redirectUrl}?redirect=${current}`;
@@ -95,7 +93,7 @@ const MoshlyAuth = {
   requireGod: async () => {
     const user = await MoshlyAuth.getSessionRobust();
     if (!user || user.role !== 'god') {
-      window.location.href = '/dashboard.html';
+      window.location.href = '/dashboard';
       return null;
     }
     return user;

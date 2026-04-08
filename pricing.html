@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="pricing.css" />
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
   <script>
@@ -27,12 +27,12 @@
         <span class="nav-logo-text">Moshly</span>
       </a>
       <div class="nav-links">
-        <a href="index.html#apps" class="nav-link">Apps</a>
-        <a href="index.html#roadmap" class="nav-link">Roadmap</a>
-        <a href="app-tour.html" class="nav-link">Tour</a>
-        <a href="pricing.html" class="nav-link nav-link--active">Pricing</a>
-        <a href="/login.html" class="nav-login-btn" id="nav-login-btn">Log In</a>
-        <a id="nav-dash-btn" href="/dashboard.html" class="nav-login-btn u-hidden">Dashboard →</a>
+        <a href="/#apps" class="nav-link">Apps</a>
+        <a href="/#roadmap" class="nav-link">Roadmap</a>
+        <a href="/app-tour" class="nav-link">Tour</a>
+        <a href="/pricing" class="nav-link nav-link--active">Pricing</a>
+        <a href="/login" class="nav-login-btn" id="nav-login-btn">Log In</a>
+        <a id="nav-dash-btn" href="/dashboard" class="nav-login-btn u-hidden">Dashboard →</a>
       </div>
       <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
         <span class="nav-menu-line"></span>
@@ -41,12 +41,12 @@
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="index.html#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="index.html#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
-      <a href="app-tour.html" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
-      <a href="pricing.html" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
-      <a href="/login.html" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
-      <a id="mobile-nav-dash-btn" href="/dashboard.html" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
+      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <a href="/login" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
+      <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
     </div>
   </nav>
 
@@ -234,7 +234,7 @@
             <h3 class="explore-strip-title">Sign up free and explore Moshly's universe.</h3>
             <p class="explore-strip-desc">1 project, access to future free tools and topable AI features. No credit card, no activation required.</p>
           </div>
-          <a href="/signup.html" class="btn-ghost explore-strip-btn">Start Exploring →</a>
+          <a href="/signup" class="btn-ghost explore-strip-btn">Start Exploring →</a>
         </div>
       </div>
 
@@ -270,7 +270,7 @@
       <h2 class="cta-title">Not sure which plan?<br /><span class="gradient-text">Start now.</span></h2>
       <p class="cta-subtitle">Sign up for a free account and explore the ecosystem. No credit card required.</p>
       <div class="hero-actions">
-        <a href="/signup.html" class="btn-primary">Create Free Account</a>
+        <a href="/signup" class="btn-primary">Create Free Account</a>
         <a href="#contact" class="btn-ghost">Talk to Us</a>
       </div>
     </div>
@@ -345,11 +345,11 @@
       </div>
       <p class="footer-tagline">Micro-tools for the music industry.</p>
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/faq">FAQ</a>
+        <a href="/contact">Contact</a>
       </div>
       <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
       <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
@@ -363,8 +363,8 @@
     </div>
   </footer>
 
-  <script src="auth-client.js"></script>
-  <script src="moshly-ui.js"></script>
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
   <script>
     let isYearly = false;
 
@@ -580,7 +580,7 @@
           <div class="auth-field auth-field--sm-top">
             <label class="auth-consent-label">
               <input type="checkbox" id="reg-terms" class="auth-consent-check" required />
-              <span>I agree to the <a href="/terms.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Privacy Policy</a>.</span>
+              <span>I agree to the <a href="/terms" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Terms of Service</a> and <a href="/privacy" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Privacy Policy</a>.</span>
             </label>
           </div>
           <div class="auth-field auth-field--sm-top">

@@ -41,7 +41,7 @@ export async function onRequestPost({ request, env }) {
         headers: { 'Content-Type': 'application/json' },
       });
     }
-    await env.AUTH_KV.put(lockKey, '1', { expirationTtl: 5 });
+    await env.AUTH_KV.put(lockKey, '1', { expirationTtl: 60 });
 
     // Look up refresh token in KV
     const storedValue = await env.AUTH_KV.get(`rt:${refreshToken}`);
