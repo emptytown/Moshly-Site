@@ -5,7 +5,7 @@
 
 async function initDashboard() {
     // 1. Guard: Ensure session
-    const ok = await window.MoshlyAuth.requireSession('/?auth=login');
+    const ok = await window.MoshlyAuth.requireSession('/login');
     if (!ok) return;
 
     // 2. Fetch User Data (Profiles, Quotas, Workspaces)

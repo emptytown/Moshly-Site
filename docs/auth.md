@@ -1,25 +1,26 @@
-# Authentication
+# Authentication & Security
 
-## Session Guard
-- **Helper**: `MoshlyAuth.requireSession(redirectUrl)` (defined in `auth-client.js`).
-- **Functionality**: Checks for a valid session. If missing, it redirects the browser to the provided URL (defaults to `/login`).
-- **Clean URL Standard**: Never pass `.html` to the redirect parameter. The function includes a safety check that automatically strips `.html` from the path.
+## Session Management
+- **Central Authority**: `auth-client.js` handles all session checks and redirect logic.
+- **Helper**: `MoshlyAuth.requireSession(redirectUrl)`.
+  - **Redirect Pattern**: Defaults to `/login`.
+  - **Safety Rule**: Automatically strips `.html` from the path. Always use clean paths in parameters.
+- **Storage**: Sessions are held in `localStorage` and `sessionStorage`.
 
-## Protected Pages
-The following pages are behind the auth guard:
+## Protected Routes
+The following pages require a valid session:
 - `/dashboard`
 - `/launcher`
 - `/setup-profile`
 - `/admin`
 
-## Auth Logic
-- **Storage**: Sessions are managed via local and session storage.
-- **Handover**: `launcher.html` handles passing auth context to external apps.
-- **Login/Signup**: Standard forms on clean `/login` and `/signup` paths.
-- **Invitation**: `join.html` (clean path `/join`) handles invite code validation before signup.
+## Auth Flows
+1. **Login**: Standard form on `/login`.
+2. **Signup**: Standard form on `/signup`.
+3. **Join/Invite**: `/join` (maps to `join.html`) validates invite codes before signup.
+4. **Context Handover**: `launcher.html` passes auth context to external applications.
 
-## Redirection Flow
-1. User visits `/dashboard`.
-2. `dashboard-logic.js` calls `requireSession('/login')`.
-3. If not logged in, user is sent to `/login`.
-4. After successful login, user is returned to their original destination.
+## Redirection Logic
+- Redirects must only use clean, path-only URLs (e.g., `/login`).
+- `dashboard-logic.js` is the primary entry point for session verification on protected pages.
+- After a successful login, the system should return the user to the originally requested destination.

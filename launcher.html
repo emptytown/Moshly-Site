@@ -316,17 +316,17 @@
     </div>
   </div>
 
-  <script src="app-manifest.js"></script>
+  <script src="/app-manifest.js"></script>
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
   <script>
     // Guard: redirect to login if no session.
-    // Bypass on localhost (dev mock mode) — same pattern as dashboard.html.
+    // Bypass on localhost (dev mock mode) — same pattern as /dashboard.
     (async () => {
       const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
       if (!useDevMock) {
-        const ok = await window.MoshlyAuth.requireSession('/?auth=login');
+        const ok = await window.MoshlyAuth.requireSession('/login');
         if (!ok) return;
       }
     })();
@@ -360,7 +360,7 @@
             const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
             const plan = String(user?.plan || '').toLowerCase();
             if (knownDevPlans.has(plan)) {
-              return `dashboard.html?dev_plan=${encodeURIComponent(plan)}&dev_mock=1`;
+              return `/dashboard?dev_plan=${encodeURIComponent(plan)}&dev_mock=1`;
             }
           } catch {
             // Ignore parse errors and use default target.

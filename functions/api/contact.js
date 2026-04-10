@@ -72,7 +72,7 @@ function buildUserConfirmationHtml(name, subject, message, origin) {
           </div>
           <p style="margin:0;font-size:14px;color:#7B7F93;line-height:1.7;text-align:center;">
             We reply fast — usually within a business day.<br/>
-            In the meantime, feel free to explore <a href="${origin}/pricing.html" style="color:#6B5CFF;text-decoration:none;">our plans</a>.
+            In the meantime, feel free to explore <a href="${origin}/pricing" style="color:#6B5CFF;text-decoration:none;">our plans</a>.
           </p>
         </div>
         <div style="padding:24px 32px;border-top:1px solid #2D3048;background:#141624;text-align:center;">

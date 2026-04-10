@@ -94,7 +94,7 @@
           if (!user) {
             showError('No active session. Redirecting to Moshly…');
             setTimeout(() => {
-              window.location.href = 'index.html?auth=login&redirect=' + encodeURIComponent(window.location.href);
+              window.location.href = '/login?redirect=' + encodeURIComponent(window.location.href);
             }, 1200);
             return;
           }

@@ -684,7 +684,7 @@
       const p = new URLSearchParams(location.search);
       const collabInvite = p.get('collab_invite');
       if (collabInvite) {
-        window.location.replace('/join.html?code=' + encodeURIComponent(collabInvite.toUpperCase()));
+        window.location.replace('/join?code=' + encodeURIComponent(collabInvite.toUpperCase()));
       } else if (p.get('error') === 'hub_token_expired' && p.get('auth') === 'login') {
         const cachedUser = (() => {
           try { return JSON.parse(localStorage.getItem('moshly_user')); } catch { return null; }
@@ -708,18 +708,18 @@
 
         if (canRetry) {
           try { sessionStorage.setItem(retryKey, String(retryCount + 1)); } catch {}
-          const retryDest = redirect.endsWith('.html') || redirect.includes('?') ? redirect : redirect + '.html';
+          const retryDest = redirect.endsWith('.html') || redirect.includes('?') ? redirect.replace(/\.html$/, '') : redirect;
           setTimeout(() => window.location.replace(retryDest), 450);
         } else {
           if (retryKey) sessionStorage.removeItem(retryKey);
-          const finalRedirect = redirect.endsWith('.html') || redirect.includes('?') ? redirect : redirect + '.html';
-          window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(finalRedirect) : ''));
+          const finalRedirect = redirect.endsWith('.html') || redirect.includes('?') ? redirect.replace(/\.html$/, '') : redirect;
+          window.location.replace('/login' + (redirect ? '?redirect=' + encodeURIComponent(finalRedirect) : ''));
         }
       } else if (p.get('auth') === 'login') {
         const redirect = p.get('redirect');
-        window.location.replace('/login.html' + (redirect ? '?redirect=' + encodeURIComponent(redirect) : ''));
+        window.location.replace('/login' + (redirect ? '?redirect=' + encodeURIComponent(redirect) : ''));
       } else if (p.get('auth') === 'register') {
-        window.location.replace('/signup.html');
+        window.location.replace('/signup');
       }
     })();
 

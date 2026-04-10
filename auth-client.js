@@ -80,11 +80,16 @@ const MoshlyAuth = {
   requireSession: async (redirectUrl = '/login') => {
     const user = await MoshlyAuth.getSession();
     if (!user) {
+      // Clean redirectUrl (strip .html if passed manually)
+      const cleanUrl = redirectUrl.split('?')[0].endsWith('.html') 
+        ? redirectUrl.replace('.html', '') 
+        : redirectUrl;
+
       // Encode only the relative path — never the full absolute URL (F-14)
       const current = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = redirectUrl.includes('?')
-        ? `${redirectUrl}&redirect=${current}`
-        : `${redirectUrl}?redirect=${current}`;
+      window.location.href = cleanUrl.includes('?')
+        ? `${cleanUrl}&redirect=${current}`
+        : `${cleanUrl}?redirect=${current}`;
       return false;
     }
     return true;
@@ -229,7 +234,7 @@ const MoshlyAuth = {
           // Validate redirect before navigating — reject absolute/external URLs (F-02)
           const params = new URLSearchParams(window.location.search);
           const redirectParam = params.get('redirect');
-          let dest = isSafeRedirect(redirectParam) ? redirectParam : '/dashboard.html';
+          let dest = isSafeRedirect(redirectParam) ? redirectParam : '//dashboard';
 
           if (localStorage.getItem('moshly_is_new_signup') === 'true') {
             dest = '/setup-profile.html';
@@ -298,7 +303,7 @@ const MoshlyAuth = {
 
         if (ok && data.success) {
           // Send to login with registered=true to show confirmation message
-          window.location.href = '/login.html?registered=true&email=' + encodeURIComponent(email);
+          window.location.href = '/login?registered=true&email=' + encodeURIComponent(email);
           return;
         } else {
           if (feedback) {

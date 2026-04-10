@@ -26,20 +26,38 @@ function toggleMobileMenu() {
     const btn = document.getElementById('navMenuBtn');
     const menu = document.getElementById('mobileNavMenu');
     if (!btn || !menu) return;
-    const isOpen = menu.classList.toggle('mobile-nav--open');
-    btn.classList.toggle('nav-menu-btn--open', isOpen);
-    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+
+    if (window.ModalManager) {
+        if (menu.classList.contains('open')) {
+            window.ModalManager.close('mobileNavMenu');
+            btn.classList.remove('nav-menu-btn--open');
+            btn.setAttribute('aria-expanded', 'false');
+        } else {
+            window.ModalManager.open('mobileNavMenu');
+            btn.classList.add('nav-menu-btn--open');
+            btn.setAttribute('aria-expanded', 'true');
+        }
+    } else {
+        const isOpen = menu.classList.toggle('mobile-nav--open');
+        btn.classList.toggle('nav-menu-btn--open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
 }
 
 function closeMobileMenu() {
     const btn = document.getElementById('navMenuBtn');
     const menu = document.getElementById('mobileNavMenu');
     if (!btn || !menu) return;
-    menu.classList.remove('mobile-nav--open');
+
+    if (window.ModalManager) {
+        window.ModalManager.close('mobileNavMenu');
+    } else {
+        menu.classList.remove('mobile-nav--open');
+        menu.setAttribute('aria-hidden', 'true');
+    }
     btn.classList.remove('nav-menu-btn--open');
     btn.setAttribute('aria-expanded', 'false');
-    menu.setAttribute('aria-hidden', 'true');
 }
 
 function initMobileMenu() {
@@ -48,7 +66,7 @@ function initMobileMenu() {
     btn.addEventListener('click', toggleMobileMenu);
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('mobileNavMenu');
-        if (!menu || !menu.classList.contains('mobile-nav--open')) return;
+        if (!menu || (!menu.classList.contains('mobile-nav--open') && !menu.classList.contains('open'))) return;
         if (menu.contains(e.target) || btn.contains(e.target)) return;
         closeMobileMenu();
     });
@@ -86,17 +104,28 @@ function openModal(tab) {
     switchTab(tab || 'login');
     const overlay = document.getElementById('authOverlay');
     if (!overlay) return;
-    overlay.classList.add('auth-overlay--visible');
-    overlay.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
+
+    if (window.ModalManager) {
+        window.ModalManager.open('authOverlay');
+    } else {
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeModal() {
     const overlay = document.getElementById('authOverlay');
     if (!overlay) return;
-    overlay.classList.remove('auth-overlay--visible');
-    overlay.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
+
+    if (window.ModalManager) {
+        window.ModalManager.close('authOverlay');
+    } else {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
     // Reset eye icons
     document.querySelectorAll('.auth-pw-toggle').forEach(btn => {
         const eye = btn.querySelector('.pw-eye');
@@ -159,8 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        closeModal();
-        closeMobileMenu();
+        if (window.ModalManager) {
+            window.ModalManager.closeAll();
+        } else {
+            closeModal();
+            closeMobileMenu();
+        }
     }
 });
 

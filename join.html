@@ -82,7 +82,7 @@
         });
 
         if (ok && data.success) {
-          window.location.href = '//dashboard';
+          window.location.href = '/dashboard';
         } else {
           feedback.textContent = data.error || 'Invalid or expired invite code.';
           feedback.style.display = 'block';
@@ -91,7 +91,7 @@
         }
       } else {
         // Send to signup with the code pre-filled
-        window.location.href = '/signup.html?code=' + encodeURIComponent(code);
+        window.location.href = '/signup?code=' + encodeURIComponent(code);
       }
     }
 

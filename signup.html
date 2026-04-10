@@ -117,7 +117,7 @@
       // Use getSession() instead of isAuthenticated() to allow silentRefresh to run
       const user = await MoshlyAuth.getSession();
       if (user) {
-        window.location.href = '//dashboard';
+        window.location.href = '/dashboard';
       }
     })();
 
@@ -215,7 +215,7 @@
 
       if (ok && data.success) {
         // We no longer auto-login to ensure email verification
-        window.location.href = '/login.html?registered=true&email=' + encodeURIComponent(email);
+        window.location.href = '/login?registered=true&email=' + encodeURIComponent(email);
       } else {
         feedback.textContent = data.error || 'Registration failed. Please try again.';
         feedback.style.display = 'block';

@@ -303,7 +303,7 @@
   <script>
     // Guard: redirect to login if no session
     (async () => {
-      const ok = await window.MoshlyAuth.requireSession('/?auth=login');
+      const ok = await window.MoshlyAuth.requireSession('/login');
       if (!ok) return;
     })();
 
