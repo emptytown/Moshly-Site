@@ -5,80 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="Solving forget password functionality">
-      <change afterPath="$PROJECT_DIR$/docs/CLAUDE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/GEMINI.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/CLAUDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/api-tester.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/architect-reviewer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/browser-qa-agent.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/bug-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/code-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/code-fixer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/console-monitor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/db-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/dep-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/deploy-checker.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/doc-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/env-validator.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/fix-planner.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/fullstack-qa-orchestrator.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/infra-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/perf-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/pr-writer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/security-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/seed-generator.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/seo-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/test-runner.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/test-writer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/ui-auditor.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/agents/visual-diff.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/audits/auth-audit.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.claude/audits/auth-audit.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.claude/audits/db-audit.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.claude/audits/db-audit.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.islstudio/audit.jsonl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/flow/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/flow/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/last-score.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/last-score.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/provenance/attestations.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/provenance/edits.jsonl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/registry-cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/registry-cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/sync-queue.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.vibecheck/sync-queue.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GEMINI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/Errors/ErrorPage.html.har" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/Errors/chromewebdata.login.problem.har" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/ViberLogs/0304ThursdayB-TODO.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/ViberLogs/0304ThursdayTODO.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/ViberLogs/2703FridayTODO.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/ViberLogs/2803SaturdayTODO.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MoshlyDev/ViberLogs/2903SundayTODO.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/contact.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard-logic.js" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard-logic.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/architecture.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/auth.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/auth.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/deployment.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/routing.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/troubleshooting.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/faq.html" beforeDir="false" afterPath="$PROJECT_DIR$/faq.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/feeme.html" beforeDir="false" afterPath="$PROJECT_DIR$/feeme.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/join.html" beforeDir="false" afterPath="$PROJECT_DIR$/join.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launching-soon/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/launching-soon/contact.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launching-soon/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/launching-soon/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-ui.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pricing.html" beforeDir="false" afterPath="$PROJECT_DIR$/pricing.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup-profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/setup-profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/bug-fix.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/full-audit.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/new-feature.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/pre-commit.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/pre-deploy.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflows/release-prep.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_redirects" beforeDir="false" afterPath="$PROJECT_DIR$/_redirects" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +94,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775612448169</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Solving forget password functionality">
+      <option name="closed" value="true" />
+      <created>1775788572147</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1775788572147</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

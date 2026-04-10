@@ -1,7 +1,7 @@
 # 1. Force Clean URLs (Strip .html from the browser bar)
-/*.html  /:1  301
+# 2. i'm commenting out this command - /*.html  /:1  301
 
-# 2. Map clean URLs to their .html files (Cloudflare handles this automatically if "Pretty URLs" is enabled, but explicit is better for clarity)
+# 3. Map clean URLs to their .html files (Cloudflare handles this automatically if "Pretty URLs" is enabled, but explicit is better for clarity)
 /admin              /admin.html              200
 /app-tour           /app-tour.html           200
 /confirm            /confirm.html            200
