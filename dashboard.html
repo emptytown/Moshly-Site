@@ -463,19 +463,28 @@
                     <div aria-hidden="true" class="db-flow-node"></div>
                     <div class="db-card db-card--narrow">
                         <div class="db-card-header">
-                            <span class="db-card-title">Visibility</span>
+                            <span class="db-card-title">Settings and Visibility</span>
                         </div>
                         <div class="db-visibility-toggle db-visibility-toggle--flush">
                             <div class="db-toggle-label">
-                                <strong>Public Profile</strong>
-                                Visible to other crew members
+                                <strong>Settings</strong>
+                                Overall UX options and preferences
                             </div>
-                            <button class="db-toggle on" onclick="this.classList.toggle('on')"
-                                    title="Toggle public profile"></button>
+                            <button class="db-btn-secondary db-btn-secondary-sm" onclick="openProjectContextModal()">
+                                Open Settings
+                            </button>
                         </div>
                         <div class="db-visibility-toggle">
                             <div class="db-toggle-label">
-                                <strong>Public on Moshly Metaverse</strong>
+                                <strong>Searchable Profile</strong>
+                                Visible to other crew members
+                            </div>
+                            <button class="db-toggle on" onclick="this.classList.toggle('on')"
+                                    title="Toggle searchable profile"></button>
+                        </div>
+                        <div class="db-visibility-toggle">
+                            <div class="db-toggle-label">
+                                <strong>Join Moshly Metaverse</strong>
                                 Visible in the future Moshly Metaverse
                             </div>
                             <button class="db-toggle" onclick="this.classList.toggle('on')"
@@ -563,9 +572,6 @@
                         <button class="db-danger-btn" onclick="handleDangerAction('erase')" type="button">Erase local
                             cache
                         </button>
-                        <button class="db-danger-btn" onclick="handleDangerAction('delete')" type="button">Delete
-                            workspace
-                        </button>
                         <button class="db-danger-btn db-danger-btn--strong" onclick="handleDangerAction('terminate')"
                                 type="button">Terminate account
                         </button>
@@ -612,6 +618,14 @@
                 <!-- View Mode -->
                 <div id="dbProfileViewFields">
                     <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">First Name</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewFirstName">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
+                        <span class="db-profile-panel-field-label">Surname</span>
+                        <span class="db-profile-panel-field-val" id="dbPanelViewLastName">—</span>
+                    </div>
+                    <div class="db-profile-panel-field">
                         <span class="db-profile-panel-field-label">Display Name</span>
                         <span class="db-profile-panel-field-val" id="dbPanelViewName">—</span>
                     </div>
@@ -639,8 +653,18 @@
                 <!-- Edit Mode -->
                 <div class="db-hidden" id="dbProfileEditFields">
                     <div class="db-profile-panel-input-group">
+                        <label for="dbEditFirstName">First Name</label>
+                        <input autocomplete="given-name" class="db-profile-panel-input" id="dbEditFirstName" placeholder="Your first name"
+                               type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
+                        <label for="dbEditLastName">Surname</label>
+                        <input autocomplete="family-name" class="db-profile-panel-input" id="dbEditLastName" placeholder="Your surname"
+                               type="text"/>
+                    </div>
+                    <div class="db-profile-panel-input-group">
                         <label for="dbEditName">Display Name</label>
-                        <input autocomplete="name" class="db-profile-panel-input" id="dbEditName" placeholder="Your name"
+                        <input autocomplete="name" class="db-profile-panel-input" id="dbEditName" placeholder="Public display name"
                                type="text"/>
                     </div>
                     <div class="db-profile-panel-input-group">
@@ -901,6 +925,22 @@
         <div class="db-ctx-modal" id="dbProjectContextModal"></div>
     </div>
 
+    <!-- ─── SIGN OUT CONFIRMATION MODAL ────────── -->
+    <div class="db-modal-overlay db-modal--confirm" id="dbSignOutOverlay">
+        <div class="db-modal-backdrop" onclick="closeSignOutConfirmation()"></div>
+        <div class="db-modal-content">
+            <div class="db-modal-header">
+                <h3 class="db-modal-title" id="signOutTitle">Sign Out</h3>
+            </div>
+            <div class="db-modal-body">
+                <p id="signOutMessage">Are you sure you want to sign out?</p>
+            </div>
+            <div class="db-modal-footer">
+                <button class="db-btn-secondary" id="signOutCancelBtn" onclick="closeSignOutConfirmation()">Cancel</button>
+                <button class="db-btn-primary" id="signOutConfirmBtn" onclick="confirmSignOut()">Proceed</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="/auth-client.js"></script>

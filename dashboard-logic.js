@@ -8,6 +8,14 @@ async function initDashboard() {
     const ok = await window.MoshlyAuth.requireSession('/login');
     if (!ok) return;
 
+    // Update Date Greeting
+    const dateEl = document.getElementById('db-date');
+    if (dateEl) {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateEl.textContent = now.toLocaleDateString(undefined, options);
+    }
+
     // 2. Fetch User Data (Profiles, Quotas, Workspaces)
     const { ok: fetchOk, data } = await window.MoshlyAuth.authFetch('/me');
     if (!fetchOk) {
@@ -18,34 +26,339 @@ async function initDashboard() {
     const { user } = data;
     updateProfileUI(user);
     updateQuotasUI(user.subscription);
+    updateSubscriptionUI(user.subscription);
+
+    // 3. Setup Sidebars and Theme
+    initSidebarControls();
+    initDashboardTheme();
+
+    // 4. Fetch Projects
+    fetchProjects();
+}
+
+async function fetchProjects() {
+    const { ok, data } = await window.MoshlyAuth.authFetch('/api/projects');
+    if (ok) {
+        updateProjectsUI(data.projects);
+    }
+}
+
+function updateProjectsUI(projects) {
+    const listEl = document.getElementById('dbProjectsList');
+    const managerListEl = document.getElementById('dbProjectsManagerList');
+    
+    // For the small card list
+    if (listEl) {
+        if (!projects || projects.length === 0) {
+            listEl.innerHTML = '<div class="db-proj-empty">No projects yet.</div>';
+        } else {
+            listEl.innerHTML = projects.slice(0, 5).map(p => `
+                <div class="db-proj-item">
+                    <div class="db-proj-icon">${getProjectIcon(p.type)}</div>
+                    <div class="db-proj-info">
+                        <div class="db-proj-name">${p.name}</div>
+                        <div class="db-proj-meta">${p.type.charAt(0).toUpperCase() + p.type.slice(1)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    // For the manager modal
+    if (managerListEl) {
+        if (!projects || projects.length === 0) {
+            managerListEl.innerHTML = '<div class="db-manager-empty">No projects found. Create your first one to get started!</div>';
+        } else {
+            managerListEl.innerHTML = projects.map(p => `
+                <div class="db-manager-item">
+                    <div class="db-manager-item-icon">${getProjectIcon(p.type)}</div>
+                    <div class="db-manager-item-info">
+                        <div class="db-manager-item-name">${p.name}</div>
+                        <div class="db-manager-item-meta">${p.type} · ${p.location || 'No location'}</div>
+                    </div>
+                    <button class="db-manager-item-btn" onclick="openProjectDetails('${p.id}')">View</button>
+                </div>
+            `).join('');
+        }
+    }
+}
+
+function getProjectIcon(type) {
+    const icons = {
+        artist: '👤',
+        band: '🎸',
+        theatre: '🎭',
+        venue: '🏛️',
+        festival: '🎡',
+        production: '🎬',
+        agency: '🧭'
+    };
+    return icons[type] || '📁';
+}
+
+async function submitCreateProject() {
+    const name = document.getElementById('dbProjName').value;
+    const typeBtn = document.querySelector('.db-proj-type-btn.active');
+    const type = typeBtn ? typeBtn.getAttribute('data-type') : null;
+    const genre = document.getElementById('dbProjGenre').value;
+    const location = document.getElementById('dbProjBasedOn').value;
+    const description = document.getElementById('dbProjDesc').value;
+    const notes = document.getElementById('dbProjNotes').value;
+
+    if (!name || !type) {
+        alert('Please enter a project name and select a type.');
+        return;
+    }
+
+    const btn = document.getElementById('dbProjConfirmBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Creating...';
+    btn.disabled = true;
+
+    try {
+        const { ok, data } = await window.MoshlyAuth.authFetch('/api/projects', {
+            method: 'POST',
+            body: JSON.stringify({
+                name,
+                type,
+                genre,
+                location,
+                description,
+                notes
+                // Skipping team, extraFields, aiContextRules for now as they need more complex UI handling
+            })
+        });
+
+        if (ok) {
+            alert('Project created successfully!');
+            closeProjectModal();
+            fetchProjects(); // Refresh the list
+        } else {
+            alert(data.error || 'Failed to create project.');
+        }
+    } catch (err) {
+        console.error('Project creation error:', err);
+        alert('An error occurred.');
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+}
+
+window.submitCreateProject = submitCreateProject;
+
+// UI Stubs for complex project fields (to be implemented)
+window.addProjectExtraFieldRow = () => console.log('Add project extra field');
+window.addProjectTeamRow = () => console.log('Add project team row');
+window.updateProjectTeamSummary = () => console.log('Update project team summary');
+window.toggleProjectTeamSection = () => {
+    const body = document.getElementById('dbProjTeamBody');
+    const btn = document.getElementById('dbProjTeamToggleBtn');
+    if (body) {
+        const isOpen = body.classList.toggle('open');
+        if (btn) btn.textContent = isOpen ? 'Close Team' : 'Open Team';
+    }
+};
+window.addAiContextRule = () => {
+    const input = document.getElementById('dbProjAiRuleInput');
+    const val = input?.value.trim();
+    if (val) {
+        const chips = document.getElementById('dbProjAiChips');
+        const chip = document.createElement('div');
+        chip.className = 'db-proj-ai-chip';
+        chip.innerHTML = `${val} <span onclick="this.parentElement.remove()">×</span>`;
+        chips.appendChild(chip);
+        input.value = '';
+    }
+};
+
+function initSidebarControls() {
+    // Collapse / Expand Sidebar
+    const collapseBtn = document.getElementById('dbCollapseBtn');
+    const sidebar = document.getElementById('dbSidebar');
+    if (collapseBtn && sidebar) {
+        collapseBtn.addEventListener('click', () => {
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            localStorage.setItem('moshly-sidebar-collapsed', isCollapsed);
+        });
+
+        // Restore state
+        if (localStorage.getItem('moshly-sidebar-collapsed') === 'true') {
+            sidebar.classList.add('collapsed');
+        }
+    }
+
+    // Sign Out
+    const signoutBtns = document.querySelectorAll('.db-signout-btn, .db-mob-drawer-footer-btn.signout');
+    signoutBtns.forEach(btn => {
+        btn.addEventListener('click', signOut);
+    });
+}
+
+function signOut() {
+    openSignOutConfirmation();
+}
+
+/**
+ * SIGN OUT CONFIRMATION FLOW
+ */
+window.openSignOutConfirmation = function() {
+    const overlay = document.getElementById('dbSignOutOverlay');
+    if (overlay) {
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+window.closeSignOutConfirmation = function() {
+    const overlay = document.getElementById('dbSignOutOverlay');
+    if (overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        
+        // Reset modal content in case it was showing "See you soon"
+        setTimeout(() => {
+            const title = document.getElementById('signOutTitle');
+            const message = document.getElementById('signOutMessage');
+            const footer = overlay.querySelector('.db-modal-footer');
+            if (title) title.innerText = 'Sign Out';
+            if (message) message.innerText = 'Are you sure you want to sign out?';
+            if (footer) footer.style.display = 'flex';
+        }, 300);
+    }
+};
+
+window.confirmSignOut = function() {
+    const title = document.getElementById('signOutTitle');
+    const message = document.getElementById('signOutMessage');
+    const footer = document.querySelector('#dbSignOutOverlay .db-modal-footer');
+
+    if (title) title.innerText = 'Logging out...';
+    if (message) message.innerText = 'You will be logged out immediately. See you soon!';
+    if (footer) footer.style.display = 'none';
+
+    // Delay to let user read the message
+    setTimeout(() => {
+        if (window.MoshlyAuth && window.MoshlyAuth.logout) {
+            window.MoshlyAuth.logout();
+        } else {
+            // Fallback
+            localStorage.removeItem('moshly_token');
+            localStorage.removeItem('moshly_user');
+            sessionStorage.clear();
+            window.location.href = '/login';
+        }
+    }, 2000);
+};
+
+function initDashboardTheme() {
+    const themeBtn = document.getElementById('dbThemeBtn');
+    const mobThemeBtn = document.getElementById('dbMobThemeBtn');
+
+    const toggle = () => {
+        const isLight = document.body.classList.toggle('db-light');
+        localStorage.setItem('moshly-dashboard-theme', isLight ? 'light' : 'dark');
+        updateDashboardThemeUI(isLight);
+    };
+
+    if (themeBtn) themeBtn.addEventListener('click', toggle);
+    if (mobThemeBtn) mobThemeBtn.addEventListener('click', toggle);
+
+    // Restore state
+    const saved = localStorage.getItem('moshly-dashboard-theme');
+    const isLight = saved === 'light';
+    if (isLight) {
+        document.body.classList.add('db-light');
+    }
+    updateDashboardThemeUI(isLight);
+}
+
+function updateDashboardThemeUI(isLight) {
+    const sunIcons = document.querySelectorAll('#dbThemeIconSun, #dbMobThemeIconSun');
+    const moonIcons = document.querySelectorAll('#dbThemeIconMoon, #dbMobThemeIconMoon');
+    const labels = document.querySelectorAll('#dbThemeLabel, #dbMobThemeLabel');
+
+    sunIcons.forEach(el => el.classList.toggle('db-hidden', !isLight));
+    moonIcons.forEach(el => el.classList.toggle('db-hidden', isLight));
+    labels.forEach(el => el.textContent = isLight ? 'Dark Mode' : 'Light Mode');
 }
 
 function updateProfileUI(user) {
     const nameEls = document.querySelectorAll('.db-user-name, .db-mob-drawer-uname');
     const planEls = document.querySelectorAll('.db-user-plan, .db-mob-drawer-uplan');
     const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar');
+    const firstNameEl = document.getElementById('db-first-name');
 
-    nameEls.forEach(el => el.textContent = user.name || user.email.split('@')[0]);
+    const firstName = user.profile?.firstName || user.name?.split(' ')[0] || user.email.split('@')[0];
+    const displayName = user.name || firstName || user.email.split('@')[0];
+    
+    nameEls.forEach(el => el.textContent = displayName);
+    if (firstNameEl) firstNameEl.textContent = firstName;
+
     planEls.forEach(el => {
-        el.textContent = (user.plan || 'Free').toUpperCase() + ' PLAN';
-        el.className = `db-user-plan db-plan-${user.plan || 'free'}`;
+        el.textContent = (user.subscription?.plan || 'Free').toUpperCase() + ' PLAN';
+        el.className = `db-user-plan db-plan-${user.subscription?.plan || 'free'}`;
     });
 
-    if (user.avatarUrl) {
+    // Update Avatar
+    const updateAvatars = (url) => {
         avatarEls.forEach(el => {
-            el.style.backgroundImage = `url(${user.avatarUrl})`;
+            el.style.backgroundImage = url ? `url(${url})` : '';
             el.style.backgroundSize = 'cover';
-            el.textContent = '';
+            el.textContent = url ? '' : initials;
         });
+        // Profile Panel Avatar
+        const panelAvatar = document.getElementById('dbPanelAvatar');
+        if (panelAvatar) {
+            panelAvatar.style.backgroundImage = url ? `url(${url})` : '';
+            panelAvatar.style.backgroundSize = 'cover';
+            panelAvatar.textContent = url ? '' : initials;
+        }
+    };
+
+    const initials = (user.name || user.email)
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
+    if (user.avatarUrl) {
+        updateAvatars(user.avatarUrl);
     } else {
-        const initials = (user.name || user.email)
-            .split(' ')
-            .map(n => n[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-        avatarEls.forEach(el => el.textContent = initials);
+        updateAvatars(null);
     }
+
+    // Update Profile Panel Info
+    const panelName = document.getElementById('dbPanelName');
+    const panelEmail = document.getElementById('dbPanelEmail');
+    if (panelName) panelName.textContent = displayName;
+    if (panelEmail) panelEmail.textContent = user.email;
+
+    // View Mode Fields
+    const fieldMapping = {
+        'dbPanelViewFirstName': user.profile?.firstName || '—',
+        'dbPanelViewLastName': user.profile?.lastName || '—',
+        'dbPanelViewName': user.name || '—',
+        'dbPanelViewEmail': user.email || '—',
+        'dbPanelViewJobTitle': user.profile?.jobTitle || '—',
+        'dbPanelViewOrg': user.profile?.organization || '—',
+        'dbPanelViewLocation': user.profile?.location || '—',
+        'dbPanelViewSkills': user.profile?.skills || '—'
+    };
+    for (const [id, val] of Object.entries(fieldMapping)) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
+    // Dashboard Cards (using data-field)
+    document.querySelectorAll('[data-field]').forEach(el => {
+        const field = el.getAttribute('data-field');
+        if (field === 'org') el.textContent = user.profile?.organization || '—';
+        if (field === 'job_title') el.textContent = user.profile?.jobTitle || '—';
+        if (field === 'skills') el.textContent = user.profile?.skills || '—';
+        if (field === 'location') el.textContent = user.profile?.location || '—';
+    });
 }
 
 function updateQuotasUI(sub) {
@@ -86,10 +399,170 @@ function updateQuotasUI(sub) {
     }
 }
 
+function updateSubscriptionUI(sub) {
+    const planNameEl = document.getElementById('db-billing-plan-name');
+    const planRenewEl = document.getElementById('db-plan-renew-sub');
+    const planPriceEl = document.getElementById('db-billing-price');
+    
+    if (planNameEl) {
+        planNameEl.textContent = (sub?.plan || 'Free').charAt(0).toUpperCase() + (sub?.plan || 'Free').slice(1) + ' Plan';
+    }
+
+    if (planPriceEl) {
+        const prices = { 'free': '$0/mo', 'pro': '$19/mo', 'business': '$49/mo' };
+        planPriceEl.textContent = prices[sub?.plan?.toLowerCase()] || '$0/mo';
+    }
+
+    if (planRenewEl && sub?.expiresAt) {
+        const date = new Date(sub.expiresAt);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        planRenewEl.textContent = `Renews on ${date.toLocaleDateString(undefined, options)}`;
+    } else if (planRenewEl) {
+        planRenewEl.textContent = 'No active subscription cycle.';
+    }
+}
+
+async function handlePhotoFileChange(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // 1. Client-side preview & size check
+    if (file.size > 2 * 1024 * 1024) {
+        alert('Image too large. Please select a file under 2MB.');
+        return;
+    }
+
+    // 2. Convert to Base64 (Temporary solution if no R2)
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const base64Data = e.target.result;
+
+        // 3. Upload to /api/me
+        try {
+            const { ok, data } = await window.MoshlyAuth.authFetch('/api/me', {
+                method: 'PATCH',
+                body: JSON.stringify({ avatarUrl: base64Data })
+            });
+
+            if (ok) {
+                // Update all avatars in UI
+                const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar, #dbPanelAvatar');
+                avatarEls.forEach(el => {
+                    el.style.backgroundImage = `url(${base64Data})`;
+                    el.style.backgroundSize = 'cover';
+                    el.textContent = '';
+                });
+                alert('Photo updated successfully!');
+            } else {
+                alert('Failed to upload photo.');
+            }
+        } catch (err) {
+            console.error('Photo upload error:', err);
+            alert('An error occurred during upload.');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
 function formatNumber(num) {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
     return num.toString();
 }
+
+/**
+ * Handles permanent and destructive actions in the Deadly Zone.
+ * @param {string} action - The type of danger action to perform.
+ */
+async function handleDangerAction(action) {
+    if (action === 'terminate') {
+        return terminateAccount();
+    }
+
+    const messages = {
+        disconnect: "This will disconnect all connected apps and integrations. Continue?",
+        erase: "This will clear your local browser cache and sign you out. Continue?",
+    };
+
+    if (!confirm(messages[action])) return;
+
+
+    try {
+        switch (action) {
+            case 'erase':
+                // Clear all local storage types
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear cookies (best effort for client-side)
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+
+                alert("Local cache erased. Redirecting to login...");
+                window.location.href = '/login';
+                break;
+
+            case 'disconnect':
+                const discRes = await window.MoshlyAuth.authFetch('/api/me/disconnect', { method: 'POST' });
+                if (discRes.ok) alert('All apps disconnected.');
+                break;
+
+        }
+    } catch (err) {
+        console.error(`Deadly Zone Error (${action}):`, err);
+        alert('An error occurred while performing this action.');
+    }
+}
+
+/**
+ * Handles the "Terminate Account" action with mandatory confirmation and timing choice.
+ */
+async function terminateAccount() {
+    // 1. Initial Warning
+    const initialWarning = "DANGER: This will permanently delete your ENTIRE account. This action is NOT REVOKABLE even if you choose to terminate at the end of the cycle.";
+    if (!confirm(initialWarning)) return;
+
+    // 2. Choice of Timing
+    // OK = Terminate NOW, Cancel = End of Cycle
+    const choice = confirm("Press OK to terminate NOW (Immediate effect) or CANCEL to terminate at the END OF THE CYCLE.");
+    const timing = choice ? 'now' : 'end_of_cycle';
+
+    // 3. Mandatory Confirmation String
+    const verify = prompt(`To confirm ${timing.replace(/_/g, ' ')} termination, please type "DELETE ACCOUNT":`);
+    if (verify !== 'DELETE ACCOUNT') {
+        alert("Confirmation failed. Action cancelled.");
+        return;
+    }
+
+    try {
+        const response = await window.MoshlyAuth.authFetch('/api/me', {
+            method: 'DELETE',
+            body: JSON.stringify({ timing: timing })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            if (timing === 'now') {
+                alert("Account terminated immediately. Logging out.");
+                localStorage.clear();
+                window.location.href = '/signup';
+            } else {
+                alert("Account scheduled for termination at the end of the cycle. This action cannot be undone.");
+                window.location.reload();
+            }
+        } else {
+            alert(`Error: ${result.error || 'Failed to terminate account'}`);
+        }
+    } catch (err) {
+        console.error("Termination Error:", err);
+        alert("An error occurred during account termination.");
+    }
+}
+
+// Export to window so the HTML onclick can find it
+window.handleDangerAction = handleDangerAction;
+window.handlePhotoFileChange = handlePhotoFileChange;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initDashboard);

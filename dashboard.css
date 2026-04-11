@@ -750,9 +750,35 @@
       justify-content: center;
     }
     body.db-light .db-card--danger {
-      background: linear-gradient(180deg, rgba(255, 242, 245, 0.96), rgba(255, 236, 240, 0.94));
-      border-color: rgba(220, 38, 38, 0.42);
-      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.12);
+      background: linear-gradient(180deg, #fff5f5, #fff0f0);
+      border-color: #feb2b2;
+      box-shadow: 0 8px 20px rgba(155, 44, 44, 0.08);
+    }
+    body.db-light .db-card--danger .db-card-title {
+      color: #c53030;
+    }
+    body.db-light .db-deadly-copy {
+      color: #742a2a;
+    }
+    body.db-light .db-danger-btn {
+      border: 1px solid #feb2b2;
+      color: #9b2c2c;
+      background: #fffafa;
+    }
+    body.db-light .db-danger-btn:hover {
+      background: #fff5f5;
+      border-color: #fc8181;
+      color: #c53030;
+    }
+    body.db-light .db-danger-btn--strong {
+      background: #c53030;
+      color: #ffffff;
+      border-color: #9b2c2c;
+    }
+    body.db-light .db-danger-btn--strong:hover {
+      background: #9b2c2c;
+      border-color: #742a2a;
+      color: #ffffff;
     }
     .db-card--danger .db-card-title {
       color: #fee2e2;
@@ -778,10 +804,19 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .db-danger-btn:hover {
+      background: rgba(127,29,29,0.5);
+      border-color: rgba(254,202,202,0.6);
     }
     .db-danger-btn--strong {
       background: rgba(220,38,38,.36);
       border-color: rgba(239,68,68,.66);
+    }
+    .db-danger-btn--strong:hover {
+      background: rgba(220,38,38,0.6);
+      border-color: rgba(239,68,68,0.8);
     }
 
     .db-split-card-actions {
@@ -1979,6 +2014,7 @@
       flex-direction: column;
       overflow: hidden;
     }
+
     .db-manager-modal-overlay.open .db-manager-modal { transform: translateX(0); }
     .db-manager-modal-header {
       display: flex;
@@ -3301,4 +3337,66 @@
     .db-projects-type-tag--artist { background: rgba(192,38,211,.1); color: #d946ef; }
     .db-projects-type-tag--band   { background: rgba(107,92,255,.1); color: var(--color-accent-hover); }
     .db-projects-type-tag--company{ background: rgba(0,229,255,.1); color: #22d3ee; }
+
+    /* ─── SIGN OUT CONFIRMATION MODAL ────────── */
+    .db-modal-overlay.db-modal--confirm {
+        position: fixed; inset: 0; z-index: 1000;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity .3s ease;
+    }
+    .db-modal-overlay.db-modal--confirm.open { opacity: 1; pointer-events: all; }
+    .db-modal-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(0,0,0,.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        cursor: pointer;
+    }
+    .db-modal-content {
+        position: relative; width: 400px; max-width: 90vw;
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border-subtle);
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.3);
+        display: flex; flex-direction: column;
+        overflow: hidden;
+        transform: scale(.9);
+        transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .db-modal-overlay.open .db-modal-content { transform: scale(1); }
+    .db-modal-header {
+        padding: 24px 24px 16px;
+        text-align: center;
+    }
+    .db-modal-title {
+        font-size: 20px; font-weight: 700;
+        color: var(--color-text-primary);
+        margin: 0;
+    }
+    .db-modal-body {
+        padding: 0 24px 24px;
+        text-align: center;
+        color: var(--color-text-secondary);
+        font-size: 15px; line-height: 1.5;
+    }
+    .db-modal-footer {
+        padding: 16px 24px 24px;
+        display: flex; gap: 12px;
+        justify-content: center;
+    }
+    .db-btn-primary {
+        background: var(--color-accent-primary); color: #fff;
+        border: none; padding: 10px 24px; border-radius: 99px;
+        font-weight: 600; cursor: pointer;
+        transition: background .2s, transform .2s;
+    }
+    .db-btn-primary:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
+    .db-btn-secondary {
+        background: transparent; color: var(--color-text-secondary);
+        border: 1px solid var(--color-border-subtle); padding: 10px 24px; border-radius: 99px;
+        font-weight: 600; cursor: pointer;
+        transition: all .2s;
+    }
+    .db-btn-secondary:hover { background: var(--color-bg-primary); color: var(--color-text-primary); }
   

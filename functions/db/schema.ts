@@ -21,6 +21,8 @@ export const users = sqliteTable('users', {
 // --- PROFILES ---
 export const profiles = sqliteTable('profiles', {
   userId: text('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  firstName: text('first_name'),
+  lastName: text('last_name'),
   jobTitle: text('job_title'),
   organization: text('organization'),
   bio: text('bio'),
@@ -66,4 +68,25 @@ export const inviteCodes = sqliteTable('invite_codes', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 }, (table) => ({
   workspaceIdIdx: index('invite_codes_workspace_id_idx').on(table.workspaceId),
+}));
+
+// --- PROJECTS ---
+export const projects = sqliteTable('projects', {
+  id: text('id').primaryKey(),
+  workspaceId: text('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
+  ownerId: text('owner_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  type: text('type', { enum: ['artist', 'band', 'theatre', 'venue', 'festival', 'production', 'agency'] }).notNull(),
+  genre: text('genre'),
+  location: text('location'),
+  description: text('description'),
+  notes: text('notes'),
+  aiContextRules: text('ai_context_rules'), // Stored as JSON string
+  extraFields: text('extra_fields'), // Stored as JSON string
+  team: text('team'), // Stored as JSON string
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
+}, (table) => ({
+  workspaceIdIdx: index('projects_workspace_id_idx').on(table.workspaceId),
+  ownerIdIdx: index('projects_owner_id_idx').on(table.ownerId),
 }));

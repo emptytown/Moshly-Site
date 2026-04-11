@@ -50,6 +50,8 @@ export async function onRequestGet({ request, env }) {
         role: user.role,
         avatarUrl: user.avatarUrl,
         profile: profile ? {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
           jobTitle: profile.jobTitle,
           organization: profile.organization,
           bio: profile.bio,
@@ -103,37 +105,70 @@ export async function onRequestPatch({ request, env }) {
     });
   }
 
-  const name     = String(body.name                           || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const jobTitle = String(body.job_title                      || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const org      = String(body.organization || body.org       || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const location = String(body.location                       || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-  const skills   = String(body.skills                         || '').trim().slice(0, MAX_FIELD_LENGTH) || null;
-
-  if (!name || !jobTitle || !org || !location) {
-    return new Response(JSON.stringify({ error: 'Name, job title, organisation, and location are required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+  const name      = body.name !== undefined ? String(body.name || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const firstName = body.first_name !== undefined ? String(body.first_name || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const lastName  = body.last_name !== undefined ? String(body.last_name || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const jobTitle  = body.job_title !== undefined ? String(body.job_title || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const org       = (body.organization !== undefined || body.org !== undefined) 
+                    ? String(body.organization || body.org || '').trim().slice(0, MAX_FIELD_LENGTH) 
+                    : undefined;
+  const location  = body.location !== undefined ? String(body.location || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const skills    = body.skills !== undefined ? String(body.skills || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
+  const avatarUrl = body.avatarUrl !== undefined ? String(body.avatarUrl).trim().slice(0, 2048) : undefined;
 
   const db = drizzle(env.MOSHLY_DB);
 
   try {
-    await db.batch([
-      db.update(schema.users)
-        .set({ name })
-        .where(eq(schema.users.id, payload.userId)),
-      db.insert(schema.profiles)
-        .values({ userId: payload.userId, jobTitle, organization: org, location, skills })
-        .onConflictDoUpdate({
-          target: schema.profiles.userId,
-          set: { jobTitle, organization: org, location, skills },
-        }),
-    ]);
+    const userUpdate = {};
+    if (name !== undefined) userUpdate.name = name;
+    if (avatarUrl !== undefined) userUpdate.avatarUrl = avatarUrl;
+
+    const profileUpdate = {};
+    if (firstName !== undefined) profileUpdate.firstName = firstName;
+    if (lastName !== undefined) profileUpdate.lastName = lastName;
+    if (jobTitle !== undefined) profileUpdate.jobTitle = jobTitle;
+    if (org !== undefined) profileUpdate.organization = org;
+    if (location !== undefined) profileUpdate.location = location;
+    if (skills !== undefined) profileUpdate.skills = skills;
+
+    const updates = [];
+    if (Object.keys(userUpdate).length > 0) {
+      updates.push(
+        db.update(schema.users)
+          .set(userUpdate)
+          .where(eq(schema.users.id, payload.userId))
+      );
+    }
+
+    if (Object.keys(profileUpdate).length > 0) {
+      updates.push(
+        db.insert(schema.profiles)
+          .values({ userId: payload.userId, ...profileUpdate })
+          .onConflictDoUpdate({
+            target: schema.profiles.userId,
+            set: profileUpdate,
+          })
+      );
+    }
+
+    if (updates.length > 0) {
+      await db.batch(updates);
+    }
 
     console.info('Profile updated', { userId: payload.userId });
 
-    return new Response(JSON.stringify({ success: true, user: { name, jobTitle, organization: org, location, skills } }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      user: { 
+        name, 
+        firstName,
+        lastName,
+        jobTitle, 
+        organization: org, 
+        location, 
+        skills 
+      } 
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -147,4 +182,85 @@ export async function onRequestPatch({ request, env }) {
   }
 }
 
-export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'GET, PATCH, OPTIONS');
+export async function onRequestDelete({ request, env }) {
+  const payload = await verifyJWT(request, env);
+  if (!payload) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // Rate limit by IP after auth
+  const clientIp = getClientIp(request);
+  const deleteRetryAfter = await applyRateLimit(env.AUTH_KV, 'me-delete', `ip:${clientIp}`);
+  if (deleteRetryAfter) return rateLimitedResponse(deleteRetryAfter);
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  const { timing } = body;
+  if (timing !== 'now' && timing !== 'end_of_cycle') {
+    return new Response(JSON.stringify({ error: 'Invalid timing option' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  const db = drizzle(env.MOSHLY_DB);
+
+  try {
+    if (timing === 'now') {
+      // Immediate deletion - Cascade handles the rest
+      await db.delete(schema.users)
+        .where(eq(schema.users.id, payload.userId))
+        .run();
+
+      console.info('Account terminated NOW', { userId: payload.userId });
+
+      return new Response(JSON.stringify({ success: true, message: 'Account terminated immediately' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } else {
+      // Terminate at end of cycle
+      // We set expiresAt to the end of the current billing period. 
+      // For now, if we don't have a real billing engine, we might just set it to 30 days from now
+      // or use the existing expiresAt if it exists.
+      const existingSub = await db.select()
+        .from(schema.subscriptions)
+        .innerJoin(schema.workspaces, eq(schema.workspaces.id, schema.subscriptions.workspaceId))
+        .where(eq(schema.workspaces.ownerId, payload.userId))
+        .get();
+
+      const endOfCycle = existingSub?.subscriptions?.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+      await db.update(schema.subscriptions)
+        .set({ expiresAt: endOfCycle })
+        .where(eq(schema.subscriptions.workspaceId, existingSub.subscriptions.workspaceId))
+        .run();
+
+      console.info('Account scheduled for termination', { userId: payload.userId, expiresAt: endOfCycle });
+
+      return new Response(JSON.stringify({ success: true, message: 'Account scheduled for termination', expiresAt: endOfCycle }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  } catch (error) {
+    console.error('Delete account error:', { error: error.message, userId: payload.userId });
+    return new Response(JSON.stringify({ error: 'Server error during account termination' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+export const onRequestOptions = ({ request }) => corsOptionsResponse(request, 'GET, PATCH, DELETE, OPTIONS');

@@ -109,6 +109,17 @@ function closeProjectContextModal() {
     ModalManager.close('dbProjectContextOverlay');
 }
 
+function selectProjectType(btn) {
+    if (!btn) return;
+    // Remove active class from all sibling buttons
+    const parent = btn.parentElement;
+    if (parent) {
+        parent.querySelectorAll('.db-proj-type-btn').forEach(el => el.classList.remove('active'));
+    }
+    // Add active class to clicked button
+    btn.classList.add('active');
+}
+
 function openMobDrawer() {
     ModalManager.open('dbMobDrawer');
 }
@@ -145,6 +156,7 @@ window.openMobDrawer = openMobDrawer;
 window.closeMobDrawer = closeMobDrawer;
 window.openProjectContextModal = openProjectContextModal;
 window.closeProjectContextModal = closeProjectContextModal;
+window.selectProjectType = selectProjectType;
 
 // --- Profile Edit Logic (Restoring basic functionality) ---
 function enableProfileEdit() {
@@ -159,12 +171,16 @@ function enableProfileEdit() {
     if (editActions) editActions.classList.remove('db-hidden');
     
     // Fill inputs with current values
+    const firstNameVal = document.getElementById('dbPanelViewFirstName');
+    const lastNameVal = document.getElementById('dbPanelViewLastName');
     const nameVal = document.getElementById('dbPanelViewName');
     const jobVal = document.getElementById('dbPanelViewJobTitle');
     const orgVal = document.getElementById('dbPanelViewOrg');
     const locVal = document.getElementById('dbPanelViewLocation');
     const skillsVal = document.getElementById('dbPanelViewSkills');
 
+    if (firstNameVal && document.getElementById('dbEditFirstName')) document.getElementById('dbEditFirstName').value = firstNameVal.textContent.replace('—', '').trim();
+    if (lastNameVal && document.getElementById('dbEditLastName')) document.getElementById('dbEditLastName').value = lastNameVal.textContent.replace('—', '').trim();
     if (nameVal && document.getElementById('dbEditName')) document.getElementById('dbEditName').value = nameVal.textContent.replace('—', '').trim();
     if (jobVal && document.getElementById('dbEditJobTitle')) document.getElementById('dbEditJobTitle').value = jobVal.textContent.replace('—', '').trim();
     if (orgVal && document.getElementById('dbEditOrg')) document.getElementById('dbEditOrg').value = orgVal.textContent.replace('—', '').trim();
@@ -192,6 +208,8 @@ async function saveProfileChanges() {
     btn.disabled = true;
 
     const payload = {
+        first_name: document.getElementById('dbEditFirstName')?.value || '',
+        last_name: document.getElementById('dbEditLastName')?.value || '',
         name: document.getElementById('dbEditName')?.value || '',
         job_title: document.getElementById('dbEditJobTitle')?.value || '',
         org: document.getElementById('dbEditOrg')?.value || '',
@@ -200,19 +218,28 @@ async function saveProfileChanges() {
     };
 
     try {
-        const { ok, data } = await window.MoshlyAuth.authFetch('/me/profile', {
+        const { ok, data } = await window.MoshlyAuth.authFetch('/api/me', {
             method: 'PATCH',
             body: JSON.stringify(payload)
         });
 
         if (ok) {
-            // Update UI
+            // Update View Labels
+            if (document.getElementById('dbPanelViewFirstName')) document.getElementById('dbPanelViewFirstName').textContent = payload.first_name || '—';
+            if (document.getElementById('dbPanelViewLastName')) document.getElementById('dbPanelViewLastName').textContent = payload.last_name || '—';
             if (document.getElementById('dbPanelViewName')) document.getElementById('dbPanelViewName').textContent = payload.name || '—';
             if (document.getElementById('dbPanelViewJobTitle')) document.getElementById('dbPanelViewJobTitle').textContent = payload.job_title || '—';
             if (document.getElementById('dbPanelViewOrg')) document.getElementById('dbPanelViewOrg').textContent = payload.org || '—';
             if (document.getElementById('dbPanelViewLocation')) document.getElementById('dbPanelViewLocation').textContent = payload.location || '—';
             if (document.getElementById('dbPanelViewSkills')) document.getElementById('dbPanelViewSkills').textContent = payload.skills || '—';
             
+            // Sync with dashboard views
+            const firstName = payload.first_name || payload.name?.split(' ')[0] || document.getElementById('dbPanelEmail')?.textContent.split('@')[0] || '—';
+            const displayName = payload.name || firstName || '—';
+            document.querySelectorAll('.db-user-name, .db-mob-drawer-uname, #dbPanelName').forEach(el => el.textContent = displayName);
+            const firstNameEl = document.getElementById('db-first-name');
+            if (firstNameEl) firstNameEl.textContent = firstName;
+
             // Also update main dashboard view (if data-field exists)
             document.querySelectorAll('[data-field]').forEach(el => {
                 const field = el.getAttribute('data-field');
