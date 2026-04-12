@@ -155,7 +155,14 @@
                 </svg>
                 <span>APP Connector</span>
             </button>
-
+            <button class="db-nav-btn" onclick="window.location.href='/fifthsense'" type="button">
+                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24" width="16">
+                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                    <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
+                </svg>
+                <span>Fifth Sense</span>
+            </button>
             <button class="db-nav-btn" onclick="openAuditLogModal()" type="button">
                 <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                      viewBox="0 0 24 24" width="16">
@@ -489,6 +496,17 @@
                             </div>
                             <button class="db-toggle" onclick="this.classList.toggle('on')"
                                     title="Toggle Metaverse visibility"></button>
+                        </div>
+
+                        <!-- 1/4 (integrated): Fifth Sense -->
+                        <div class="db-visibility-toggle">
+                            <div class="db-toggle-label">
+                                <strong>Fifth Sense</strong>
+                                Sensory experience and Spoke app
+                            </div>
+                            <button class="db-btn-secondary db-btn-secondary-sm" onclick="window.location.href='/fifthsense'">
+                                Open App
+                            </button>
                         </div>
                     </div>
                 </div>

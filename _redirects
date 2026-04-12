@@ -5,3 +5,5 @@
 # We only need explicit redirects here for non-standard mappings or 301s.
 
 /index              /                        301
+/fifthsense         /apps/fifthsense.html    200
+/feeme              /apps/feeme.html         200

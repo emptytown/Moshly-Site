@@ -22,6 +22,7 @@ A Cloudflare Pages PWA with clean-URL routing, centralized modal/drawer UX, and 
 ├─ functions/
 │  ├─ _middleware.js
 │  └─ api/
+│     ├─ projects.js
 │     └─ contact.js
 ├─ launching-soon/
 │  └─ index.html
