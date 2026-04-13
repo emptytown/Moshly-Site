@@ -56,9 +56,9 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Root path: serve the default index.html
+  // Root path: serve the default index.html explicitly to ensure it is used
   if (pathname === '/') {
-    return next();
+    return serveAsset(env, request, '/index.html');
   }
 
   // All other paths: default Pages asset serving
