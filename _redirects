@@ -7,3 +7,6 @@
 /index              /                        301
 /fifthsense         /apps/fifthsense.html    200
 /feeme              /apps/feeme.html         200
+/launching-soon/    /                        301
+/launching-soon     /                        301
+/launching-soon/*   /                        301

@@ -454,7 +454,7 @@
           const isLive = app.status === 'live';
           const isActive = active.has(app.slug);
           const isSoon = app.status === 'soon';
-          const shouldShade = isSoon || (represented.has(app.slug) && !isActive);
+          const shouldShade = false;
 
           const cardClass = [
             isLive ? 'app-card live' : 'app-card coming',

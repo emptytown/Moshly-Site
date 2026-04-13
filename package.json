@@ -4,8 +4,8 @@
   "description": "Frontend website for the Moshly universe.",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "dev": "npx serve ."
+    "start": "npx serve . -c serve.json",
+    "dev": "npx serve . -c serve.json"
   },
   "keywords": [],
   "author": "",

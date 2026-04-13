@@ -27,6 +27,7 @@ async function initDashboard() {
     updateProfileUI(user);
     updateQuotasUI(user.subscription);
     updateSubscriptionUI(user.subscription);
+    updateAppsUI(user);
 
     // 3. Setup Sidebars and Theme
     initSidebarControls();
@@ -462,6 +463,84 @@ async function handlePhotoFileChange(input) {
         }
     };
     reader.readAsDataURL(file);
+}
+
+function updateAppsUI(user) {
+    const appsGrid = document.getElementById('dbAppsGrid');
+    const peekGrid = document.getElementById('dbPeekGrid');
+    if (!appsGrid) return;
+
+    const catalog = [
+        { slug: 'feeme', name: 'FeeMe', description: 'Financial hub', status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html' },
+        { slug: 'fifthsense', name: 'Fifth Sense', description: 'Experience design', status: 'live', iconAsset: 'assets/fifthsense-logo-icon.svg', url: 'apps/fifthsense.html' },
+        { slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', status: 'live', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#' },
+        { slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#' },
+        { slug: 'merchclick', name: 'MerchClick', description: 'Merch management', status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: '#' }
+    ];
+
+    const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase()) : [];
+    const activeApps = catalog.filter(a => activeAppSlugs.includes(a.slug));
+
+    // Determine slot capacity based on plan
+    const plan = (user.subscription?.plan || 'free').toLowerCase();
+    const slotMap = { 'free': 1, 'pro': 3, 'business': 6 };
+    const totalSlots = slotMap[plan] || 1;
+
+    // 1. Permanent Slots
+    let appsHtml = activeApps.map(app => `
+        <a href="${app.url}" class="db-app-slot">
+            <div class="db-app-slot-icon">
+                <img src="${app.iconAsset}" alt="${app.name}">
+            </div>
+            <div class="db-app-slot-info">
+                <div class="db-app-slot-name">${app.name}</div>
+                <div class="db-app-slot-status">Live</div>
+            </div>
+        </a>
+    `).join('');
+
+    // Add empty slots
+    const emptyCount = Math.max(0, totalSlots - activeApps.length);
+    for (let i = 0; i < emptyCount; i++) {
+        appsHtml += `
+            <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
+                <div class="db-app-slot-empty-content">
+                    <div class="db-app-slot-plus-circle">+</div>
+                    <span class="db-app-slot-label">Connect App</span>
+                </div>
+            </a>
+        `;
+    }
+    appsGrid.innerHTML = appsHtml;
+
+    // 2. Peek Slot
+    if (peekGrid) {
+        const peekAppSlug = user.peek_app?.toLowerCase();
+        const peekApp = catalog.find(a => a.slug === peekAppSlug);
+
+        if (peekApp) {
+            peekGrid.innerHTML = `
+                <a href="${peekApp.url}" class="db-app-slot db-app-slot--peek">
+                    <div class="db-app-slot-icon">
+                        <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
+                    </div>
+                    <div class="db-app-slot-info">
+                        <div class="db-app-slot-name">${peekApp.name}</div>
+                        <div class="db-app-slot-status">Peek Active</div>
+                    </div>
+                </a>
+            `;
+        } else {
+            peekGrid.innerHTML = `
+                <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
+                    <div class="db-app-slot-empty-content">
+                        <div class="db-app-slot-plus-circle">+</div>
+                        <span class="db-app-slot-label">Try any App (24h)</span>
+                    </div>
+                </a>
+            `;
+        }
+    }
 }
 
 function formatNumber(num) {

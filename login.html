@@ -67,8 +67,10 @@
   <script>
     // Redirect already-authenticated users
     (async () => {
-      // Use getSession() instead of isAuthenticated() to allow silentRefresh to run
-      const user = await MoshlyAuth.getSession();
+      // Pass true to getSession to skip silent refresh on initial page load.
+      // This prevents accidental session leakage (F-01) if another user was
+      // previously logged in on the same browser but didn't log out.
+      const user = await MoshlyAuth.getSession(true);
       if (user) {
         const params = new URLSearchParams(window.location.search);
         const redirectParam = params.get('redirect');

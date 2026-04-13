@@ -118,6 +118,14 @@ export async function onRequestPost({ request, env }) {
         plan: subscription?.plan || 'free',
         jobTitle: profile?.jobTitle || null,
         organization: profile?.organization || null,
+        subscription: subscription ? {
+          plan: subscription.plan,
+          pdfExportsLimit: subscription.pdfExportsLimit,
+          pdfExportsUsed: subscription.pdfExportsUsed,
+          aiCreditsLimit: subscription.aiCreditsLimit,
+          aiCreditsUsed: subscription.aiCreditsUsed,
+          expiresAt: subscription.expiresAt,
+        } : null,
       },
       token: accessToken,
     }), {

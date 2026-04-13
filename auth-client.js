@@ -52,8 +52,9 @@ const MoshlyAuth = {
 
   // Returns cached user if a valid token is in memory; otherwise attempts a
   // silent refresh via the HttpOnly cookie to restore the session.
-  getSession: async () => {
+  getSession: async (skipSilent = false) => {
     if (_accessToken && MoshlyAuth.getUser()) return MoshlyAuth.getUser();
+    if (skipSilent) return null;
     const refreshed = await MoshlyAuth.silentRefresh();
     return refreshed ? MoshlyAuth.getUser() : null;
   },

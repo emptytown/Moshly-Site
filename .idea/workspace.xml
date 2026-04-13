@@ -18,7 +18,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="root index connect" />
+    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="root index connect">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_redirects" beforeDir="false" afterPath="$PROJECT_DIR$/_redirects" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard-logic.js" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard-logic.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/refresh.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/refresh.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
