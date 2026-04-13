@@ -79,8 +79,19 @@
     })();
 
     // Show confirmation message if redirected after signup
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener("DOMContentLoaded", () => {
       const params = new URLSearchParams(window.location.search);
+      const reason = params.get("reason");
+      const fb = document.getElementById("login-feedback");
+      if (reason === "expired") {
+        fb.textContent = "Your session has expired. Please log in again to continue.";
+        fb.className = "auth-feedback auth-feedback--error";
+        fb.style.display = "block";
+      } else if (reason === "unverified") {
+        fb.innerHTML = "Account not verified. Please check your email or <a href="/signup" style="color:inherit;text-decoration:underline;">click here</a> to resend the verification link.";
+        fb.className = "auth-feedback auth-feedback--error";
+        fb.style.display = "block";
+      }
       if (params.get('registered') === 'true') {
         const fb = document.getElementById('login-feedback');
         fb.textContent = 'Account created! Please check your email to confirm your account.';

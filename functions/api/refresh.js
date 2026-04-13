@@ -80,7 +80,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const { user, profile, subscription } = refreshResult;
+    const { user, profile, subscription } = refreshResult; if (!user.emailVerified) return new Response(JSON.stringify({ error: "email_unverified" }), { status: 403, headers: { "Content-Type": "application/json" } });
 
     // Issue new access token (15 min — per OWASP-JWT-001)
     const secret = new TextEncoder().encode(env.JWT_SECRET);
@@ -119,9 +119,7 @@ export async function onRequestPost({ request, env }) {
           name: user.name,
           role: user.role,
           plan: subscription?.plan || 'free',
-          jobTitle: profile?.jobTitle || null,
-          organization: profile?.organization || null,
-          subscription: subscription ? {
+          profile: profile ? { firstName: profile.firstName, lastName: profile.lastName, jobTitle: profile.jobTitle, organization: profile.organization, bio: profile.bio, skills: profile.skills, location: profile.location } : null,          subscription: subscription ? {
             plan: subscription.plan,
             pdfExportsLimit: subscription.pdfExportsLimit,
             pdfExportsUsed: subscription.pdfExportsUsed,

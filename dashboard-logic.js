@@ -285,9 +285,9 @@ function updateDashboardThemeUI(isLight) {
 }
 
 function updateProfileUI(user) {
-    const nameEls = document.querySelectorAll('.db-user-name, .db-mob-drawer-uname');
+    const nameEls = document.querySelectorAll('.db-user-name, .db-mob-drawer-uname, .db-profile-pname');
     const planEls = document.querySelectorAll('.db-user-plan, .db-mob-drawer-uplan');
-    const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar');
+    const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar, .db-profile-avatar');
     const firstNameEl = document.getElementById('db-first-name');
 
     const firstName = user.profile?.firstName || user.name?.split(' ')[0] || user.email.split('@')[0];
@@ -358,12 +358,12 @@ function updateProfileUI(user) {
         if (field === 'org') el.textContent = user.profile?.organization || '—';
         if (field === 'job_title') el.textContent = user.profile?.jobTitle || '—';
         if (field === 'skills') el.textContent = user.profile?.skills || '—';
-        if (field === 'location') el.textContent = user.profile?.location || '—';
+        if (field === 'location') el.textContent = user.profile?.location || '—'; if (field === 'email') el.textContent = user.email || '—';
     });
 }
 
 function updateQuotasUI(sub) {
-    if (!sub) return;
+    if (!sub) return; updateQuotasCardUI(sub);
 
     // PDF Exports
     const pdfUsed = sub.pdfExportsUsed || 0;
@@ -447,7 +447,7 @@ async function handlePhotoFileChange(input) {
 
             if (ok) {
                 // Update all avatars in UI
-                const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar, #dbPanelAvatar');
+                const avatarEls = document.querySelectorAll('.db-user-avatar, .db-mob-drawer-avatar, .db-profile-avatar, #dbPanelAvatar');
                 avatarEls.forEach(el => {
                     el.style.backgroundImage = `url(${base64Data})`;
                     el.style.backgroundSize = 'cover';
@@ -645,3 +645,15 @@ window.handlePhotoFileChange = handlePhotoFileChange;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initDashboard);
+
+function updateQuotasCardUI(sub) {
+    const renewEl = document.getElementById("db-billing-renewal-val");
+    const appsEl = document.getElementById("db-billing-apps-val");
+    const pdfEl = document.getElementById("db-billing-pdf-val");
+    const aiEl = document.getElementById("db-billing-ai-val");
+
+    if (renewEl && sub.expiresAt) renewEl.textContent = new Date(sub.expiresAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    if (appsEl) appsEl.textContent = (sub.plan === "free" ? "1" : sub.plan === "pro" ? "3" : "6");
+    if (pdfEl) pdfEl.textContent = sub.pdfExportsLimit || "1";
+    if (aiEl) aiEl.textContent = formatNumber(sub.aiCreditsLimit || 100);
+}

@@ -329,7 +329,7 @@
         const ok = await window.MoshlyAuth.requireSession('/login');
         if (!ok) return;
       }
-    })();
+
 
     const DASH_RETURN_STORAGE_KEY = 'moshly_dash_return_dashboard_v1';
 
@@ -583,6 +583,7 @@
       setInterval(() => {
         paint();
       }, 1000);
+    })();
     })();
   </script>
 </body>

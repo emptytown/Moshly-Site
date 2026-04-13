@@ -56,7 +56,7 @@ const MoshlyAuth = {
     if (_accessToken && MoshlyAuth.getUser()) return MoshlyAuth.getUser();
     if (skipSilent) return null;
     const refreshed = await MoshlyAuth.silentRefresh();
-    return refreshed ? MoshlyAuth.getUser() : null;
+    if (refreshed === "unverified") return "unverified"; return refreshed ? MoshlyAuth.getUser() : null;
   },
 
   // Like getSession but always re-fetches the user from the server to ensure
@@ -80,7 +80,7 @@ const MoshlyAuth = {
 
   requireSession: async (redirectUrl = '/login') => {
     const user = await MoshlyAuth.getSession();
-    if (!user) {
+    if (!user || user === "unverified") {
       // Clean redirectUrl (strip .html if passed manually)
       const cleanUrl = redirectUrl.split('?')[0].endsWith('.html') 
         ? redirectUrl.replace('.html', '') 
@@ -88,10 +88,10 @@ const MoshlyAuth = {
 
       // Encode only the relative path — never the full absolute URL (F-14)
       const current = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = cleanUrl.includes('?')
-        ? `${cleanUrl}&redirect=${current}`
-        : `${cleanUrl}?redirect=${current}`;
-      return false;
+      const reason = (user === "unverified") ? "unverified" : (MoshlyAuth.getUser() ? "expired" : "unauthorized");
+      window.location.href = cleanUrl.includes("?")
+        ? `${cleanUrl}&reason=${reason}&redirect=${current}`
+        : `${cleanUrl}?reason=${reason}&redirect=${current}`;      return false;
     }
     return true;
   },
@@ -105,7 +105,7 @@ const MoshlyAuth = {
     return user;
   },
 
-  logout: async () => {
+  logout: async (reason = null) => {
     try {
       await fetch(`${AUTH_URL}/logout`, {
         method: 'POST',
@@ -118,7 +118,7 @@ const MoshlyAuth = {
     localStorage.removeItem('moshly_user');
     localStorage.removeItem('moshly_session_token'); // clean up legacy key
     if (window.syncAuthUI) window.syncAuthUI();
-    window.location.href = '/';
+    window.location.href = reason ? `/?reason=${reason}` : '/';
   },
 
   // Exchanges the HttpOnly refresh token cookie for a new access token.
@@ -134,7 +134,7 @@ const MoshlyAuth = {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        if (response.status === 401) return false;
+        if (response.status === 401) return false; if (response.status === 403) return "unverified";
 
         if (response.status === 409 && retryCount < 2) {
           // Collision detected, retry up to 2 times after a short delay (100-200ms)
@@ -195,7 +195,7 @@ const MoshlyAuth = {
         if (refreshed) {
           return MoshlyAuth.authFetch(endpoint, { ...options, _retry: true });
         }
-        MoshlyAuth.logout();
+        MoshlyAuth.logout("expired");
         return { ok: false, status: 401, data };
       }
 
