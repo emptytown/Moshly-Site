@@ -2,16 +2,12 @@
  * Global Pages Functions middleware.
  *
  * Routing logic:
- *   /              → launching-soon/index.html  (before LAUNCH_DATE)
- *                 → index.html                  (on/after LAUNCH_DATE)
+ *   /              → index.html
  *   /dashboard    → dashboard.html
  *   /admin        → admin.html
  *   /api/*        → delegated to api/ function handlers
  *   everything else → default Pages asset serving
  */
-
-// BP-CONST-001: named constant instead of inline literal date string
-const LAUNCH_DATE = new Date('2025-05-01T00:00:00Z');
 
 // BP-CONST-001: route map kept as a named constant, not scattered inline literals
 const CLEAN_ROUTE_MAP = {
@@ -60,12 +56,8 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Root path: serve based on whether launch date has passed
+  // Root path: serve the default index.html
   if (pathname === '/') {
-    const isPreLaunch = new Date() < LAUNCH_DATE;
-    if (isPreLaunch) {
-      return serveAsset(env, request, '/launching-soon/index.html');
-    }
     return next();
   }
 
