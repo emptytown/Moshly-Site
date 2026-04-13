@@ -208,7 +208,7 @@
       const payload = { email, password, name };
       if (inviteCode) payload.inviteCode = inviteCode;
 
-      const { ok, data } = await MoshlyAuth.authFetch('/register', {
+      const { ok, data, status } = await MoshlyAuth.authFetch('/register', {
         method: 'POST',
         body: JSON.stringify(payload)
       });
@@ -216,8 +216,17 @@
       if (ok && data.success) {
         // We no longer auto-login to ensure email verification
         window.location.href = '/login?registered=true&email=' + encodeURIComponent(email);
+      } else if (status === 409 && data.error === 'email_unverified') {
+        feedback.textContent = data.message || 'Account already exists but is not verified. A new confirmation email has been sent!';
+        feedback.className = 'auth-feedback auth-feedback--success';
+        feedback.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
       } else {
-        feedback.textContent = data.error || 'Registration failed. Please try again.';
+        feedback.textContent = (status === 409 && data.error === 'email_exists')
+          ? 'An account with this email already exists. Log in here or reset password.'
+          : (data.error || 'Registration failed. Please try again.');
+        feedback.className = 'auth-feedback auth-feedback--error';
         feedback.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Create Account';

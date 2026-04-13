@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-04-13
+- **Auth Race Condition Resolution**: Implemented client-side promise deduplication for concurrent session refresh calls in `auth-client.js` to prevent token rotation collisions.
+- **Eliminated Placeholder Ghosting**: Removed the hardcoded "Jane" from `dashboard.html`, replacing it with a neutral loading placeholder to prevent UI flickering during session hydration.
+- **Improved Auth Sync**: Updated `moshly-ui.js` to ensure the "Dashboard" button only appears after successful session verification, preventing stale UI states.
+
 ## 2026-04-11
 - **Settings and Visibility Container**: Restructured the "Visibility" dashboard card into "Settings and Visibility" with three distinct sections: Settings Drawer trigger, Searchable Profile toggle, and Join Moshly Metaverse toggle.
 - **Create Project Functionality**: Fully implemented end-to-end project creation, including the `projects` table in D1, a new backend API endpoint (`/api/projects`), and frontend form submission logic.

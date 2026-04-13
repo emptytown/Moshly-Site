@@ -123,7 +123,7 @@ export async function onRequestOptions({ request }) {
 export async function onRequestPost({ request, env }) {
   const origin = getAllowedOrigin(request);
   try {
-    const { email, source = 'launching-soon' } = await request.json();
+    const { email, source = 'homepage' } = await request.json();
     const normalizedEmail = String(email || '').trim().toLowerCase();
 
     if (!isValidEmail(normalizedEmail)) {

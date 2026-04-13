@@ -24,8 +24,6 @@ A Cloudflare Pages PWA with clean-URL routing, centralized modal/drawer UX, and 
 │  └─ api/
 │     ├─ projects.js
 │     └─ contact.js
-├─ launching-soon/
-│  └─ index.html
 ├─ MoshlyDev/
 │  └─ ViberLogs/*.md (historical notes)
 ├─ dashboard.html

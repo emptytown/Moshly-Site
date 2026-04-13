@@ -117,7 +117,7 @@
       btn.textContent = 'Logging in…';
 
       try {
-        const { ok, data } = await MoshlyAuth.authFetch('/login', {
+        const { ok, data, status } = await MoshlyAuth.authFetch('/login', {
           method: 'POST',
           body: JSON.stringify({ email, password })
         });
@@ -132,7 +132,11 @@
           return;
         }
 
-        feedback.textContent = data.error || 'Login failed. Please try again.';
+        if (status === 403) {
+          feedback.innerHTML = 'Account not verified. Please check your email or <a href="/signup" style="color:inherit;text-decoration:underline;">click here</a> to resend the verification link.';
+        } else {
+          feedback.textContent = data.error || 'Login failed. Please try again.';
+        }
         feedback.className = 'auth-feedback auth-feedback--error';
         feedback.style.display = 'block';
       } catch {

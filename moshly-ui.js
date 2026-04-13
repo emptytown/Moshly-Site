@@ -4,23 +4,7 @@
  */
 
 // --- 1. AUTH UI SYNC ---
-function syncAuthUI() {
-    const user = (() => {
-        try { return JSON.parse(localStorage.getItem('moshly_user')); } catch { return null; }
-    })();
-
-    const loginBtns = document.querySelectorAll('#nav-login-btn, #mobile-nav-login-btn');
-    const dashBtns = document.querySelectorAll('#nav-dash-btn, #mobile-nav-dash-btn');
-
-    if (user && user.email) {
-        loginBtns.forEach(btn => btn.classList.add('u-hidden'));
-        dashBtns.forEach(btn => btn.classList.remove('u-hidden'));
-    } else {
-        loginBtns.forEach(btn => btn.classList.remove('u-hidden'));
-        dashBtns.forEach(btn => btn.classList.add('u-hidden'));
-    }
-}
-
+async function syncAuthUI() { const loginBtns = document.querySelectorAll("#nav-login-btn, #mobile-nav-login-btn"); const dashBtns = document.querySelectorAll("#nav-dash-btn, #mobile-nav-dash-btn"); if (window.MoshlyAuth) { const user = await window.MoshlyAuth.getSession(); if (user) { loginBtns.forEach(btn => btn.classList.add("u-hidden")); dashBtns.forEach(btn => btn.classList.remove("u-hidden")); return; } } loginBtns.forEach(btn => btn.classList.remove("u-hidden")); dashBtns.forEach(btn => btn.classList.add("u-hidden")); }
 // --- 2. MOBILE MENU ---
 function toggleMobileMenu() {
     const btn = document.getElementById('navMenuBtn');

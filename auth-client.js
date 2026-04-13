@@ -13,7 +13,7 @@
 const AUTH_URL = '/api';
 
 // Private in-memory access token — never persisted to localStorage (F-01)
-let _accessToken = null;
+let _accessToken = null; let _refreshPromise = null;
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
@@ -124,35 +124,49 @@ const MoshlyAuth = {
   // Exchanges the HttpOnly refresh token cookie for a new access token.
   // Stores result in _accessToken — never in localStorage.
   silentRefresh: async (retryCount = 0) => {
-    try {
-      const response = await fetch(`${AUTH_URL}/refresh`, {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json' },
-      });
+    if (retryCount === 0 && _refreshPromise) return _refreshPromise;
 
-      if (response.status === 401) return false;
+    const performRefresh = async () => {
+      try {
+        const response = await fetch(`${AUTH_URL}/refresh`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-      if (response.status === 409 && retryCount < 2) {
-        // Collision detected, retry up to 2 times after a short delay (100-200ms)
-        const delay = 100 + Math.floor(Math.random() * 100);
-        await new Promise(r => setTimeout(r, delay));
-        return MoshlyAuth.silentRefresh(retryCount + 1);
+        if (response.status === 401) return false;
+
+        if (response.status === 409 && retryCount < 2) {
+          // Collision detected, retry up to 2 times after a short delay (100-200ms)
+          const delay = 100 + Math.floor(Math.random() * 100);
+          await new Promise(r => setTimeout(r, delay));
+          return MoshlyAuth.silentRefresh(retryCount + 1);
+        }
+
+        if (response.status === 204) return true; // Valid session, no new token needed/provided
+
+        const data = await response.json();
+
+        if (response.ok && data.token) {
+          _accessToken = data.token;
+          if (data.user) localStorage.setItem('moshly_user', JSON.stringify(data.user));
+          return true;
+        }
+      } catch (e) {
+        console.error('Silent refresh failed:', e);
       }
+      return false;
+    };
 
-      if (response.status === 204) return true; // Valid session, no new token needed/provided
-
-      const data = await response.json();
-
-      if (response.ok && data.token) {
-        _accessToken = data.token;
-        if (data.user) localStorage.setItem('moshly_user', JSON.stringify(data.user));
-        return true;
+    if (retryCount === 0) {
+      _refreshPromise = performRefresh();
+      try {
+        return await _refreshPromise;
+      } finally {
+        _refreshPromise = null;
       }
-    } catch (e) {
-      console.error('Silent refresh failed:', e);
     }
-    return false;
+    return performRefresh();
   },
 
   // Authenticated API helper. On 401 attempts one silent refresh then retries.
