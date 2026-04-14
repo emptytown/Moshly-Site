@@ -223,9 +223,7 @@
         btn.disabled = false;
         btn.textContent = 'Create Account';
       } else {
-        feedback.textContent = (status === 409 && data.error === 'email_exists')
-          ? 'An account with this email already exists. Log in here or reset password.'
-          : (data.error || 'Registration failed. Please try again.');
+        feedback.textContent = data.message || data.error || 'Registration failed. Please try again.';
         feedback.className = 'auth-feedback auth-feedback--error';
         feedback.style.display = 'block';
         btn.disabled = false;
