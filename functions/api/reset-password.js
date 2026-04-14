@@ -24,14 +24,20 @@ export async function onRequestPost({ request, env }) {
     try {
       ({ token, password } = await request.json());
     } catch {
-      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_body',
+        message: 'Invalid request body' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
     if (!token || !password) {
-      return new Response(JSON.stringify({ error: 'Token and password are required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_fields',
+        message: 'Token and password are required' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -39,7 +45,10 @@ export async function onRequestPost({ request, env }) {
 
     const passwordError = validatePassword(password);
     if (passwordError) {
-      return new Response(JSON.stringify({ error: passwordError }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_password',
+        message: passwordError 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -60,7 +69,10 @@ export async function onRequestPost({ request, env }) {
       .get();
 
     if (!existing) {
-      return new Response(JSON.stringify({ error: 'Invalid or expired reset token' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_token',
+        message: 'Invalid or expired reset token' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -86,7 +98,10 @@ export async function onRequestPost({ request, env }) {
 
     if (!result.meta?.changes || result.meta.changes === 0) {
       // Token was consumed by a concurrent request between pre-check and update
-      return new Response(JSON.stringify({ error: 'Invalid or expired reset token' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_token',
+        message: 'Invalid or expired reset token' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -113,7 +128,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Reset password error:', error.message);
-    return new Response(JSON.stringify({ error: 'Server error' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'An internal server error occurred' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

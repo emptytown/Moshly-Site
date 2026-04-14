@@ -24,14 +24,20 @@ export async function onRequestPost({ request, env }) {
     try {
       ({ email } = await request.json());
     } catch {
-      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_body',
+        message: 'Invalid request body' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
     if (!email) {
-      return new Response(JSON.stringify({ error: 'Email is required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_fields',
+        message: 'Email is required' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -135,7 +141,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Forgot password error:', error);
-    return new Response(JSON.stringify({ error: 'Server error' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'An internal server error occurred' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
