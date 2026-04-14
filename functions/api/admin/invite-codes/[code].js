@@ -15,12 +15,18 @@ function json(data, status = 200) {
 export async function onRequestDelete({ request, env, params }) {
   const payload = await verifyJWT(request, env);
   if (!payload || payload.role !== 'god') {
-    return json({ error: 'Forbidden' }, 403);
+    return json({ 
+      error: 'forbidden',
+      message: 'Forbidden' 
+    }, 403);
   }
 
   const code = (params.code || '').toUpperCase().trim();
   if (!code) {
-    return json({ error: 'Code is required' }, 400);
+    return json({ 
+      error: 'missing_code',
+      message: 'Code is required' 
+    }, 400);
   }
 
   const db = drizzle(env.MOSHLY_DB);
@@ -33,7 +39,10 @@ export async function onRequestDelete({ request, env, params }) {
       .get();
 
     if (!existing) {
-      return json({ error: 'Code not found' }, 404);
+      return json({ 
+        error: 'not_found',
+        message: 'Code not found' 
+      }, 404);
     }
 
     await db.delete(schema.inviteCodes).where(eq(schema.inviteCodes.code, code));
@@ -43,7 +52,10 @@ export async function onRequestDelete({ request, env, params }) {
     return json({ success: true, message: `Code ${code} revoked.` });
   } catch (err) {
     console.error('Failed to revoke invite code:', { error: err.message, code });
-    return json({ error: 'Failed to revoke code' }, 500);
+    return json({ 
+      error: 'server_error',
+      message: 'Failed to revoke code' 
+    }, 500);
   }
 }
 

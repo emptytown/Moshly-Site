@@ -39,7 +39,10 @@ function computeSubscriptionExpiresAt(durationMonths) {
 export async function onRequestGet({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload || !requireGod(payload)) {
-    return json({ error: 'Forbidden' }, 403);
+    return json({ 
+      error: 'forbidden',
+      message: 'Forbidden' 
+    }, 403);
   }
 
   const db = drizzle(env.MOSHLY_DB);
@@ -66,7 +69,10 @@ export async function onRequestGet({ request, env }) {
     });
   } catch (err) {
     console.error('Failed to list invite codes:', { error: err.message });
-    return json({ error: 'Failed to load invite codes' }, 500);
+    return json({ 
+      error: 'server_error',
+      message: 'Failed to load invite codes' 
+    }, 500);
   }
 }
 
@@ -74,7 +80,10 @@ export async function onRequestGet({ request, env }) {
 export async function onRequestPost({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload || !requireGod(payload)) {
-    return json({ error: 'Forbidden' }, 403);
+    return json({ 
+      error: 'forbidden',
+      message: 'Forbidden' 
+    }, 403);
   }
 
   let body;
@@ -143,10 +152,16 @@ export async function onRequestPost({ request, env }) {
     }, 201);
   } catch (err) {
     if (err.message?.includes('UNIQUE')) {
-      return json({ error: 'Code already exists. Try a different custom code or leave it blank.' }, 409);
+      return json({ 
+        error: 'code_exists',
+        message: 'Code already exists. Try a different custom code or leave it blank.' 
+      }, 409);
     }
     console.error('Failed to create invite code:', { error: err.message, code });
-    return json({ error: 'Failed to create invite code' }, 500);
+    return json({ 
+      error: 'server_error',
+      message: 'Failed to create invite code' 
+    }, 500);
   }
 }
 
