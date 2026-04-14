@@ -4,7 +4,10 @@ export async function onRequestPost({ request, env }) {
   try {
     const { token } = await request.json();
     if (!token) {
-      return new Response(JSON.stringify({ error: 'SSO token is required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_token',
+        message: 'SSO token is required' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': getAllowedOrigin(request) }
       });
@@ -12,7 +15,10 @@ export async function onRequestPost({ request, env }) {
 
     if (!env.AUTH_KV) {
       console.error('CRITICAL: AUTH_KV is not configured');
-      return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      return new Response(JSON.stringify({ 
+        error: 'server_error',
+        message: 'Internal server error' 
+      }), {
         status: 500,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': getAllowedOrigin(request) }
       });
@@ -23,7 +29,10 @@ export async function onRequestPost({ request, env }) {
     const storedData = await env.AUTH_KV.get(kvKey);
 
     if (!storedData) {
-      return new Response(JSON.stringify({ error: 'Invalid or expired SSO token' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_token',
+        message: 'Invalid or expired SSO token' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': getAllowedOrigin(request) }
       });
@@ -53,7 +62,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('SSO verification error:', error.message);
-    return new Response(JSON.stringify({ error: 'Failed to verify SSO token' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Failed to verify SSO token' 
+    }), {
       status: 500,
       headers: { 
         'Content-Type': 'application/json',

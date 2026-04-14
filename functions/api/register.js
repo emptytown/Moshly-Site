@@ -6,7 +6,7 @@ import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit'
 import { validatePassword } from './_password';
 import { corsOptionsResponse } from './_cors';
 import { PLAN_LIMITS, GOD_TIER_PLANS, SUBSCRIPTION_PLANS } from './_plans';
-import { sha256Hex, sendVerificationEmail } from './_email_utils';
+import { sha256Hex, sendVerificationEmail, resendVerification } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -75,26 +75,19 @@ export async function onRequestPost({ request, env }) {
       if (!existing.emailVerified) {
         // Handle unverified user (Scenario "Filipe")
         // We update their name/password too in case they made a typo or forgot it
-        const verificationToken = crypto.randomUUID();
-        const verificationTokenHash = await sha256Hex(verificationToken);
-        const verificationExpires = new Date(Date.now() + 3600000); // 1 hour
-
         await db.update(schema.users)
           .set({ 
-            verificationToken: verificationTokenHash,
-            verificationExpires: verificationExpires,
             name: name || existing.name,
             passwordHash: passwordHash
           })
           .where(eq(schema.users.id, existing.id))
           .run();
 
-        // Send Verification Email
-        await sendVerificationEmail(request, env, email, name || existing.name, verificationToken);
+        await resendVerification(db, request, env, { ...existing, name: name || existing.name });
 
         return new Response(JSON.stringify({
           error: 'email_unverified',
-          message: 'Account already exists but is not verified. A new confirmation email has been sent!'
+          message: 'Account already exists but is not verified. We’ve sent you a new confirmation email. Please confirm your account using the latest email.'
         }), {
           status: 409,
           headers: { 'Content-Type': 'application/json' }

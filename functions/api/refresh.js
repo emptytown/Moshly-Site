@@ -4,7 +4,7 @@ import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
-import { sha256Hex, sendVerificationEmail } from './_email_utils';
+import { sha256Hex, sendVerificationEmail, resendVerification } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   try {
@@ -98,24 +98,11 @@ export async function onRequestPost({ request, env }) {
       const now = new Date();
       if (user.verificationExpires && user.verificationExpires < now) {
         // Token expired, send a new one
-        const verificationToken = crypto.randomUUID();
-        const verificationTokenHash = await sha256Hex(verificationToken);
-        const verificationExpires = new Date(Date.now() + 3600000); // 1 hour
-
-        await db.update(schema.users)
-          .set({ 
-            verificationToken: verificationTokenHash,
-            verificationExpires: verificationExpires
-          })
-          .where(eq(schema.users.id, user.id))
-          .run();
-
-        // Send Verification Email
-        await sendVerificationEmail(request, env, user.email, user.name, verificationToken);
+        await resendVerification(db, request, env, user);
 
         return new Response(JSON.stringify({ 
           error: 'email_validation_expired',
-          message: 'Your verification link has expired. We\'ve sent a new confirmation link to your email.' 
+          message: 'Your confirmation link has expired. We’ve sent you a new confirmation email. Please confirm your account using the latest email.' 
         }), {
           status: 403,
           headers: { 'Content-Type': 'application/json' }
@@ -124,7 +111,7 @@ export async function onRequestPost({ request, env }) {
 
       return new Response(JSON.stringify({ 
         error: 'email_unverified',
-        message: 'Please confirm your email before continuing' 
+        message: 'Your confirmation link is still valid, but your account has not been confirmed yet. Please check your inbox and complete the verification.' 
       }), { 
         status: 403, 
         headers: { 'Content-Type': 'application/json' } 

@@ -5,7 +5,10 @@ export async function onRequestPost({ request, env }) {
   // 1. Verify Authentication
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 
         'Content-Type': 'application/json',
@@ -51,7 +54,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('SSO Token generation error:', error.message);
-    return new Response(JSON.stringify({ error: 'Failed to generate SSO token' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Failed to generate SSO token' 
+    }), {
       status: 500,
       headers: { 
         'Content-Type': 'application/json',
