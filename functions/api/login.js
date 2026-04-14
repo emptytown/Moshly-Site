@@ -5,6 +5,7 @@ import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { getAllowedOrigin, corsOptionsResponse } from './_cors';
+import { sha256Hex, sendVerificationEmail } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -19,14 +20,20 @@ export async function onRequestPost({ request, env }) {
     try {
       ({ email, password } = await request.json());
     } catch {
-      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_body',
+        message: 'Invalid request body' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ error: 'Email and password are required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_fields',
+        message: 'Email and password are required' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -51,7 +58,10 @@ export async function onRequestPost({ request, env }) {
     .get();
 
     if (!loginResult || !loginResult.user) {
-      return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_credentials',
+        message: 'Invalid email or password. Please try again.' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -61,7 +71,37 @@ export async function onRequestPost({ request, env }) {
     
     // Check if email is verified
     if (!user.emailVerified) {
-      return new Response(JSON.stringify({ error: 'Please confirm your email before logging in' }), {
+      const now = new Date();
+      if (user.verificationExpires && user.verificationExpires < now) {
+        // Token expired, send a new one
+        const verificationToken = crypto.randomUUID();
+        const verificationTokenHash = await sha256Hex(verificationToken);
+        const verificationExpires = new Date(Date.now() + 3600000); // 1 hour
+
+        await db.update(schema.users)
+          .set({ 
+            verificationToken: verificationTokenHash,
+            verificationExpires: verificationExpires
+          })
+          .where(eq(schema.users.id, user.id))
+          .run();
+
+        // Send Verification Email
+        await sendVerificationEmail(request, env, user.email, user.name, verificationToken);
+
+        return new Response(JSON.stringify({ 
+          error: 'email_validation_expired',
+          message: 'Your verification link has expired. We\'ve sent a new confirmation link to your email.' 
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      return new Response(JSON.stringify({ 
+        error: 'email_unverified',
+        message: 'Please confirm your email before logging in' 
+      }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -70,7 +110,10 @@ export async function onRequestPost({ request, env }) {
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
-      return new Response(JSON.stringify({ error: 'Invalid credentials' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_credentials',
+        message: 'Invalid email or password. Please try again.' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -136,7 +179,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Login error:', error.message);
-    return new Response(JSON.stringify({ error: 'Server error during login' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error during login' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

@@ -144,9 +144,13 @@
         }
 
         if (status === 403) {
-          feedback.innerHTML = 'Account not verified. Please check your email or <a href="/signup" style="color:inherit;text-decoration:underline;">click here</a> to resend the verification link.';
+          if (data.error === 'email_validation_expired') {
+            feedback.textContent = data.message || 'Your verification link has expired. We\'ve sent a new confirmation link to your email.';
+          } else {
+            feedback.innerHTML = 'Account not verified. Please check your email or <a href="/signup" style="color:inherit;text-decoration:underline;">click here</a> to resend the verification link.';
+          }
         } else {
-          feedback.textContent = data.error || 'Login failed. Please try again.';
+          feedback.textContent = data.message || data.error || 'Login failed. Please try again.';
         }
         feedback.className = 'auth-feedback auth-feedback--error';
         feedback.style.display = 'block';

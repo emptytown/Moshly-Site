@@ -23,7 +23,7 @@ export async function onRequestPost({ request, env }) {
   const isSecure = new URL(request.url).protocol === 'https:';
   const clearCookie = `moshly_rt=; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=0`;
 
-  return new Response(JSON.stringify({ success: true }), {
+  return new Response(JSON.stringify({ success: true, message: 'Logged out successfully' }), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',

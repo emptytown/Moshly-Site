@@ -259,7 +259,8 @@ const MoshlyAuth = {
           window.location.href = dest;
         } else {
           if (feedback) {
-            feedback.textContent = data.error || 'Login failed. Please try again.';
+            feedback.textContent = data.message || data.error || 'Login failed. Please try again.';
+            feedback.className = 'auth-feedback auth-feedback--error';
             feedback.style.display = 'block';
           }
         }
@@ -322,7 +323,8 @@ const MoshlyAuth = {
           return;
         } else {
           if (feedback) {
-            feedback.textContent = data.error || 'Registration failed.';
+            feedback.textContent = data.message || data.error || 'Registration failed.';
+            feedback.className = 'auth-feedback auth-feedback--error';
             feedback.style.display = 'block';
           }
         }
@@ -370,22 +372,22 @@ const MoshlyAuth = {
           if (feedback) {
             feedback.textContent = data.message || 'If an account exists, a reset link has been sent.';
             feedback.style.display = 'block';
-            feedback.className = 'auth-feedback success';
+            feedback.className = 'auth-feedback auth-feedback--success';
             const input = document.getElementById('forgot-email');
             if (input) input.value = '';
           }
         } else {
           if (feedback) {
-            feedback.textContent = data.error || 'Request failed. Please try again.';
+            feedback.textContent = data.message || data.error || 'Request failed. Please try again.';
             feedback.style.display = 'block';
-            feedback.className = 'auth-feedback error';
+            feedback.className = 'auth-feedback auth-feedback--error';
           }
         }
       } catch (error) {
         if (feedback) {
           feedback.textContent = 'An error occurred. Please try again later.';
           feedback.style.display = 'block';
-          feedback.className = 'auth-feedback error';
+          feedback.className = 'auth-feedback auth-feedback--error';
         }
       } finally {
         if (btn) {

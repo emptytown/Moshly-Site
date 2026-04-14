@@ -69,7 +69,10 @@ export async function applyRateLimit(kv, endpoint, identifier) {
  */
 export function rateLimitedResponse(retryAfter) {
   return new Response(
-    JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+    JSON.stringify({ 
+      error: 'too_many_requests',
+      message: 'Too many requests. Please try again later.' 
+    }),
     {
       status: 429,
       headers: {

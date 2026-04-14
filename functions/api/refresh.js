@@ -4,6 +4,7 @@ import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
+import { sha256Hex, sendVerificationEmail } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   try {
@@ -17,7 +18,10 @@ export async function onRequestPost({ request, env }) {
     const refreshToken = match?.[1];
 
     if (!refreshToken) {
-      return new Response(JSON.stringify({ error: 'Refresh token is required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_token',
+        message: 'Refresh token is required' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -36,7 +40,10 @@ export async function onRequestPost({ request, env }) {
     const lockKey = `rt:lock:${refreshToken}`;
     const existingLock = await env.AUTH_KV.get(lockKey);
     if (existingLock) {
-      return new Response(JSON.stringify({ error: 'Refresh in progress, please retry' }), {
+      return new Response(JSON.stringify({ 
+        error: 'refresh_conflict',
+        message: 'Refresh in progress, please retry' 
+      }), {
         status: 409,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -46,7 +53,10 @@ export async function onRequestPost({ request, env }) {
     // Look up refresh token in KV
     const storedValue = await env.AUTH_KV.get(`rt:${refreshToken}`);
     if (!storedValue) {
-      return new Response(JSON.stringify({ error: 'Invalid or expired refresh token' }), {
+      return new Response(JSON.stringify({ 
+        error: 'invalid_token',
+        message: 'Invalid or expired refresh token' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -74,13 +84,52 @@ export async function onRequestPost({ request, env }) {
       .get();
 
     if (!refreshResult?.user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
+      return new Response(JSON.stringify({ 
+        error: 'user_not_found',
+        message: 'User not found' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const { user, profile, subscription } = refreshResult; if (!user.emailVerified) return new Response(JSON.stringify({ error: "email_unverified" }), { status: 403, headers: { "Content-Type": "application/json" } });
+    const { user, profile, subscription } = refreshResult; 
+    if (!user.emailVerified) {
+      const now = new Date();
+      if (user.verificationExpires && user.verificationExpires < now) {
+        // Token expired, send a new one
+        const verificationToken = crypto.randomUUID();
+        const verificationTokenHash = await sha256Hex(verificationToken);
+        const verificationExpires = new Date(Date.now() + 3600000); // 1 hour
+
+        await db.update(schema.users)
+          .set({ 
+            verificationToken: verificationTokenHash,
+            verificationExpires: verificationExpires
+          })
+          .where(eq(schema.users.id, user.id))
+          .run();
+
+        // Send Verification Email
+        await sendVerificationEmail(request, env, user.email, user.name, verificationToken);
+
+        return new Response(JSON.stringify({ 
+          error: 'email_validation_expired',
+          message: 'Your verification link has expired. We\'ve sent a new confirmation link to your email.' 
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      return new Response(JSON.stringify({ 
+        error: 'email_unverified',
+        message: 'Please confirm your email before continuing' 
+      }), { 
+        status: 403, 
+        headers: { 'Content-Type': 'application/json' } 
+      });
+    }
 
     // Issue new access token (15 min — per OWASP-JWT-001)
     const secret = new TextEncoder().encode(env.JWT_SECRET);
@@ -134,7 +183,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Refresh token error:', error.message);
-    return new Response(JSON.stringify({ error: 'Server error during token refresh' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error during token refresh' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

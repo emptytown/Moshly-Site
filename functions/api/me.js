@@ -10,7 +10,10 @@ const MAX_FIELD_LENGTH = 200;
 export async function onRequestGet({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -33,7 +36,10 @@ export async function onRequestGet({ request, env }) {
     .get();
 
     if (!result || !result.user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
+      return new Response(JSON.stringify({ 
+        error: 'user_not_found',
+        message: 'User not found' 
+      }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -74,7 +80,10 @@ export async function onRequestGet({ request, env }) {
 
   } catch (error) {
     console.error('Fetch user error:', error);
-    return new Response(JSON.stringify({ error: 'Server error fetching profile' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error fetching profile' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -84,7 +93,10 @@ export async function onRequestGet({ request, env }) {
 export async function onRequestPatch({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -99,7 +111,10 @@ export async function onRequestPatch({ request, env }) {
   try {
     body = await request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+    return new Response(JSON.stringify({ 
+      error: 'invalid_body',
+      message: 'Invalid request body' 
+    }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -175,7 +190,10 @@ export async function onRequestPatch({ request, env }) {
 
   } catch (error) {
     console.error('Update profile error:', { error: error.message, userId: payload.userId });
-    return new Response(JSON.stringify({ error: 'Server error updating profile' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error updating profile' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -185,7 +203,10 @@ export async function onRequestPatch({ request, env }) {
 export async function onRequestDelete({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -200,7 +221,10 @@ export async function onRequestDelete({ request, env }) {
   try {
     body = await request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+    return new Response(JSON.stringify({ 
+      error: 'invalid_body',
+      message: 'Invalid request body' 
+    }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -208,7 +232,10 @@ export async function onRequestDelete({ request, env }) {
 
   const { timing } = body;
   if (timing !== 'now' && timing !== 'end_of_cycle') {
-    return new Response(JSON.stringify({ error: 'Invalid timing option' }), {
+    return new Response(JSON.stringify({ 
+      error: 'invalid_timing',
+      message: 'Invalid timing option' 
+    }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -256,7 +283,10 @@ export async function onRequestDelete({ request, env }) {
     }
   } catch (error) {
     console.error('Delete account error:', { error: error.message, userId: payload.userId });
-    return new Response(JSON.stringify({ error: 'Server error during account termination' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error during account termination' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
