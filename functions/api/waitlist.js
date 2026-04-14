@@ -127,7 +127,10 @@ export async function onRequestPost({ request, env }) {
     const normalizedEmail = String(email || '').trim().toLowerCase();
 
     if (!isValidEmail(normalizedEmail)) {
-      return json({ error: 'Please enter a valid email address.' }, 400, origin);
+      return json({ 
+        error: 'invalid_email',
+        message: 'Please enter a valid email address.' 
+      }, 400, origin);
     }
 
     const apiKey = env.WAITLIST_API_KEY;
@@ -136,7 +139,10 @@ export async function onRequestPost({ request, env }) {
     const audienceId = env.RESEND_AUDIENCE_ID;
 
     if (!apiKey || !fromEmail || !notifyTo) {
-      return json({ error: 'Waitlist email service is not configured yet.' }, 500, origin);
+      return json({ 
+        error: 'service_error',
+        message: 'Waitlist email service is not configured yet.' 
+      }, 500, origin);
     }
 
     await addToAudience(apiKey, audienceId, normalizedEmail, source);
@@ -167,6 +173,9 @@ export async function onRequestPost({ request, env }) {
     return json({ success: true }, 200, origin);
   } catch (error) {
     console.error('Waitlist signup error:', error);
-    return json({ error: 'Could not add you to the waitlist right now.' }, 500, origin);
+    return json({ 
+      error: 'server_error',
+      message: 'Could not add you to the waitlist right now.' 
+    }, 500, origin);
   }
 }

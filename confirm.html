@@ -87,6 +87,8 @@
 
         if (response.ok) {
           statusMessage.textContent = 'Verification complete!';
+          successDiv.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0;"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>${data.message || 'Your email has been successfully confirmed. You can now log in.'}</span>`;
           successDiv.style.display = 'flex';
         } else {
           statusMessage.textContent = 'Verification failed.';

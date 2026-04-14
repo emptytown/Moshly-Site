@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { corsOptionsResponse } from './_cors';
-import { sha256Hex } from './_email_utils';
+import { sha256Hex, resendVerification } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -37,21 +37,37 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
+    // Case C: Email already confirmed
+    if (user.emailVerified) {
+      return new Response(JSON.stringify({
+        success: true,
+        message: 'Your email has been successfully confirmed. You can now log in.'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const now = new Date();
     if (user.verificationExpires && user.verificationExpires < now) {
+      // Case B: Token expired, send a new one automatically
+      await resendVerification(db, request, env, user);
+
       return new Response(JSON.stringify({ 
         error: 'token_expired',
-        message: 'Verification token has expired. Please try logging in to receive a new one.' 
+        message: 'Your confirmation link has expired. We’ve sent you a new confirmation email. Please confirm your account using the latest email.' 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
+    // Case A: Valid and unconfirmed -> Confirm now
     await db.update(schema.users)
       .set({
         emailVerified: true,
-        verificationToken: null,
+        // We keep the verificationToken to allow the "Already confirmed" message 
+        // on subsequent clicks, but we clear the expiration to avoid auto-resend.
         verificationExpires: null
       })
       .where(eq(schema.users.id, user.id))
@@ -59,7 +75,7 @@ export async function onRequestPost({ request, env }) {
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'Email verified successfully. You can now log in.'
+      message: 'Your email has been successfully confirmed. You can now log in.'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
