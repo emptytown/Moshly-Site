@@ -7,7 +7,10 @@ import { corsOptionsResponse } from './_cors';
 export async function onRequestPost({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -20,7 +23,10 @@ export async function onRequestPost({ request, env }) {
     const { name, type, genre, location, description, notes, aiContextRules, extraFields, team } = body;
 
     if (!name || !type) {
-      return new Response(JSON.stringify({ error: 'Name and Type are required' }), {
+      return new Response(JSON.stringify({ 
+        error: 'missing_fields',
+        message: 'Name and Type are required' 
+      }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -33,7 +39,10 @@ export async function onRequestPost({ request, env }) {
       .get();
 
     if (!workspace) {
-      return new Response(JSON.stringify({ error: 'Workspace not found' }), {
+      return new Response(JSON.stringify({ 
+        error: 'workspace_not_found',
+        message: 'Workspace not found' 
+      }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -63,7 +72,10 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Create project error:', error);
-    return new Response(JSON.stringify({ error: 'Server error creating project' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error creating project' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -73,7 +85,10 @@ export async function onRequestPost({ request, env }) {
 export async function onRequestGet({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ 
+      error: 'unauthorized',
+      message: 'Unauthorized' 
+    }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -94,7 +109,10 @@ export async function onRequestGet({ request, env }) {
 
   } catch (error) {
     console.error('Fetch projects error:', error);
-    return new Response(JSON.stringify({ error: 'Server error fetching projects' }), {
+    return new Response(JSON.stringify({ 
+      error: 'server_error',
+      message: 'Server error fetching projects' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

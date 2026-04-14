@@ -118,10 +118,22 @@ export async function onRequestPost({ request, env }) {
   const subject = String(body.subject || '').trim();
   const message = String(body.message || '').trim().slice(0, MAX_MESSAGE_LENGTH);
 
-  if (!name)                          return json({ error: 'Name is required' }, 400);
-  if (!isValidEmail(email))           return json({ error: 'A valid email is required' }, 400);
-  if (!ALLOWED_SUBJECTS.includes(subject)) return json({ error: 'Invalid subject' }, 400);
-  if (!message || message.length < 10) return json({ error: 'Message must be at least 10 characters' }, 400);
+  if (!name)                          return json({ 
+    error: 'missing_name',
+    message: 'Name is required' 
+  }, 400);
+  if (!isValidEmail(email))           return json({ 
+    error: 'invalid_email',
+    message: 'A valid email is required' 
+  }, 400);
+  if (!ALLOWED_SUBJECTS.includes(subject)) return json({ 
+    error: 'invalid_subject',
+    message: 'Invalid subject' 
+  }, 400);
+  if (!message || message.length < 10) return json({ 
+    error: 'invalid_message',
+    message: 'Message must be at least 10 characters' 
+  }, 400);
 
   const apiKey    = env.RESEND_API_KEY;
   const fromEmail = env.RESEND_FROM_EMAIL || 'noreply@moshly.io';
@@ -130,7 +142,10 @@ export async function onRequestPost({ request, env }) {
 
   if (!apiKey) {
     console.error('Contact form failed: RESEND_API_KEY not configured');
-    return json({ error: 'Email service is not configured' }, 500);
+    return json({ 
+      error: 'service_error',
+      message: 'Email service is not configured' 
+    }, 500);
   }
 
   try {
@@ -158,7 +173,10 @@ export async function onRequestPost({ request, env }) {
     return json({ success: true });
   } catch (err) {
     console.error('Contact form email failed:', { error: err.message });
-    return json({ error: 'Failed to send message. Please try again.' }, 500);
+    return json({ 
+      error: 'server_error',
+      message: 'Failed to send message. Please try again.' 
+    }, 500);
   }
 }
 
