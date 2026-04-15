@@ -5,6 +5,7 @@ import { SignJWT } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { getAllowedOrigin, corsOptionsResponse } from './_cors';
+import { resendVerification } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -91,11 +92,20 @@ export async function onRequestPost({ request, env }) {
       const now = new Date();
       const isExpired = !user.verificationExpires || user.verificationExpires < now;
 
+      if (isExpired) {
+        await resendVerification(db, request, env, user);
+        return new Response(JSON.stringify({
+          error: 'email_validation_expired',
+          message: 'Your confirmation link has expired. We\'ve sent you a new confirmation email — please check your inbox and confirm your account.'
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
       return new Response(JSON.stringify({
-        error: isExpired ? 'email_validation_expired' : 'email_unverified',
-        message: isExpired
-          ? 'Your confirmation link has expired. Please use the "Forgot password?" link to regain access, or request a new confirmation email.'
-          : 'Your account has not been confirmed yet. Please check your inbox and complete the verification.'
+        error: 'email_unverified',
+        message: 'Your account has not been confirmed yet. Please check your inbox and complete the verification.'
       }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' }
