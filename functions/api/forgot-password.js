@@ -86,7 +86,7 @@ export async function onRequestPost({ request, env }) {
       const resetLink = `${origin}/reset-password.html?token=${resetToken}`;
       const logoUrl = `${origin}/assets/Moshly-Main-Logo-1.svg`;
 
-      await fetch(`${RESEND_API_BASE}/emails`, {
+      const resendRes = await fetch(`${RESEND_API_BASE}/emails`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -126,6 +126,12 @@ export async function onRequestPost({ request, env }) {
           text: `Reset your Moshly password by visiting this link: ${resetLink}\n\nThis link will expire in 1 hour.\n\n© 2026 Moshly · moshly.io`
         })
       });
+      if (!resendRes.ok) {
+        const resendBody = await resendRes.text();
+        console.error(`Resend API error ${resendRes.status}: ${resendBody}`);
+      } else {
+        console.log(`Password reset email sent to ${email} via Resend`);
+      }
     } else {
       console.warn('RESEND_API_KEY not found, email not sent');
     }
