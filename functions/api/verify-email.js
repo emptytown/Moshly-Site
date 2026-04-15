@@ -3,11 +3,16 @@ import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { corsOptionsResponse } from './_cors';
 import { sha256Hex, resendVerification } from './_email_utils';
+import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
+    const clientIp = getClientIp(request);
+    const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'verify-email', `ip:${clientIp}`);
+    if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
+
     const { token } = await request.json();
 
     if (!token) {

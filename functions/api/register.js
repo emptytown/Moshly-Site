@@ -42,14 +42,17 @@ export async function onRequestPost({ request, env }) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'invalid_email',
-        message: 'Invalid email format' 
+        message: 'Invalid email format'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    // Normalize before any DB operations so stored email is always canonical.
+    email = email.toLowerCase().trim();
 
     const passwordError = validatePassword(password);
     if (passwordError) {
@@ -63,7 +66,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Email rate limit — after parsing, dual-keyed per OWASP-RATELIMIT-001
-    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'register', `email:${email.toLowerCase()}`);
+    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'register', `email:${email}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
     // Hash password — compute once for both fresh signups and unverified re-registrations
@@ -104,65 +107,46 @@ export async function onRequestPost({ request, env }) {
       }
     }
 
-    // Validate invite code if provided
+    // Validate invite code if provided (read-only — claim happens AFTER user creation)
     let resolvedCode = null;
+    let normalizedInviteCode = null;
     if (inviteCode) {
-      const normalizedCode = String(inviteCode).toUpperCase().trim();
+      normalizedInviteCode = String(inviteCode).toUpperCase().trim();
       const codeRecord = await db.select()
         .from(schema.inviteCodes)
-        .where(eq(schema.inviteCodes.code, normalizedCode))
+        .where(eq(schema.inviteCodes.code, normalizedInviteCode))
         .get();
 
       if (!codeRecord) {
-        return new Response(JSON.stringify({ 
+        return new Response(JSON.stringify({
           error: 'invalid_invite_code',
-          message: 'The invite code you entered is invalid.' 
+          message: 'The invite code you entered is invalid.'
         }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         });
       }
       if (codeRecord.expiresAt && codeRecord.expiresAt < new Date()) {
-        return new Response(JSON.stringify({ 
+        return new Response(JSON.stringify({
           error: 'invite_code_expired',
-          message: 'This invite code has expired and can no longer be used.' 
+          message: 'This invite code has expired and can no longer be used.'
         }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         });
       }
       if (codeRecord.usesCount >= codeRecord.maxUses) {
-        return new Response(JSON.stringify({ 
+        return new Response(JSON.stringify({
           error: 'invite_code_max_uses',
-          message: 'This invite code has already reached its maximum number of uses.' 
+          message: 'This invite code has already reached its maximum number of uses.'
         }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         });
       }
       resolvedCode = codeRecord;
-
-      // Atomically claim one use: only succeeds if usesCount is still below maxUses.
-      // This closes the TOCTOU window between the check above and the batch insert below.
-      // sql`uses_count < max_uses` compares the two DB columns so the guard is evaluated
-      // inside the same atomic UPDATE statement.
-      const claimResult = await db.update(schema.inviteCodes)
-        .set({ usesCount: sql`${schema.inviteCodes.usesCount} + 1` })
-        .where(and(
-          eq(schema.inviteCodes.code, normalizedCode),
-          sql`uses_count < max_uses`
-        ))
-        .run();
-
-      if (!claimResult.meta.changes) {
-        return new Response(JSON.stringify({ 
-          error: 'invite_code_max_uses',
-          message: 'This invite code has already reached its maximum number of uses.' 
-        }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
+      // Do NOT claim the code here — the atomic claim happens after db.batch() so
+      // a failed user creation cannot permanently burn a use slot.
     }
 
     // Determine plan from invite code; default to free
@@ -216,9 +200,38 @@ export async function onRequestPost({ request, env }) {
       }),
     ];
 
-    // Invite code use was already claimed atomically above — do not increment again here.
-
     await db.batch(batchOps);
+
+    // Atomically claim one invite code use NOW — after user creation succeeds.
+    // Doing it here means a failed batch can never burn a use slot.
+    // The conditional WHERE guard closes the TOCTOU window between the read-
+    // only validation above and this write.
+    if (resolvedCode) {
+      const claimResult = await db.update(schema.inviteCodes)
+        .set({ usesCount: sql`${schema.inviteCodes.usesCount} + 1` })
+        .where(and(
+          eq(schema.inviteCodes.code, normalizedInviteCode),
+          sql`uses_count < max_uses`
+        ))
+        .run();
+
+      if (!claimResult.meta.changes) {
+        // Extremely rare: another request exhausted the last use in the window
+        // between our read-check and this write. Roll back the user we just created.
+        await db.batch([
+          db.delete(schema.subscriptions).where(eq(schema.subscriptions.workspaceId, workspaceId)),
+          db.delete(schema.workspaces).where(eq(schema.workspaces.id, workspaceId)),
+          db.delete(schema.users).where(eq(schema.users.id, userId)),
+        ]);
+        return new Response(JSON.stringify({
+          error: 'invite_code_max_uses',
+          message: 'This invite code has already reached its maximum number of uses.'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    }
 
     // Send Verification Email via Resend
     await sendVerificationEmail(request, env, email, name, verificationToken);

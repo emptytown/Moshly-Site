@@ -11,6 +11,7 @@ const MAX_ATTEMPTS_PER_WINDOW = {
   register: 5,
   'forgot-password': 5,
   'reset-password': 5,
+  'verify-email': 10,
   refresh: 20,
   'me-patch': 30,
 };

@@ -62,7 +62,27 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const { userId } = JSON.parse(storedValue);
+    const { userId, issuedAt } = JSON.parse(storedValue);
+
+    // Revocation check: password reset writes rv:{userId} = timestamp.
+    // Any token issued before that timestamp is invalid, regardless of which
+    // device issued it — this covers all concurrent sessions uniformly.
+    const rv = await env.AUTH_KV.get(`rv:${userId}`);
+    if (rv) {
+      const revokedAt = parseInt(rv, 10);
+      // Tokens without issuedAt predate this fix and are conservatively revoked
+      // once a password reset has occurred.
+      if (!issuedAt || issuedAt < revokedAt) {
+        await env.AUTH_KV.delete(`rt:${refreshToken}`);
+        return new Response(JSON.stringify({
+          error: 'session_revoked',
+          message: 'Session was invalidated. Please log in again.'
+        }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
 
     // Rotate: delete old token immediately before issuing new one
     await env.AUTH_KV.delete(`rt:${refreshToken}`);
@@ -134,13 +154,14 @@ export async function onRequestPost({ request, env }) {
       .sign(secret);
 
     // Issue new refresh token (rotation — 7 days).
-    // Update reverse-index key so password reset can still invalidate it (F-12).
+    // issuedAt is carried forward so future revocation checks remain accurate.
     const newRefreshToken = crypto.randomUUID();
     const RT_TTL = 7 * 24 * 3600;
-    await Promise.all([
-      env.AUTH_KV.put(`rt:${newRefreshToken}`, JSON.stringify({ userId: user.id }), { expirationTtl: RT_TTL }),
-      env.AUTH_KV.put(`rt:user:${user.id}`, newRefreshToken, { expirationTtl: RT_TTL }),
-    ]);
+    await env.AUTH_KV.put(
+      `rt:${newRefreshToken}`,
+      JSON.stringify({ userId: user.id, issuedAt: Date.now() }),
+      { expirationTtl: RT_TTL }
+    );
 
     const isSecure = new URL(request.url).protocol === 'https:';
     const refreshCookie = `moshly_rt=${newRefreshToken}; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=604800`;

@@ -18,15 +18,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="root index connect">
+    <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="fix(auth): unlock reset for unverified accounts and clarify login error messages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_redirects" beforeDir="false" afterPath="$PROJECT_DIR$/_redirects" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/auth-client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard-logic.js" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard-logic.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/api/forgot-password.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/forgot-password.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/api/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/refresh.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/refresh.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +29,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="5732" />
+    <option name="cachedIndexableFilesCount" value="5754" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -65,7 +60,7 @@
     <urls />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6,
@@ -90,7 +85,7 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/megacromo/DEV/Moshly/Moshly-Site",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
+    "settings.editor.selected.configurable": "junie.application.models",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -157,7 +152,79 @@
       <option name="project" value="LOCAL" />
       <updated>1776038318103</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="root index connect">
+      <option name="closed" value="true" />
+      <created>1776082445880</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1776082445880</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Forgot Password Flow">
+      <option name="closed" value="true" />
+      <created>1776166997800</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1776166997800</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fix registration and email verification flow">
+      <option name="closed" value="true" />
+      <created>1776167681864</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1776167681864</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Auth session stabilization">
+      <option name="closed" value="true" />
+      <created>1776167853069</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1776167853069</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Invite codes">
+      <option name="closed" value="true" />
+      <created>1776167956849</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1776167956849</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat(auth): improve login, signup and token flows">
+      <option name="closed" value="true" />
+      <created>1776186982565</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1776186982565</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat(email): add confirmation and verification flow">
+      <option name="closed" value="true" />
+      <created>1776187150785</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1776187150785</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(ui): update dashboard, projects and contact flows">
+      <option name="closed" value="true" />
+      <created>1776187181937</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1776187181937</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix(auth): unlock reset for unverified accounts and clarify login error messages">
+      <option name="closed" value="true" />
+      <created>1776218477575</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1776218477575</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -182,7 +249,15 @@
     <MESSAGE value="Solving forget password functionality" />
     <MESSAGE value="Next step, connecting the apps" />
     <MESSAGE value="root index connect" />
-    <option name="LAST_COMMIT_MESSAGE" value="root index connect" />
+    <MESSAGE value="Forgot Password Flow" />
+    <MESSAGE value="Fix registration and email verification flow" />
+    <MESSAGE value="Auth session stabilization" />
+    <MESSAGE value="Invite codes" />
+    <MESSAGE value="feat(auth): improve login, signup and token flows" />
+    <MESSAGE value="feat(email): add confirmation and verification flow" />
+    <MESSAGE value="feat(ui): update dashboard, projects and contact flows" />
+    <MESSAGE value="fix(auth): unlock reset for unverified accounts and clarify login error messages" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(auth): unlock reset for unverified accounts and clarify login error messages" />
     <option name="LAST_CHUNK_COMMIT_MESSAGE" value="Add GET /apps/state endpoint for dashboard app slots rendering" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

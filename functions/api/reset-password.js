@@ -5,11 +5,7 @@ import bcrypt from 'bcryptjs';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { validatePassword } from './_password';
 import { corsOptionsResponse } from './_cors';
-
-async function sha256Hex(input) {
-  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+import { sha256Hex } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -108,15 +104,14 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Invalidate active refresh token so existing sessions cannot persist after a password reset (F-12)
+    // Invalidate ALL active sessions by writing a revocation timestamp.
+    // The refresh endpoint compares each token's issuedAt against this value;
+    // any token issued before the reset is rejected — covers every device,
+    // not just the last one that was tracked by the old single-slot index.
+    // TTL is 8 days — longer than the 7-day refresh token lifetime — so no
+    // pre-reset token can outlive the revocation record.
     if (env.AUTH_KV) {
-      const activeRefreshToken = await env.AUTH_KV.get(`rt:user:${existing.id}`);
-      if (activeRefreshToken) {
-        await Promise.all([
-          env.AUTH_KV.delete(`rt:${activeRefreshToken}`),
-          env.AUTH_KV.delete(`rt:user:${existing.id}`),
-        ]);
-      }
+      await env.AUTH_KV.put(`rv:${existing.id}`, String(Date.now()), { expirationTtl: 8 * 24 * 3600 });
     }
 
     return new Response(JSON.stringify({

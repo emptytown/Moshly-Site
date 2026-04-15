@@ -3,13 +3,9 @@ import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
+import { sha256Hex } from './_email_utils';
 
 const RESEND_API_BASE = 'https://api.resend.com';
-
-async function sha256Hex(input) {
-  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -34,17 +30,19 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (!email) {
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'missing_fields',
-        message: 'Email is required' 
+        message: 'Email is required'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
+    email = email.toLowerCase().trim();
+
     // Email rate limit — after parsing, to prevent email bombing
-    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `email:${email.toLowerCase()}`);
+    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `email:${email}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
     // Check if user exists

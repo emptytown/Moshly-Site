@@ -29,17 +29,21 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'missing_fields',
-        message: 'Email and password are required' 
+        message: 'Email and password are required'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
+    // Normalize early so DB query, rate limit key, and any downstream logic all
+    // operate on the same canonical form.
+    email = email.toLowerCase().trim();
+
     // Email rate limit — after parsing, dual-keyed per OWASP-RATELIMIT-001
-    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `email:${email.toLowerCase()}`);
+    const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'login', `email:${email}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
     // Find user with profile, workspace, and subscription using JOINs
@@ -67,31 +71,33 @@ export async function onRequestPost({ request, env }) {
     }
 
     const { user, profile, subscription } = loginResult;
-    
-    // Check if email is verified
+
+    // Verify password FIRST — before checking verification status.
+    // This prevents an attacker from learning whether an email is registered
+    // (and whether it is verified) without first proving knowledge of the password.
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      return new Response(JSON.stringify({
+        error: 'invalid_credentials',
+        message: 'The password you entered is incorrect. Please try again.'
+      }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Check if email is verified — only reachable with the correct password
     if (!user.emailVerified) {
       const now = new Date();
       const isExpired = !user.verificationExpires || user.verificationExpires < now;
 
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: isExpired ? 'email_validation_expired' : 'email_unverified',
         message: isExpired
           ? 'Your confirmation link has expired. Please use the "Forgot password?" link to regain access, or request a new confirmation email.'
           : 'Your account has not been confirmed yet. Please check your inbox and complete the verification.'
       }), {
         status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isPasswordValid) {
-      return new Response(JSON.stringify({ 
-        error: 'invalid_credentials',
-        message: 'The password you entered is incorrect. Please try again.' 
-      }), {
-        status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
@@ -115,14 +121,17 @@ export async function onRequestPost({ request, env }) {
       .sign(secret);
 
     // Issue refresh token (7 days) stored in KV.
-    // Also write a reverse-index key so password reset can invalidate it (F-12).
+    // issuedAt is recorded so the refresh endpoint can compare it against the
+    // rv:{userId} revocation timestamp written by reset-password — this lets a
+    // password reset invalidate ALL active sessions, not just the last one.
     const refreshToken = crypto.randomUUID();
     const RT_TTL = 7 * 24 * 3600;
     if (env.AUTH_KV) {
-      await Promise.all([
-        env.AUTH_KV.put(`rt:${refreshToken}`, JSON.stringify({ userId: user.id }), { expirationTtl: RT_TTL }),
-        env.AUTH_KV.put(`rt:user:${user.id}`, refreshToken, { expirationTtl: RT_TTL }),
-      ]);
+      await env.AUTH_KV.put(
+        `rt:${refreshToken}`,
+        JSON.stringify({ userId: user.id, issuedAt: Date.now() }),
+        { expirationTtl: RT_TTL }
+      );
     }
 
     const isSecure = new URL(request.url).protocol === 'https:';
