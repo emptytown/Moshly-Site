@@ -11,8 +11,8 @@ export async function sendVerificationEmail(request, env, email, name, verificat
   const fromEmail = env.RESEND_FROM_EMAIL || 'Moshly <hello@moshly.io>';
 
   if (!apiKey) {
-    console.warn('RESEND_API_KEY not found, email not sent');
-    return;
+    console.error('sendVerificationEmail: RESEND_API_KEY is not set — email not sent', { to: email });
+    return false;
   }
 
   try {
@@ -21,7 +21,7 @@ export async function sendVerificationEmail(request, env, email, name, verificat
     const confirmUrl = `${origin}/confirm.html?token=${verificationToken}`;
     const logoUrl = `${origin}/assets/Moshly-Main-Logo-1.svg`;
 
-    await fetch('https://api.resend.com/emails', {
+    const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -63,8 +63,18 @@ export async function sendVerificationEmail(request, env, email, name, verificat
         text: `Welcome to Moshly!\n\nHello ${name || 'there'},\n\nThanks for joining Moshly. Please confirm your email address to activate your account by visiting this link: ${confirmUrl}\n\nIf you didn't sign up for Moshly, you can safely ignore this email.\n\n© 2026 Moshly · moshly.io`
       })
     });
+
+    if (!resendRes.ok) {
+      const body = await resendRes.text();
+      console.error('sendVerificationEmail: Resend API error', { status: resendRes.status, to: email, from: fromEmail, body });
+      return false;
+    }
+
+    console.log('sendVerificationEmail: sent', { to: email });
+    return true;
   } catch (emailError) {
-    console.error('Failed to send verification email:', emailError);
+    console.error('sendVerificationEmail: network error', { error: emailError.message, to: email });
+    return false;
   }
 }
 

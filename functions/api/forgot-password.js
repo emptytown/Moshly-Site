@@ -77,7 +77,9 @@ export async function onRequestPost({ request, env }) {
 
     // Email Integration
     const apiKey = env.RESEND_API_KEY;
-    const fromEmail = env.RESEND_FROM_EMAIL || 'Moshly <auth@moshly.io>';
+    // Use the same RESEND_FROM_EMAIL default as sendVerificationEmail to ensure
+    // a single verified sender domain covers all outbound email.
+    const fromEmail = env.RESEND_FROM_EMAIL || 'Moshly <hello@moshly.io>';
 
     if (apiKey) {
       const origin = new URL(request.url).origin;
@@ -126,12 +128,12 @@ export async function onRequestPost({ request, env }) {
       });
       if (!resendRes.ok) {
         const resendBody = await resendRes.text();
-        console.error(`Resend API error ${resendRes.status}: ${resendBody}`);
+        console.error('forgot-password: Resend API error', { status: resendRes.status, to: email, from: fromEmail, body: resendBody });
       } else {
-        console.log(`Password reset email sent to ${email} via Resend`);
+        console.log('forgot-password: reset email sent', { to: email });
       }
     } else {
-      console.warn('RESEND_API_KEY not found, email not sent');
+      console.error('forgot-password: RESEND_API_KEY is not set — email not sent', { to: email });
     }
 
     return new Response(JSON.stringify({
