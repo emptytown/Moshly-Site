@@ -19,3 +19,4 @@ Thumbs.db
 Library/
 node_modules/
 node_modules/.cache/
+.functions-build-test/
