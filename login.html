@@ -143,11 +143,10 @@
           return;
         }
 
-        if (status === 403) {
-          // Display the specific message from backend (expired vs unverified)
-          feedback.textContent = data.message || 'Please check your email to confirm your account.';
-        } else if (status === 401 && data.error === 'invalid_credentials') {
-          feedback.textContent = 'Invalid email or password. Please try again.';
+        if (status === 403 || status === 401) {
+          feedback.textContent = data.message || 'Authentication failed. Please check your details.';
+        } else if (status === 429) {
+          feedback.textContent = 'Too many attempts. Please try again later.';
         } else {
           feedback.textContent = data.message || data.error || 'Login failed. Please try again.';
         }

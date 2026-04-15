@@ -86,7 +86,8 @@ export async function onRequestPost({ request, env }) {
       .set({
         passwordHash,
         resetToken: null,
-        resetExpires: null
+        resetExpires: null,
+        emailVerified: true
       })
       .where(
         and(

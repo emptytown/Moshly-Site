@@ -60,7 +60,7 @@ export async function onRequestPost({ request, env }) {
     if (!loginResult || !loginResult.user) {
       return new Response(JSON.stringify({ 
         error: 'invalid_credentials',
-        message: 'Invalid email or password. Please try again.' 
+        message: 'No account found with that email. Please check your spelling or sign up.' 
       }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
@@ -99,7 +99,7 @@ export async function onRequestPost({ request, env }) {
     if (!isPasswordValid) {
       return new Response(JSON.stringify({ 
         error: 'invalid_credentials',
-        message: 'Invalid email or password. Please try again.' 
+        message: 'The password you entered is incorrect. Please try again.' 
       }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }

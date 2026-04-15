@@ -47,15 +47,14 @@ export async function onRequestPost({ request, env }) {
     const emailRetryAfter = await applyRateLimit(env.AUTH_KV, 'forgot-password', `email:${email.toLowerCase()}`);
     if (emailRetryAfter) return rateLimitedResponse(emailRetryAfter);
 
-    // Check if user exists and is verified
+    // Check if user exists
     const user = await db.select({ 
-      id: schema.users.id,
-      emailVerified: schema.users.emailVerified
+      id: schema.users.id
     }).from(schema.users).where(eq(schema.users.email, email)).get();
 
     // Always return success to prevent user enumeration
-    // Only proceed if user exists AND is verified
-    if (!user || !user.emailVerified) {
+    // Only proceed if user exists
+    if (!user) {
       return new Response(JSON.stringify({
         success: true,
         message: 'If an account exists with that email, a reset link has been sent.'
