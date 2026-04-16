@@ -218,7 +218,7 @@ async function saveProfileChanges() {
     };
 
     try {
-        const { ok, data } = await window.MoshlyAuth.authFetch('/api/me', {
+        const { ok, data } = await window.MoshlyAuth.authFetch('/me', {
             method: 'PATCH',
             body: JSON.stringify(payload)
         });

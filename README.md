@@ -47,8 +47,10 @@ A Cloudflare Pages PWA with clean-URL routing, centralized modal/drawer UX, and 
 
 ## Quickstart (Local)
 - Install: `npm i`
-- Run: `npm start` (serves on http://localhost:3000)
-- Open dashboard: http://localhost:3000/dashboard
+- Run: `npm run dev` (serves on http://localhost:8788)
+- Seed Local DB: `npm run seed:god`
+- Open dashboard: http://localhost:8788/dashboard
+- Login with: `god@moshly.com` / `moshly123`
 
 ## Environments
 - Production: Cloudflare Pages project `moshly-site`

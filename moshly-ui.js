@@ -64,14 +64,20 @@ function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('theme-light');
     localStorage.setItem('moshly-theme', isLight ? 'light' : 'dark');
     updateThemeToggle(isLight);
+    // Sync with dashboard if present
+    if (typeof updateDashboardThemeUI === 'function') {
+        updateDashboardThemeUI(isLight);
+    }
 }
 
 function updateThemeToggle(isLight) {
+    // Icons for landing page
     const sun = document.querySelector('.theme-toggle-icon--sun');
     const moon = document.querySelector('.theme-toggle-icon--moon');
-    if (!sun || !moon) return;
-    sun.style.opacity = isLight ? '1' : '0.35';
-    moon.style.opacity = isLight ? '0.35' : '1';
+    if (sun && moon) {
+        sun.style.opacity = isLight ? '1' : '0.35';
+        moon.style.opacity = isLight ? '0.35' : '1';
+    }
 }
 
 function initTheme() {
@@ -79,8 +85,13 @@ function initTheme() {
     const isLight = saved === 'light';
     if (isLight) {
         document.documentElement.classList.add('theme-light');
+    } else {
+        document.documentElement.classList.remove('theme-light');
     }
     updateThemeToggle(isLight);
+    if (typeof updateDashboardThemeUI === 'function') {
+        updateDashboardThemeUI(isLight);
+    }
 }
 
 // --- 4. MODALS & TABS ---
