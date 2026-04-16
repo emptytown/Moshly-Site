@@ -63,7 +63,12 @@ export async function onRequestGet({ request, env }) {
           bio: profile.bio,
           skills: profile.skills,
           location: profile.location,
-        } : null,
+          uxSettings: profile.uxSettings ? JSON.parse(profile.uxSettings) : null,
+          connectedApps: profile.connectedApps ? JSON.parse(profile.connectedApps) : [],
+        } : {
+          connectedApps: [],
+          uxSettings: null
+        },
         subscription: subscription ? {
           plan: subscription.plan,
           pdfExportsLimit: subscription.pdfExportsLimit,
@@ -130,6 +135,8 @@ export async function onRequestPatch({ request, env }) {
   const location  = body.location !== undefined ? String(body.location || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
   const skills    = body.skills !== undefined ? String(body.skills || '').trim().slice(0, MAX_FIELD_LENGTH) : undefined;
   const avatarUrl = body.avatarUrl !== undefined ? String(body.avatarUrl).trim().slice(0, 2048) : undefined;
+  const uxSettings = body.uxSettings !== undefined ? JSON.stringify(body.uxSettings) : undefined;
+  const connectedApps = body.connectedApps !== undefined ? JSON.stringify(body.connectedApps) : undefined;
 
   const db = drizzle(env.MOSHLY_DB);
 
@@ -145,6 +152,8 @@ export async function onRequestPatch({ request, env }) {
     if (org !== undefined) profileUpdate.organization = org;
     if (location !== undefined) profileUpdate.location = location;
     if (skills !== undefined) profileUpdate.skills = skills;
+    if (uxSettings !== undefined) profileUpdate.uxSettings = uxSettings;
+    if (connectedApps !== undefined) profileUpdate.connectedApps = connectedApps;
 
     const updates = [];
     if (Object.keys(userUpdate).length > 0) {
@@ -181,7 +190,9 @@ export async function onRequestPatch({ request, env }) {
         jobTitle, 
         organization: org, 
         location, 
-        skills 
+        skills,
+        uxSettings: body.uxSettings,
+        connectedApps: body.connectedApps
       } 
     }), {
       status: 200,

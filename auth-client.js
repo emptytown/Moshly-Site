@@ -124,7 +124,8 @@ const MoshlyAuth = {
   // Exchanges the HttpOnly refresh token cookie for a new access token.
   // Stores result in _accessToken — never in localStorage.
   silentRefresh: async (retryCount = 0) => {
-    if (retryCount === 0 && _refreshPromise) return _refreshPromise;
+    // If a refresh is already in progress, wait for it instead of starting a new one.
+    if (_refreshPromise) return _refreshPromise;
 
     const performRefresh = async () => {
       try {
@@ -134,7 +135,8 @@ const MoshlyAuth = {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        if (response.status === 401) return false; if (response.status === 403) return "unverified";
+        if (response.status === 401) return false;
+        if (response.status === 403) return "unverified";
 
         if (response.status === 409 && retryCount < 2) {
           // Collision detected, retry up to 2 times after a short delay (100-200ms)
@@ -145,7 +147,12 @@ const MoshlyAuth = {
 
         if (response.status === 204) return true; // Valid session, no new token needed/provided
 
-        const data = await response.json();
+        // If response is not OK, don't try to parse as JSON if it's not JSON
+        const contentType = response.headers.get("content-type");
+        let data = {};
+        if (contentType && contentType.includes("application/json")) {
+          data = await response.json();
+        }
 
         if (response.ok && data.token) {
           _accessToken = data.token;
@@ -158,15 +165,12 @@ const MoshlyAuth = {
       return false;
     };
 
-    if (retryCount === 0) {
-      _refreshPromise = performRefresh();
-      try {
-        return await _refreshPromise;
-      } finally {
-        _refreshPromise = null;
-      }
+    _refreshPromise = performRefresh();
+    try {
+      return await _refreshPromise;
+    } finally {
+      _refreshPromise = null;
     }
-    return performRefresh();
   },
 
   // Authenticated API helper. On 401 attempts one silent refresh then retries.

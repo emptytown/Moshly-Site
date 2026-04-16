@@ -56,6 +56,7 @@ async function initDashboard() {
     }
 
     // 2. Fetch User Data (Profiles, Quotas, Workspaces)
+    // requireSession above already ensures we have a valid _accessToken.
     const { ok: fetchOk, data } = await window.MoshlyAuth.authFetch('/me');
     if (!fetchOk) {
         console.error('Failed to fetch dashboard data');
@@ -63,6 +64,21 @@ async function initDashboard() {
     }
 
     const { user } = data;
+    
+    // Sync user preferences from server to localStorage for immediate availability
+    if (user.profile) {
+        if (user.profile.uxSettings) {
+            if (user.profile.uxSettings.emptySlots) {
+                localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
+            }
+        }
+        // Sync apps if they exist on profile
+        if (user.profile.connectedApps) {
+            user.apps = user.profile.connectedApps;
+        }
+    }
+
+    window._currentUser = user; // Store globally for UI updates
     updateProfileUI(user);
     updateQuotasUI(user.subscription);
     updateSubscriptionUI(user.subscription);
@@ -72,6 +88,7 @@ async function initDashboard() {
     // 3. Setup Sidebars and Theme
     initSidebarControls();
     initDashboardTheme();
+    initUXSettings();
 
     // 4. Fetch Projects
     fetchProjects();
@@ -304,6 +321,48 @@ function initDashboardTheme() {
     updateDashboardThemeUI(isLight);
 }
 
+function initUXSettings() {
+    const emptySlotsSetting = localStorage.getItem('moshly_setting_empty_slots') || '12';
+    const select = document.getElementById('dbSettingEmptySlots');
+    if (select) {
+        select.value = emptySlotsSetting;
+    }
+}
+
+async function updateUXSettings() {
+    const select = document.getElementById('dbSettingEmptySlots');
+    if (select) {
+        const val = select.value;
+        localStorage.setItem('moshly_setting_empty_slots', val);
+        
+        // Persist to server
+        if (window._currentUser) {
+            const currentUxSettings = window._currentUser.profile?.uxSettings || {};
+            const newUxSettings = { ...currentUxSettings, emptySlots: val };
+            
+            try {
+                const { ok } = await window.MoshlyAuth.authFetch('/me', {
+                    method: 'PATCH',
+                    body: JSON.stringify({ uxSettings: newUxSettings })
+                });
+                if (ok) {
+                    if (!window._currentUser.profile) window._currentUser.profile = {};
+                    window._currentUser.profile.uxSettings = newUxSettings;
+                }
+            } catch (err) {
+                console.error('Failed to save UX settings to server:', err);
+            }
+
+            updateAppsUI(window._currentUser);
+        }
+
+        // Close modal after saving
+        if (window.closeProjectContextModal) {
+            window.closeProjectContextModal();
+        }
+    }
+}
+
 function updateDashboardThemeUI(isLight) {
     const sunIcons = document.querySelectorAll('#dbThemeIconSun, #dbMobThemeIconSun, .db-theme-sun');
     const moonIcons = document.querySelectorAll('#dbThemeIconMoon, #dbMobThemeIconMoon, .db-theme-moon');
@@ -440,8 +499,8 @@ function updateSubscriptionUI(sub) {
     }
 
     if (planPriceEl) {
-        const prices = { 'free': '$0/mo', 'pro': '$19/mo', 'business': '$49/mo' };
-        planPriceEl.textContent = prices[sub?.plan?.toLowerCase()] || '$0/mo';
+        const prices = { 'free': '€0.00', 'solo': '€4.99', 'collective': '€9.99', 'business': '€24.99', 'major': '€79.99' };
+        planPriceEl.textContent = prices[sub?.plan?.toLowerCase()] || '€0.00';
     }
 
     if (planRenewEl && sub?.expiresAt) {
@@ -508,8 +567,8 @@ function updateAppsUI(user) {
 
     // Determine slot capacity based on plan
     const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 1, 'pro': 3, 'business': 6 };
-    const totalSlots = slotMap[plan] || 1;
+    const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
+    const totalSlots = slotMap[plan] || 0;
 
     // 1. Permanent Slots (Main Apps)
     const activeMainApps = activeApps.filter(a => a.type !== 'Free');
@@ -543,7 +602,22 @@ function updateAppsUI(user) {
 
     // Add empty slots
     // 1. A quantidade de slots vazios em display deve ser identico ao permitido pelo plano em uso
-    const emptySlotsCount = totalSlots - activeMainApps.length;
+    // Updated Logic: Max shown empty slots is now user configurable (default 12).
+    // If used >= base, show 3 more empty slots (capped by plan limit).
+    const usedCount = activeMainApps.length;
+    const baseSlots = parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10);
+    
+    let displayedSlots;
+    if (usedCount < baseSlots) {
+        displayedSlots = baseSlots;
+    } else {
+        displayedSlots = Math.floor(usedCount / 3) * 3 + 3;
+    }
+    
+    // Cap by the actual plan total
+    const effectiveTotal = Math.min(totalSlots, displayedSlots);
+    const emptySlotsCount = Math.max(0, effectiveTotal - usedCount);
+
     for (let i = 0; i < emptySlotsCount; i++) {
         appsHtml += `
             <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
@@ -598,6 +672,7 @@ function updateAppsUI(user) {
     const freeAppsGrid = document.getElementById('dbFreeAppsGrid');
     if (freeAppsGrid) {
         // 3. Devem haver sempre pelo menos 3 slots para Free Apps Visiveis
+        // Updated Logic: Always start with 3 empty slots. If used >= 3, show 3 more empty slots (incremental).
         // Render active free apps first
         let freeAppsHtml = activeFreeApps.map(app => `
             <a href="${app.url}" class="db-app-slot">
@@ -615,9 +690,16 @@ function updateAppsUI(user) {
             </a>
         `).join('');
 
-        // Fill remaining up to 3 with empty slots
-        const minFreeSlots = 3;
-        const emptyFreeSlotsCount = Math.max(0, minFreeSlots - activeFreeApps.length);
+        // Incremental logic for free slots
+        const usedFreeCount = activeFreeApps.length;
+        let displayedFreeSlots;
+        if (usedFreeCount < 3) {
+            displayedFreeSlots = 3;
+        } else {
+            displayedFreeSlots = Math.floor(usedFreeCount / 3) * 3 + 3;
+        }
+
+        const emptyFreeSlotsCount = Math.max(0, displayedFreeSlots - usedFreeCount);
         for (let i = 0; i < emptyFreeSlotsCount; i++) {
             freeAppsHtml += `
                 <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
@@ -641,8 +723,8 @@ function updateAppConnectorUI(user) {
 
     // Plan & Capacity Logic
     const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 1, 'pro': 3, 'business': 6 };
-    const totalSlots = slotMap[plan] || 1;
+    const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
+    const totalSlots = slotMap[plan] || 0;
     const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
     
     // Normalize aliases for usage calculation
@@ -821,7 +903,19 @@ function toggleAppConnection(appSlug, isChecked) {
 /**
  * Saves app choices, closes modal and anchors to the apps section.
  */
-function saveAppChoices() {
+async function saveAppChoices() {
+    const user = window._currentUser;
+    if (user && Array.isArray(user.apps)) {
+        try {
+            await window.MoshlyAuth.authFetch('/me', {
+                method: 'PATCH',
+                body: JSON.stringify({ connectedApps: user.apps })
+            });
+        } catch (err) {
+            console.error('Failed to save app choices to server:', err);
+        }
+    }
+
     if (window.closeAppConnectorModal) {
         window.closeAppConnectorModal();
     }
@@ -932,6 +1026,7 @@ async function terminateAccount() {
 // Export to window so the HTML onclick can find it
 window.handleDangerAction = handleDangerAction;
 window.handlePhotoFileChange = handlePhotoFileChange;
+window.updateUXSettings = updateUXSettings;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initDashboard);
@@ -943,7 +1038,10 @@ function updateQuotasCardUI(sub) {
     const aiEl = document.getElementById("db-billing-ai-val");
 
     if (renewEl && sub.expiresAt) renewEl.textContent = new Date(sub.expiresAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-    if (appsEl) appsEl.textContent = (sub.plan === "free" ? "1" : sub.plan === "pro" ? "3" : "6");
+    if (appsEl) {
+        const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
+        appsEl.textContent = sub.plan === 'major' ? '150' : (slotMap[sub.plan] || '0');
+    }
     if (pdfEl) pdfEl.textContent = sub.pdfExportsLimit || "1";
     if (aiEl) aiEl.textContent = formatNumber(sub.aiCreditsLimit || 100);
 }

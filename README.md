@@ -45,6 +45,15 @@ A Cloudflare Pages PWA with clean-URL routing, centralized modal/drawer UX, and 
 └─ README.md
 ```
 
+## Plan Allowance
+| Plan | Price (Monthly) | Tools | PDF Exports | AI Credits | Projects |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Free** | €0.00 | Access to future free tools | 0 | Topable | 1 |
+| **Solo** | €4.99 | Pick 2 tools | 12 / month | 500 / month | 1 |
+| **Collective** | €9.99 | Pick 4 tools | 50 / month | 1,250 / month | 3 |
+| **Business** | €24.99 | Pick 10 tools | 100 / month | 2,500 / month | 6 |
+| **Major** | €79.99 | All Moshly tools | 250 / month | 6,000 / month | 15 |
+
 ## Quickstart (Local)
 - Install: `npm i`
 - Run: `npm run dev` (serves on http://localhost:8788)

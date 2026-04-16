@@ -29,6 +29,8 @@ export const profiles = sqliteTable('profiles', {
   bio: text('bio'),
   skills: text('skills'),
   location: text('location'),
+  uxSettings: text('ux_settings'), // Stored as JSON string
+  connectedApps: text('connected_apps'), // Stored as JSON string
 });
 
 // --- WORKSPACES ---

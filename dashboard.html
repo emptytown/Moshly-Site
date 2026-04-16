@@ -990,7 +990,46 @@
     <!-- ─── PROJECT CONTEXT MODAL ───────────────── -->
     <div class="db-ctx-overlay" id="dbProjectContextOverlay">
         <div class="db-ctx-backdrop" onclick="closeProjectContextModal()"></div>
-        <div class="db-ctx-modal" id="dbProjectContextModal"></div>
+        <div class="db-ctx-modal" id="dbProjectContextModal">
+            <div class="db-ctx-hero">
+                <div class="db-ctx-emoji-wrap">⚙️</div>
+                <div class="db-ctx-hero-info">
+                    <h3 class="db-ctx-name">Overall UX Settings</h3>
+                    <div class="db-ctx-meta">
+                        <span class="db-ctx-date">Personalize your Moshly experience</span>
+                    </div>
+                </div>
+                <button class="db-ctx-close" onclick="closeProjectContextModal()">×</button>
+            </div>
+            <div class="db-ctx-body">
+                <div class="db-ctx-section">
+                    <div class="db-ctx-section-label">App Grid Preferences</div>
+                    <div class="db-backup-row">
+                        <div class="db-backup-info">
+                            <div class="db-backup-title">Empty slots to show</div>
+                            <div class="db-backup-sub">Choose how many empty slots you want to see in your main app grid (initial view).</div>
+                        </div>
+                        <select aria-label="Empty slots count" class="db-backup-select" id="dbSettingEmptySlots">
+                            <option value="3">3 Slots</option>
+                            <option value="6">6 Slots</option>
+                            <option value="9">9 Slots</option>
+                            <option value="12" selected>12 Slots (Default)</option>
+                            <option value="15">15 Slots</option>
+                            <option value="18">18 Slots</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="db-ctx-section">
+                    <div class="db-ctx-section-label">General Preferences</div>
+                    <p class="db-ctx-date">More UX options coming soon...</p>
+                </div>
+            </div>
+            <div class="db-manager-modal-footer">
+                <button class="db-proj-cancel" onclick="closeProjectContextModal()" type="button">Close Settings</button>
+                <button class="db-proj-save" onclick="updateUXSettings()" type="button" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin-left: 10px;">Save Changes</button>
+            </div>
+        </div>
     </div>
 
     <!-- ─── SIGN OUT CONFIRMATION MODAL ────────── -->

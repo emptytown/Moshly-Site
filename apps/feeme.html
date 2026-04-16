@@ -84,7 +84,7 @@
       try {
         // Step 1: Extract SSO token from URL
         const params = new URLSearchParams(window.location.search);
-        const ssoToken = params.get('token');
+        let ssoToken = params.get('token');
 
         if (!ssoToken) {
           // Direct access without SSO token — check existing Hub session
@@ -99,9 +99,17 @@
             return;
           }
 
-          // Has Hub session but no SSO token — send back to dashboard to issue one
-          showError('Session found but no FeeMe token. <a href="/dashboard">Return to the Hub</a> and open FeeMe from there.');
-          return;
+          // Has Hub session but no SSO token — generate one now!
+          statusEl.innerHTML = '<span class="dot"></span>Preparing FeeMe session…';
+          const { ok, data } = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
+          
+          if (!ok) {
+            showError('Failed to generate SSO token. <br />Please return to <a href="/dashboard">the Hub</a> and try again.');
+            return;
+          }
+
+          // We got a token! Continue to redirect
+          ssoToken = data.token;
         }
 
         // Step 2: Show handoff UI, then redirect to FeeMe with the token intact
