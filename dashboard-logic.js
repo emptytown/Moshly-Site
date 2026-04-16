@@ -3,6 +3,45 @@
  * Fetches real data from the Hub API and populates the UI.
  */
 
+// Global APP_CATALOG with types and categories
+const APP_CATALOG = [
+    { 
+        slug: 'feeme', name: 'FeeMe', description: 'Financial hub', 
+        status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html',
+        type: 'Plan app', categories: ['Business', 'Analytics']
+    },
+    { 
+        slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths', 
+        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-nofill.svg', url: 'apps/fifthsense.html',
+        type: 'Free', categories: ['Learning', 'Interactive']
+    },
+    { 
+        slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', 
+        status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: '#',
+        type: 'Plan app', categories: ['Creative', 'Planning', 'Tools']
+    },
+    { 
+        slug: 'moshly core', name: 'Moshly Core', description: 'Base Platform', 
+        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-darkoutline.svg', url: '#',
+        type: 'Free', categories: ['Tools']
+    },
+    { 
+        slug: 'app guide', name: 'App Guide', description: 'Tutorials & Help', 
+        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-1.svg', url: '#',
+        type: 'Free', categories: ['Tour', 'Learning']
+    },
+    { 
+        slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', 
+        status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#',
+        type: 'Plan app', categories: ['Planning', 'Interactive']
+    },
+    { 
+        slug: 'merchclick', name: 'MerchClick', description: 'Merch management', 
+        status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: '#',
+        type: 'Plan app', categories: ['Business', 'Booking']
+    }
+];
+
 async function initDashboard() {
     // 1. Guard: Ensure session
     const ok = await window.MoshlyAuth.requireSession('/login');
@@ -28,6 +67,7 @@ async function initDashboard() {
     updateQuotasUI(user.subscription);
     updateSubscriptionUI(user.subscription);
     updateAppsUI(user);
+    updateAppConnectorUI(user);
 
     // 3. Setup Sidebars and Theme
     initSidebarControls();
@@ -38,7 +78,7 @@ async function initDashboard() {
 }
 
 async function fetchProjects() {
-    const { ok, data } = await window.MoshlyAuth.authFetch('/api/projects');
+    const { ok, data } = await window.MoshlyAuth.authFetch('/projects');
     if (ok) {
         updateProjectsUI(data.projects);
     }
@@ -117,7 +157,7 @@ async function submitCreateProject() {
     btn.disabled = true;
 
     try {
-        const { ok, data } = await window.MoshlyAuth.authFetch('/api/projects', {
+        const { ok, data } = await window.MoshlyAuth.authFetch('/projects', {
             method: 'POST',
             body: JSON.stringify({
                 name,
@@ -256,28 +296,18 @@ function initDashboardTheme() {
     const themeBtn = document.getElementById('dbThemeBtn');
     const mobThemeBtn = document.getElementById('dbMobThemeBtn');
 
-    const toggle = () => {
-        const isLight = document.body.classList.toggle('db-light');
-        localStorage.setItem('moshly-dashboard-theme', isLight ? 'light' : 'dark');
-        updateDashboardThemeUI(isLight);
-    };
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    if (mobThemeBtn) mobThemeBtn.addEventListener('click', toggleTheme);
 
-    if (themeBtn) themeBtn.addEventListener('click', toggle);
-    if (mobThemeBtn) mobThemeBtn.addEventListener('click', toggle);
-
-    // Restore state
-    const saved = localStorage.getItem('moshly-dashboard-theme');
-    const isLight = saved === 'light';
-    if (isLight) {
-        document.body.classList.add('db-light');
-    }
+    // Initial UI sync
+    const isLight = document.documentElement.classList.contains('theme-light');
     updateDashboardThemeUI(isLight);
 }
 
 function updateDashboardThemeUI(isLight) {
-    const sunIcons = document.querySelectorAll('#dbThemeIconSun, #dbMobThemeIconSun');
-    const moonIcons = document.querySelectorAll('#dbThemeIconMoon, #dbMobThemeIconMoon');
-    const labels = document.querySelectorAll('#dbThemeLabel, #dbMobThemeLabel');
+    const sunIcons = document.querySelectorAll('#dbThemeIconSun, #dbMobThemeIconSun, .db-theme-sun');
+    const moonIcons = document.querySelectorAll('#dbThemeIconMoon, #dbMobThemeIconMoon, .db-theme-moon');
+    const labels = document.querySelectorAll('#dbThemeLabel, #dbMobThemeLabel, .db-theme-label');
 
     sunIcons.forEach(el => el.classList.toggle('db-hidden', !isLight));
     moonIcons.forEach(el => el.classList.toggle('db-hidden', isLight));
@@ -440,7 +470,7 @@ async function handlePhotoFileChange(input) {
 
         // 3. Upload to /api/me
         try {
-            const { ok, data } = await window.MoshlyAuth.authFetch('/api/me', {
+            const { ok, data } = await window.MoshlyAuth.authFetch('/me', {
                 method: 'PATCH',
                 body: JSON.stringify({ avatarUrl: base64Data })
             });
@@ -470,38 +500,51 @@ function updateAppsUI(user) {
     const peekGrid = document.getElementById('dbPeekGrid');
     if (!appsGrid) return;
 
-    const catalog = [
-        { slug: 'feeme', name: 'FeeMe', description: 'Financial hub', status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html' },
-        { slug: 'fifthsense', name: 'Fifth Sense', description: 'Experience design', status: 'live', iconAsset: 'assets/fifthsense-logo-icon.svg', url: 'apps/fifthsense.html' },
-        { slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', status: 'live', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#' },
-        { slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#' },
-        { slug: 'merchclick', name: 'MerchClick', description: 'Merch management', status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: '#' }
-    ];
-
-    const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase()) : [];
-    const activeApps = catalog.filter(a => activeAppSlugs.includes(a.slug));
+    const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
+    // Ensure we only have one entry per app (handle aliases)
+    const uniqueActiveAppSlugs = [...new Set(activeAppSlugs.map(s => (s === 'fifth sense' ? 'fifthsense' : s)))];
+    
+    const activeApps = APP_CATALOG.filter(a => uniqueActiveAppSlugs.includes(a.slug.toLowerCase().trim()));
 
     // Determine slot capacity based on plan
     const plan = (user.subscription?.plan || 'free').toLowerCase();
     const slotMap = { 'free': 1, 'pro': 3, 'business': 6 };
     const totalSlots = slotMap[plan] || 1;
 
-    // 1. Permanent Slots
-    let appsHtml = activeApps.map(app => `
-        <a href="${app.url}" class="db-app-slot">
-            <div class="db-app-slot-icon">
-                <img src="${app.iconAsset}" alt="${app.name}">
-            </div>
-            <div class="db-app-slot-info">
-                <div class="db-app-slot-name">${app.name}</div>
-                <div class="db-app-slot-status">Live</div>
-            </div>
-        </a>
-    `).join('');
+    // 1. Permanent Slots (Main Apps)
+    const activeMainApps = activeApps.filter(a => a.type !== 'Free');
+    const activeFreeApps = activeApps.filter(a => a.type === 'Free');
+
+    let appsHtml = activeMainApps.map(app => {
+        const isNew = window._newApps && window._newApps.includes(app.slug);
+        const slotClass = isNew ? 'db-app-slot db-app-slot--new' : 'db-app-slot';
+        
+        return `
+            <a href="${app.url}" class="${slotClass}">
+                <div class="db-app-slot-icon">
+                    <img src="${app.iconAsset}" alt="${app.name}">
+                </div>
+                <div class="db-app-slot-info">
+                    <div class="db-app-slot-name">${app.name}</div>
+                    <div class="db-app-slot-desc">${app.description}</div>
+                    <div class="db-app-slot-status">Live</div>
+                    <div class="db-app-slot-action">
+                        <button class="db-app-slot-btn" type="button">Use App</button>
+                    </div>
+                </div>
+            </a>
+        `;
+    }).join('');
+
+    // Clear new apps list after rendering
+    if (window._newApps) {
+        window._newApps = [];
+    }
 
     // Add empty slots
-    const emptyCount = Math.max(0, totalSlots - activeApps.length);
-    for (let i = 0; i < emptyCount; i++) {
+    // 1. A quantidade de slots vazios em display deve ser identico ao permitido pelo plano em uso
+    const emptySlotsCount = totalSlots - activeMainApps.length;
+    for (let i = 0; i < emptySlotsCount; i++) {
         appsHtml += `
             <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
                 <div class="db-app-slot-empty-content">
@@ -511,12 +554,18 @@ function updateAppsUI(user) {
             </a>
         `;
     }
+
     appsGrid.innerHTML = appsHtml;
 
-    // 2. Peek Slot
+    // 2. Peek Slot Section Logic
     if (peekGrid) {
+        // 2. Deve sempre haver um Peek Slot visivel
+        const peekSection = document.getElementById('dbPeekSection');
+        if (peekSection) peekSection.classList.remove('db-hidden');
+
         const peekAppSlug = user.peek_app?.toLowerCase();
-        const peekApp = catalog.find(a => a.slug === peekAppSlug);
+        // Look in catalog for peek app info
+        const peekApp = APP_CATALOG.find(a => a.slug === peekAppSlug);
 
         if (peekApp) {
             peekGrid.innerHTML = `
@@ -526,7 +575,11 @@ function updateAppsUI(user) {
                     </div>
                     <div class="db-app-slot-info">
                         <div class="db-app-slot-name">${peekApp.name}</div>
+                        <div class="db-app-slot-desc">${peekApp.description}</div>
                         <div class="db-app-slot-status">Peek Active</div>
+                        <div class="db-app-slot-action">
+                            <button class="db-app-slot-btn" type="button">Use App</button>
+                        </div>
                     </div>
                 </a>
             `;
@@ -540,6 +593,243 @@ function updateAppsUI(user) {
                 </a>
             `;
         }
+    }
+
+    const freeAppsGrid = document.getElementById('dbFreeAppsGrid');
+    if (freeAppsGrid) {
+        // 3. Devem haver sempre pelo menos 3 slots para Free Apps Visiveis
+        // Render active free apps first
+        let freeAppsHtml = activeFreeApps.map(app => `
+            <a href="${app.url}" class="db-app-slot">
+                <div class="db-app-slot-icon">
+                    <img src="${app.iconAsset}" alt="${app.name}">
+                </div>
+                <div class="db-app-slot-info">
+                    <div class="db-app-slot-name">${app.name}</div>
+                    <div class="db-app-slot-desc">${app.description}</div>
+                    <div class="db-app-slot-status">Free</div>
+                    <div class="db-app-slot-action">
+                        <button class="db-app-slot-btn" type="button">Use App</button>
+                    </div>
+                </div>
+            </a>
+        `).join('');
+
+        // Fill remaining up to 3 with empty slots
+        const minFreeSlots = 3;
+        const emptyFreeSlotsCount = Math.max(0, minFreeSlots - activeFreeApps.length);
+        for (let i = 0; i < emptyFreeSlotsCount; i++) {
+            freeAppsHtml += `
+                <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
+                    <div class="db-app-slot-empty-content">
+                        <div class="db-app-slot-plus-circle">+</div>
+                        <span class="db-app-slot-label">Connect App</span>
+                    </div>
+                </a>
+            `;
+        }
+
+        freeAppsGrid.innerHTML = freeAppsHtml;
+    }
+}
+
+function updateAppConnectorUI(user) {
+    const moshlyList = document.getElementById('dbMoshlyAppsList');
+    const freeList = document.getElementById('dbFreeMoshlyAppsList');
+    const infoEl = document.getElementById('dbConnectorInfo');
+    if (!moshlyList || !freeList) return;
+
+    // Plan & Capacity Logic
+    const plan = (user.subscription?.plan || 'free').toLowerCase();
+    const slotMap = { 'free': 1, 'pro': 3, 'business': 6 };
+    const totalSlots = slotMap[plan] || 1;
+    const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
+    
+    // Normalize aliases for usage calculation
+    const usageSlugs = activeAppSlugs.map(s => (s === 'fifth sense' ? 'fifthsense' : s));
+    const uniqueUsageSlugs = [...new Set(usageSlugs)];
+    
+    // Only count non-free apps towards the usage limit
+    const freeSlugs = APP_CATALOG.filter(a => a.type === 'Free').map(a => a.slug);
+    const normalizedFreeSlugs = freeSlugs.map(s => s.toLowerCase().trim());
+    
+    const usedSlots = uniqueUsageSlugs.filter(slug => !normalizedFreeSlugs.includes(slug)).length;
+    const remainingSlots = Math.max(0, totalSlots - usedSlots);
+
+    if (infoEl) {
+        infoEl.innerHTML = `
+            <div class="db-connector-info-card">
+                <div class="db-connector-info-header">
+                    <span class="db-connector-info-plan-tag">${plan.toUpperCase()} PLAN</span>
+                    <span class="db-connector-info-usage">${usedSlots} / ${totalSlots} Slots used</span>
+                </div>
+                <div class="db-connector-info-bar">
+                    <div class="db-connector-info-fill" style="width: ${(usedSlots / totalSlots) * 100}%"></div>
+                </div>
+                <div class="db-connector-info-footer">
+                    ${remainingSlots > 0 
+                        ? `<span class="db-connector-info-status">You have <strong>${remainingSlots}</strong> slot${remainingSlots === 1 ? '' : 's'} available to connect apps.</span>`
+                        : `<span class="db-connector-info-status">Capacity reached. Upgrade your plan for more slots.</span>`
+                    }
+                </div>
+            </div>
+        `;
+    }
+
+    // Filter by UI selects if they exist
+    const typeFilter = document.getElementById('dbAppTypeFilter')?.value || 'all';
+    const categoryFilter = document.getElementById('dbAppCategoryFilter')?.value || 'all';
+
+    const filteredCatalog = APP_CATALOG.filter(app => {
+        const matchesType = typeFilter === 'all' || app.type === typeFilter;
+        const matchesCategory = categoryFilter === 'all' || app.categories.includes(categoryFilter);
+        return matchesType && matchesCategory;
+    });
+
+    // 1. Moshly Apps (Plan apps & Premium)
+    const moshlyApps = filteredCatalog.filter(a => a.type !== 'Free');
+
+    moshlyList.innerHTML = moshlyApps.map(app => {
+        const slug = app.slug;
+        const isConnected = activeAppSlugs.some(s => s === slug || (slug === 'fifthsense' && s === 'fifth sense'));
+        const canConnect = remainingSlots > 0;
+        
+        let buttonHtml = '';
+        if (isConnected) {
+            buttonHtml = `<button class="db-app-action-btn db-app-action-btn--disconnect" onclick="toggleAppConnection('${slug}', false)">Disconnect</button>`;
+        } else {
+            buttonHtml = `<button class="db-app-action-btn db-app-action-btn--connect" ${canConnect ? '' : 'disabled'} onclick="toggleAppConnection('${slug}', true)">Connect Now</button>`;
+        }
+
+        return `
+            <div class="db-app-connector-row ${isConnected ? 'db-app-connector-row--connected' : ''}">
+                <div class="db-app-connector-main">
+                    <strong>${app.name}</strong>
+                    <span>${app.description}</span>
+                    <div class="db-app-connector-categories">
+                        ${app.categories.map(c => `<span class="db-category-tag">${c}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="db-app-connector-side">
+                    <span class="db-status-tag">${app.status}</span>
+                    <div class="db-app-connector-actions">
+                        ${buttonHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (moshlyApps.length === 0) {
+        moshlyList.innerHTML = '<div class="db-connector-empty">No apps match the selected filters.</div>';
+    }
+
+    // 2. Free Moshly Apps
+    const freeApps = filteredCatalog.filter(a => a.type === 'Free');
+
+    freeList.innerHTML = freeApps.map(app => {
+        const slug = app.slug;
+        const isConnected = activeAppSlugs.some(s => s === slug || (slug === 'fifth sense' && s === 'fifthsense'));
+        
+        let buttonHtml = '';
+        if (isConnected) {
+            buttonHtml = `<button class="db-app-action-btn db-app-action-btn--disconnect" onclick="toggleAppConnection('${slug}', false)">Disconnect</button>`;
+        } else {
+            buttonHtml = `<button class="db-app-action-btn db-app-action-btn--connect" onclick="toggleAppConnection('${slug}', true)">Connect Now</button>`;
+        }
+
+        return `
+            <div class="db-app-connector-row ${isConnected ? 'db-app-connector-row--connected' : ''}">
+                <div class="db-app-connector-main">
+                    <strong>${app.name}</strong>
+                    <span>${app.description}</span>
+                    <div class="db-app-connector-categories">
+                        ${app.categories.map(c => `<span class="db-category-tag">${c}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="db-app-connector-side">
+                    <span class="db-status-tag" style="color: var(--color-success); border-color: var(--color-success);">Free</span>
+                    <div class="db-app-connector-actions">
+                        ${buttonHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (freeApps.length === 0) {
+        freeList.innerHTML = '<div class="db-connector-empty">No free apps match the selected filters.</div>';
+    }
+}
+
+/**
+ * Triggered by filter changes in the UI
+ */
+function applyAppFilters() {
+    const user = window.MoshlyAuth.getUser();
+    if (user) updateAppConnectorUI(user);
+}
+
+/**
+ * Toggles an app connection for the user and persists to localStorage.
+ * Since the backend doesn't seem to support `apps` yet, we use localStorage as the primary store.
+ * @param {string} appSlug - The slug of the app to toggle.
+ * @param {boolean} isChecked - Whether the app should be connected or disconnected.
+ */
+function toggleAppConnection(appSlug, isChecked) {
+    const user = window.MoshlyAuth.getUser();
+    if (!user) return;
+
+    if (!Array.isArray(user.apps)) {
+        user.apps = [];
+    }
+
+    const normalizedSlug = appSlug.toLowerCase().trim();
+
+    if (isChecked) {
+        // Enforce slot limit for non-free apps if needed
+        // For now, the UI disables the "Connect Now" button, but we can add a guard here too.
+        if (!user.apps.some(s => s.toLowerCase().trim() === normalizedSlug)) {
+            user.apps.push(appSlug);
+        }
+    } else {
+        // Remove both the slug and its alias if they exist
+        const aliases = {
+            'fifthsense': 'fifth sense',
+            'fifth sense': 'fifthsense'
+        };
+        const targetSlugs = [normalizedSlug];
+        if (aliases[normalizedSlug]) targetSlugs.push(aliases[normalizedSlug]);
+
+        user.apps = user.apps.filter(s => !targetSlugs.includes(s.toLowerCase().trim()));
+    }
+
+    // Persist to localStorage
+    localStorage.setItem('moshly_user', JSON.stringify(user));
+    
+    // Track newly added apps for animation
+    if (isChecked) {
+        if (!window._newApps) window._newApps = [];
+        window._newApps.push(appSlug);
+    }
+
+    // Refresh UI
+    updateAppsUI(user);
+    updateAppConnectorUI(user);
+}
+
+/**
+ * Saves app choices, closes modal and anchors to the apps section.
+ */
+function saveAppChoices() {
+    if (window.closeAppConnectorModal) {
+        window.closeAppConnectorModal();
+    }
+    
+    // Anchor to MY APPS SLOTS
+    const appsSection = document.getElementById('apps');
+    if (appsSection) {
+        appsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
@@ -582,7 +872,7 @@ async function handleDangerAction(action) {
                 break;
 
             case 'disconnect':
-                const discRes = await window.MoshlyAuth.authFetch('/api/me/disconnect', { method: 'POST' });
+                const discRes = await window.MoshlyAuth.authFetch('/me/disconnect', { method: 'POST' });
                 if (discRes.ok) alert('All apps disconnected.');
                 break;
 
@@ -614,7 +904,7 @@ async function terminateAccount() {
     }
 
     try {
-        const response = await window.MoshlyAuth.authFetch('/api/me', {
+        const response = await window.MoshlyAuth.authFetch('/me', {
             method: 'DELETE',
             body: JSON.stringify({ timing: timing })
         });

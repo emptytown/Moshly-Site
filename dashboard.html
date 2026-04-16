@@ -87,7 +87,7 @@
         </nav>
         <div class="db-mob-drawer-footer">
             <button class="db-mob-drawer-footer-btn" id="dbMobThemeBtn">
-                <span id="dbMobThemeIconSun"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round"
+                <span class="db-theme-sun" id="dbMobThemeIconSun"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round"
                                                   stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
                                                   width="16"><circle cx="12" cy="12" r="5"/><line x1="12"
                                                                                                                x2="12"
@@ -101,11 +101,11 @@
                                                                                                     y1="19.78"
                                                                                                     y2="18.36"/><line
                         x1="18.36" x2="19.78" y1="5.64" y2="4.22"/></svg></span>
-                <span class="db-hidden" id="dbMobThemeIconMoon"><svg fill="none" height="16" stroke="currentColor"
+                <span class="db-hidden db-theme-moon" id="dbMobThemeIconMoon"><svg fill="none" height="16" stroke="currentColor"
                                                                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                      viewBox="0 0 24 24" width="16"><path
                         d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-                <span id="dbMobThemeLabel">Light Mode</span>
+                <span class="db-theme-label" id="dbMobThemeLabel">Light Mode</span>
             </button>
             <button class="db-mob-drawer-footer-btn signout">
                 <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -155,14 +155,6 @@
                 </svg>
                 <span>APP Connector</span>
             </button>
-            <button class="db-nav-btn" onclick="window.location.href='/fifthsense'" type="button">
-                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     viewBox="0 0 24 24" width="16">
-                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-                    <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
-                </svg>
-                <span>Fifth Sense</span>
-            </button>
             <button class="db-nav-btn" onclick="openAuditLogModal()" type="button">
                 <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                      viewBox="0 0 24 24" width="16">
@@ -193,7 +185,7 @@
             </button>
             <!-- Theme toggle -->
             <button class="db-theme-btn" id="dbThemeBtn">
-                <span class="db-theme-icon" id="dbThemeIconSun"><svg fill="none" height="16" stroke="currentColor"
+                <span class="db-theme-icon db-theme-sun" id="dbThemeIconSun"><svg fill="none" height="16" stroke="currentColor"
                                                                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                      viewBox="0 0 24 24" width="16"><circle
                         cx="12" cy="12" r="5"/><line x1="12" x2="12" y1="1" y2="3"/><line x1="12" x2="12" y1="21"
@@ -207,7 +199,7 @@
                                                                                                                 y2="12"/><line
                         x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64"
                                                                          y2="4.22"/></svg></span>
-                <span class="db-theme-icon db-hidden" id="dbThemeIconMoon"><svg fill="none" height="16"
+                <span class="db-theme-icon db-hidden db-theme-moon" id="dbThemeIconMoon"><svg fill="none" height="16"
                                                                                 stroke="currentColor" stroke-linecap="round"
                                                                                 stroke-linejoin="round" stroke-width="2"
                                                                                 viewBox="0 0 24 24"
@@ -355,6 +347,15 @@
                         <p class="db-section-subtitle">Permanent apps available in your plan.</p>
                     </div>
                     <div class="db-apps-grid" id="dbAppsGrid"></div>
+
+                    <!-- Free Apps Section -->
+                    <div class="db-free-apps-section" id="dbFreeSection">
+                        <div class="db-section-header">
+                            <h2 class="db-section-title">Free Apps</h2>
+                            <p class="db-section-subtitle">Apps available for everyone.</p>
+                        </div>
+                        <div class="db-apps-grid" id="dbFreeAppsGrid"></div>
+                    </div>
 
                     <!-- PEEK SLOT SECTION -->
                     <div class="db-peek-section db-hidden" id="dbPeekSection">
@@ -882,22 +883,71 @@
     <!-- ─── APP CONNECTOR MODAL ────────────────── -->
     <div class="db-manager-modal-overlay" id="dbAppConnectorOverlay">
         <div class="db-manager-modal-backdrop" onclick="closeAppConnectorModal()"></div>
-        <div class="db-manager-modal">
-            <div class="db-manager-modal-header">
-                <h3 class="db-manager-modal-title">APP Connector</h3>
-                <button aria-label="Close" class="db-proj-modal-close" onclick="closeAppConnectorModal()" type="button">
-                    ×
-                </button>
+            <div class="db-manager-modal">
+                    <div class="db-manager-modal-header">
+                        <h3 class="db-manager-modal-title">APP Connector</h3>
+                        <button aria-label="Close" class="db-proj-modal-close" onclick="closeAppConnectorModal()" type="button">
+                            ×
+                        </button>
+                    </div>
+                    <div class="db-manager-modal-body">
+                        <!-- Plan & Capacity Info -->
+                        <div class="db-connector-info" id="dbConnectorInfo">
+                            <!-- Injected via JS -->
+                        </div>
+
+                        <!-- App Filters -->
+                        <div class="db-connector-filters">
+                            <div class="db-filter-group">
+                                <label for="dbAppTypeFilter" class="db-filter-label">App Type</label>
+                                <select id="dbAppTypeFilter" class="db-connector-select" onchange="applyAppFilters()">
+                                    <option value="all">All Types</option>
+                                    <option value="Free">Free</option>
+                                    <option value="Plan app">Plan app</option>
+                                    <option value="Premium">Premium</option>
+                                </select>
+                            </div>
+                            <div class="db-filter-group">
+                                <label for="dbAppCategoryFilter" class="db-filter-label">Category</label>
+                                <select id="dbAppCategoryFilter" class="db-connector-select" onchange="applyAppFilters()">
+                                    <option value="all">All Categories</option>
+                                    <option value="Tour">Tour</option>
+                                    <option value="Learning">Learning</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Creative">Creative</option>
+                                    <option value="Analytics">Analytics</option>
+                                    <option value="Interactive">Interactive</option>
+                                    <option value="Booking">Booking</option>
+                                    <option value="Rights">Rights</option>
+                                    <option value="Planning">Planning</option>
+                                    <option value="Tools">Tools</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <p class="db-manager-modal-copy">Choose which apps appear in your "Your Apps" block, whether currently active or not.</p>
+                        
+                        <!-- Moshly Apps Section -->
+                        <div class="db-connector-section">
+                            <h4 class="db-connector-section-title">Moshly Apps</h4>
+                            <div class="db-app-connector-list" id="dbMoshlyAppsList">
+                                <!-- 3 Placeholder Slots will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Free Moshly Apps Section -->
+                        <div class="db-connector-section">
+                            <h4 class="db-connector-section-title">Free Moshly Apps</h4>
+                            <div class="db-app-connector-list" id="dbFreeMoshlyAppsList">
+                                <!-- 3 Free Apps including Fifth Sense will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="db-manager-modal-footer">
+                        <button class="db-proj-cancel" onclick="closeAppConnectorModal()" type="button">Close</button>
+                        <button class="db-btn-primary" onclick="saveAppChoices()" type="button">Save Choices</button>
+                    </div>
             </div>
-            <div class="db-manager-modal-body">
-                <p class="db-manager-modal-copy">Choose which apps appear in your "Your Apps" block, whether currently
-                    active or not.</p>
-                <div class="db-app-connector-list" id="dbAppConnectorList"></div>
-            </div>
-            <div class="db-manager-modal-footer">
-                <button class="db-proj-cancel" onclick="closeAppConnectorModal()" type="button">Close</button>
-            </div>
-        </div>
     </div>
 
     <!-- ─── AUDIT LOG MODAL ────────────────────── -->

@@ -1,5 +1,4 @@
-    /* ══ LIGHT THEME ══════════════════════════════ */
-    body.db-light {
+    html.theme-light {
       --color-bg-primary:    #F0F1F8;
       --color-bg-secondary:  #FFFFFF;
       --color-bg-surface:    #FFFFFF;
@@ -9,14 +8,14 @@
       --color-border-subtle: #E2E4EF;
       --color-border-strong: #CDD0DF;
     }
-    body.db-light .db-sidebar           { box-shadow: 2px 0 16px rgba(0,0,0,.06); }
-    body.db-light .db-app-tile          { background: #F7F8FD; }
-    body.db-light .db-billing-balance   { background: #F7F8FD; }
-    body.db-light .db-tip               { background: #F7F8FD; }
-    body.db-light .db-visibility-toggle { background: #F7F8FD; }
-    body.db-light .db-feedback-textarea { background: #F7F8FD; }
-    body.db-light .db-stat              { box-shadow: 0 1px 6px rgba(0,0,0,.06); }
-    body.db-light .db-backup-select     { background-color: #F7F8FD; }
+    html.theme-light .db-sidebar           { box-shadow: 2px 0 16px rgba(0,0,0,.06); }
+    html.theme-light .db-app-tile          { background: #F7F8FD; }
+    html.theme-light .db-billing-balance   { background: #F7F8FD; }
+    html.theme-light .db-tip               { background: #F7F8FD; }
+    html.theme-light .db-visibility-toggle { background: #F7F8FD; }
+    html.theme-light .db-feedback-textarea { background: #F7F8FD; }
+    html.theme-light .db-stat              { box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+    html.theme-light .db-backup-select     { background-color: #F7F8FD; }
 
     /* ══ SHELL ════════════════════════════════════ */
     body { overflow-x: hidden; }
@@ -183,12 +182,12 @@
       z-index: 1;
     }
     .db-sidebar.collapsed ~ .db-content { margin-left: 64px; }
-    body.db-light .db-content {
+    html.theme-light .db-content {
       background:
         radial-gradient(circle at 16% 8%, rgba(107, 92, 255, 0.12), transparent 34%),
         radial-gradient(circle at 86% 92%, rgba(0, 209, 255, 0.06), transparent 42%);
     }
-    body.db-light .db-content::before {
+    html.theme-light .db-content::before {
       background-image: radial-gradient(rgba(127, 136, 188, 0.28) 1px, transparent 1px);
       opacity: 0.3;
     }
@@ -247,11 +246,11 @@
       stroke: none;
       flex-shrink: 0;
     }
-    body.db-light .db-topbar-apps-link {
+    html.theme-light .db-topbar-apps-link {
       background: #f4f6ff;
       box-shadow: 0 6px 14px rgba(46, 57, 102, .12);
     }
-    body.db-light .db-topbar-apps-link.is-sticky {
+    html.theme-light .db-topbar-apps-link.is-sticky {
       background: rgba(245, 247, 255, .96);
       border-color: rgba(107,92,255,.55);
       box-shadow: 0 0 0 rgba(107,92,255,0), 0 12px 24px rgba(41, 53, 99, .2);
@@ -471,7 +470,7 @@
       z-index: 0;
       pointer-events: none;
     }
-    body.db-light .db-flow-rail {
+    html.theme-light .db-flow-rail {
       background: linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-hover));
       opacity: .58;
     }
@@ -575,16 +574,16 @@
       background: radial-gradient(ellipse, rgba(107, 92, 255, 0.16) 0%, transparent 72%);
       animation: none;
     }
-    body.db-light .db-flow-node {
+    html.theme-light .db-flow-node {
       background: radial-gradient(circle at center, var(--color-accent-primary) 0 5px, transparent 5px);
     }
-    body.db-light .db-flow-node::before {
+    html.theme-light .db-flow-node::before {
       background: linear-gradient(to bottom, var(--color-accent-primary), transparent);
     }
-    body.db-light .db-flow-node::after {
+    html.theme-light .db-flow-node::after {
       background: radial-gradient(ellipse, var(--color-accent-opacity-22) 0%, transparent 70%);
     }
-    body.db-light .db-flow-node--end {
+    html.theme-light .db-flow-node--end {
       border-color: rgba(31, 41, 55, 0.34);
     }
     .db-flow-stage--split {
@@ -606,7 +605,7 @@
       opacity: .45;
       z-index: 0;
     }
-    body.db-light .db-flow-stage--split::before {
+    html.theme-light .db-flow-stage--split::before {
       background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-hover));
       opacity: .42;
     }
@@ -660,10 +659,10 @@
       z-index: 0;
       pointer-events: none;
     }
-    body.db-light #collab-projects #pdfs::before {
+    html.theme-light #collab-projects #pdfs::before {
       opacity: .45;
     }
-    body.db-light #collab-projects #visibility::before {
+    html.theme-light #collab-projects #visibility::before {
       opacity: .45;
     }
 
@@ -672,7 +671,7 @@
       background: rgba(107,92,255,.06);
       padding: 14px 16px;
     }
-    body.db-light .db-card--subscription {
+    html.theme-light .db-card--subscription {
       background: #eef1ff;
       border-color: #d2d8fb;
     }
@@ -749,33 +748,33 @@
     .db-card--danger .db-card-header {
       justify-content: center;
     }
-    body.db-light .db-card--danger {
+    html.theme-light .db-card--danger {
       background: linear-gradient(180deg, #fff5f5, #fff0f0);
       border-color: #feb2b2;
       box-shadow: 0 8px 20px rgba(155, 44, 44, 0.08);
     }
-    body.db-light .db-card--danger .db-card-title {
+    html.theme-light .db-card--danger .db-card-title {
       color: #c53030;
     }
-    body.db-light .db-deadly-copy {
+    html.theme-light .db-deadly-copy {
       color: #742a2a;
     }
-    body.db-light .db-danger-btn {
+    html.theme-light .db-danger-btn {
       border: 1px solid #feb2b2;
       color: #9b2c2c;
       background: #fffafa;
     }
-    body.db-light .db-danger-btn:hover {
+    html.theme-light .db-danger-btn:hover {
       background: #fff5f5;
       border-color: #fc8181;
       color: #c53030;
     }
-    body.db-light .db-danger-btn--strong {
+    html.theme-light .db-danger-btn--strong {
       background: #c53030;
       color: #ffffff;
       border-color: #9b2c2c;
     }
-    body.db-light .db-danger-btn--strong:hover {
+    html.theme-light .db-danger-btn--strong:hover {
       background: #9b2c2c;
       border-color: #742a2a;
       color: #ffffff;
@@ -920,7 +919,7 @@
       margin-bottom: 12px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 12px 24px rgba(6, 10, 24, .34);
     }
-    body.db-light .db-messenger-box {
+    html.theme-light .db-messenger-box {
       background: linear-gradient(180deg, rgba(250, 251, 255, 0.96), rgba(242, 245, 255, 0.94));
       border-color: #d9def2;
       box-shadow: inset 0 1px 0 #fff, 0 10px 24px rgba(40, 54, 101, .1);
@@ -976,7 +975,7 @@
     .db-messenger-alert-dismiss:active {
       transform: translateY(0);
     }
-    body.db-light .db-messenger-alert-dismiss {
+    html.theme-light .db-messenger-alert-dismiss {
       background: rgba(255, 255, 255, 0.55);
       color: #854d0e;
     }
@@ -1145,13 +1144,13 @@
       align-self: flex-end;
       border: 1px solid rgba(168,139,250,.44);
     }
-    body.db-light .db-msg--them {
+    html.theme-light .db-msg--them {
       background: linear-gradient(180deg, #ffffff, #f7f8ff);
       border-color: #d7ddf4;
       color: #3b4260;
       box-shadow: 0 6px 14px rgba(43, 59, 116, .1);
     }
-    body.db-light .db-msg--me {
+    html.theme-light .db-msg--me {
       background: linear-gradient(135deg, rgba(107,92,255,.2), rgba(192,38,211,.16));
       border-color: rgba(126,105,247,.4);
       color: #2b3050;
@@ -1166,7 +1165,7 @@
       border: 1px solid rgba(107,92,255,.24);
       background: rgba(13, 17, 34, .78);
     }
-    body.db-light .db-messenger-compose {
+    html.theme-light .db-messenger-compose {
       background: rgba(248, 249, 255, .92);
       border-color: #dbe1f4;
     }
@@ -1203,7 +1202,7 @@
       border-color: rgba(168,139,250,.7);
       box-shadow: 0 0 0 3px rgba(107,92,255,.2);
     }
-    body.db-light .db-messenger-input {
+    html.theme-light .db-messenger-input {
       background: #fff;
       border-color: #cfd6ef;
     }
@@ -1283,7 +1282,7 @@
       border-color: rgba(107, 92, 255, 0.5);
       box-shadow: 0 12px 34px rgba(107, 92, 255, 0.18);
     }
-    body.db-light .db-card {
+    html.theme-light .db-card {
       background: linear-gradient(180deg, #ffffff, #f8f9ff);
       border-color: #d8ddf2;
       box-shadow: 0 8px 22px rgba(41, 53, 99, 0.08);
@@ -1323,11 +1322,98 @@
     }
 
     .db-app-slot {
-        min-height: 180px;
+        min-height: 200px;
         border-radius: var(--radius-lg);
         transition: all var(--duration-fast);
         display: flex;
         flex-direction: column;
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border-subtle);
+        padding: 20px;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+    }
+
+    .db-app-slot:not(.db-app-slot--empty):hover {
+        border-color: rgba(107, 92, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .db-app-slot-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--color-bg-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        flex-shrink: 0;
+    }
+
+    .db-app-slot-icon img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+    }
+
+    .db-app-slot-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .db-app-slot-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+    }
+
+    .db-app-slot-desc {
+        font-size: 12px;
+        color: var(--color-text-tertiary);
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .db-app-slot-status {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-accent-primary);
+        margin-bottom: 12px;
+        padding: 4px 8px;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-subtle);
+        border-radius: 4px;
+        display: block;
+        width: fit-content;
+    }
+
+    .db-app-slot-action {
+        margin-top: auto;
+    }
+
+    .db-app-slot-btn {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-strong);
+        color: var(--color-text-primary);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--duration-fast);
+    }
+
+    .db-app-slot-btn:hover {
+        background: var(--color-accent-primary);
+        color: #fff;
+        border-color: var(--color-accent-primary);
     }
 
     /* Slot Vazio (Empty Slot) */
@@ -1379,6 +1465,13 @@
 
     /* Peek Slot Section */
     .db-peek-section {
+        margin-top: var(--space-xl);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--color-border-subtle);
+    }
+
+    /* Free Apps Section */
+    .db-free-apps-section {
         margin-top: var(--space-xl);
         padding-top: var(--space-lg);
         border-top: 1px solid var(--color-border-subtle);
@@ -2603,6 +2696,97 @@
     }
     .db-app-repr-toggle input { accent-color: var(--color-accent-primary); }
 
+    .db-connector-section {
+        margin-bottom: 24px;
+    }
+
+    .db-connector-section-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-tertiary);
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .db-status-tag {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid var(--color-border-strong);
+        background: var(--color-bg-secondary);
+    }
+
+    /* ══ APP FILTERS ═════════════════════════════ */
+    .db-connector-filters {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+        padding: 16px;
+        background: var(--color-bg-secondary);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border-subtle);
+    }
+    .db-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+    .db-filter-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .db-connector-select {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-border-strong);
+        background: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        font-size: 13px;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+    .db-connector-select:focus {
+        border-color: var(--color-accent-primary);
+        outline: none;
+    }
+    .db-app-connector-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+    }
+    .db-category-tag {
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        background: var(--color-bg-secondary);
+        padding: 1px 6px;
+        border-radius: 3px;
+        border: 1px solid var(--color-border-subtle);
+    }
+    .db-connector-empty {
+        text-align: center;
+        padding: 30px;
+        color: var(--color-text-tertiary);
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    /* ══ APP CONNECTOR MODAL ═════════════════════ */
+    #dbAppConnectorOverlay .db-manager-modal {
+        width: 580px;
+        max-width: 100vw;
+        padding: 0;
+        overflow: hidden;
+    }
+
     /* ══ AUDIT LOG ═══════════════════════════════ */
     .db-audit-toolbar {
       display: grid;
@@ -2805,7 +2989,7 @@
       background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);
       color:#FBBF24;font-size:13px;line-height:1.5;margin-bottom:16px;
     }
-    body.db-light .db-backup-alert { background:#FEF9EC;border-color:#F59E0B;color:#92400E; }
+    html.theme-light .db-backup-alert { background:#FEF9EC;border-color:#F59E0B;color:#92400E; }
     .db-backup-alert svg { flex-shrink:0;margin-top:1px; }
     .db-backup-row  { display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap; }
     .db-backup-info { flex:1; }
@@ -2965,7 +3149,7 @@
       transition: border-color .2s, background .2s;
     }
     .db-mob-menu-btn:hover { border-color: rgba(107,92,255,.58); background: rgba(24, 30, 60, .84); }
-    body.db-light .db-mob-menu-btn {
+    html.theme-light .db-mob-menu-btn {
       background: #f4f6ff;
       border-color: rgba(107,92,255,.28);
       box-shadow: 0 6px 14px rgba(46, 57, 102, .12);
@@ -2998,7 +3182,7 @@
       transform: translateY(0);
       animation: dbMobTopPulse 2s ease-in-out infinite;
     }
-    body.db-light .db-mob-top-btn {
+    html.theme-light .db-mob-top-btn {
       background: rgba(244, 246, 255, .96);
       border-color: rgba(107,92,255,.28);
       box-shadow: 0 6px 14px rgba(46, 57, 102, .12);
@@ -3400,3 +3584,137 @@
     }
     .db-btn-secondary:hover { background: var(--color-bg-primary); color: var(--color-text-primary); }
   
+
+/* App Connector Enhancements */
+.db-connector-info {
+    margin-bottom: 24px;
+}
+
+.db-connector-info-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.db-connector-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.db-connector-info-plan-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-radius: 4px;
+}
+
+.db-connector-info-usage {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.db-connector-info-bar {
+    height: 6px;
+    background: var(--color-bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.db-connector-info-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.db-connector-info-footer {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+}
+
+.db-connector-info-status strong {
+    color: var(--color-text-secondary);
+}
+
+/* App Action Buttons */
+.db-app-connector-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.db-app-action-btn {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.db-app-action-btn--connect {
+    background: #6B5CFF; /* Explicit high-visibility color */
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(107, 92, 255, 0.2);
+}
+
+.db-app-action-btn--connect:hover:not(:disabled) {
+    background: #5a4de6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(107, 92, 255, 0.3);
+}
+
+.db-app-action-btn--connect:disabled {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-tertiary);
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+.db-app-action-btn--disconnect {
+    background: transparent;
+    border-color: var(--color-border-strong);
+    color: var(--color-text-secondary);
+}
+
+.db-app-action-btn--disconnect:hover {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Animations */
+@keyframes fadeInApp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.db-app-slot--new {
+    animation: fadeInApp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.db-app-connector-row--connected {
+    background: rgba(107, 92, 255, 0.05);
+    border-color: rgba(107, 92, 255, 0.2);
+}
+
+html.theme-dark .db-app-action-btn--connect {
+    background: #818cf8;
+}
+html.theme-dark .db-app-action-btn--connect:hover:not(:disabled) {
+    background: #6366f1;
+}
