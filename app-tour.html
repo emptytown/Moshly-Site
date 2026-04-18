@@ -15,7 +15,7 @@
       display: flex;
       flex-direction: column;
       gap: var(--space-2xl);
-      margin-top: var(--space-3xl);
+      margin-top: var(--space-xl);
     }
 
     .tour-station {
@@ -106,7 +106,8 @@
       padding: 4px 10px;
       background: var(--color-accent-opacity-12);
       color: var(--color-accent-primary);
-      border-radius: var(--radius-pill);
+      border: 1px solid rgba(107, 92, 255, 0.3);
+      border-radius: 85px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -198,12 +199,12 @@
   </section>
 
   <!-- ROADMAP GRAPHIC -->
-  <section class="roadmap-section" style="padding-top: 0;">
+  <section class="roadmap-section" style="padding-top: 0; padding-bottom: var(--space-xl);">
     <div class="section-inner">
       <div class="section-label">The Strategy</div>
       <h2 class="section-title">Our Growth <span class="gradient-text">Trajectory</span></h2>
       
-      <div class="roadmap-container">
+      <div class="roadmap-container" style="margin-bottom: var(--space-xl);">
         <svg class="roadmap-svg" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="pathGrad" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
@@ -251,28 +252,28 @@
           <text x="80" y="104" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="800" filter="url(#glowRM)">Moshly.io</text>
           <circle cx="464" cy="130" r="26" fill="url(#ng2)" opacity="0.08" filter="url(#glowSoftRM)"/>
           <circle cx="464" cy="130" r="11" fill="url(#ng2)" opacity="0.55"/>
-          <text x="464" y="104" text-anchor="middle" fill="#A4A7B5" font-size="12" font-weight="700">FeeME</text>
+          <text x="464" y="104" text-anchor="middle" fill="#A4A7B5" font-size="12" font-weight="700">FifthSense</text>
           <circle cx="694" cy="185" r="26" fill="url(#ng3)" opacity="0.05" filter="url(#glowSoftRM)"/>
           <circle cx="694" cy="185" r="11" fill="url(#ng3)" opacity="0.3"/>
-          <text x="694" y="215" text-anchor="middle" fill="#7B7F93" font-size="12" font-weight="700">MerchClick</text>
+          <text x="694" y="215" text-anchor="middle" fill="#7B7F93" font-size="12" font-weight="700">FeeME</text>
         </svg>
       </div>
     </div>
   </section>
 
   <!-- TOUR STATIONS -->
-  <section class="apps-section">
+  <section class="apps-section" style="padding-top: var(--space-xl);">
     <div class="section-inner">
       <div class="section-label">Deep Dive</div>
       <h2 class="section-title">The Moshly <span class="gradient-text">Universe</span></h2>
-      <p class="section-subtitle">A detailed breakdown of every tool in our ecosystem.</p>
+      <p class="section-subtitle" style="margin-bottom: var(--space-xl);">A detailed breakdown of every tool in our ecosystem.</p>
 
       <div class="tour-stations">
         <!-- STATION 01: Moshly.io -->
         <div class="tour-station">
           <div class="tour-content">
             <div class="tour-station-num">01</div>
-            <div class="tour-badge" style="background: rgba(74, 222, 128, 0.1); color: #4ade80;">Active</div>
+            <div class="tour-badge" style="background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3);">Active</div>
             <h3 class="tour-app-name">Moshly.io</h3>
             <p class="tour-app-tagline">The Central Ecosystem</p>
             <p class="tour-app-desc">
@@ -286,14 +287,11 @@
           </div>
           <div class="tour-visuals">
             <div class="tour-screenshot">
-              <img src="assets/tour/moshly-makingof.jpeg" height="342"
-                   width="400"/> alt="Designing Moshly's logo" />
+              <img src="assets/photos/logo design.png" height="342"
+                   width="400" alt="Designing Moshly's logo" />
             </div>
             <div class="tour-screenshot">
-            </div>
-            <div class="tour-screenshot">
-              <!-- <img src="assets/tour/moshly-profile.jpg" alt="Moshly Profile" /> -->
-            </div>
+              <img src="assets/photos/Tech working-4-3.png" height="768" width="1024"/></div>
           </div>
         </div>
 
@@ -301,7 +299,7 @@
         <div class="tour-station">
           <div class="tour-content">
             <div class="tour-station-num">02</div>
-            <div class="tour-badge">Active</div>
+            <div class="tour-badge" style="background: rgba(192, 38, 211, 0.1); color: #c026d3; border: 1px solid rgba(192, 38, 211, 0.3);">SOON</div>
             <h3 class="tour-app-name">FeeME</h3>
             <p class="tour-app-tagline">The Smart Budget Generator</p>
             <p class="tour-app-desc">
@@ -315,11 +313,11 @@
           </div>
           <div class="tour-visuals">
             <div class="tour-screenshot">
-              <!-- <img src="assets/tour/feeme-editor.jpg" alt="FeeME Editor" /> -->
+              <img src="assets/photos/Tech budgeting.png" height="768"
+                                                          width="1024" alt="FeeME Editor" />
             </div>
             <div class="tour-screenshot">
-              <!-- <img src="assets/tour/feeme-pdf.jpg" alt="FeeME PDF Export" /> -->
-            </div>
+              <img src="assets/photos/band-pause-budget.png" height="768" width="1024"/></div>
           </div>
         </div>
 
@@ -327,7 +325,7 @@
         <div class="tour-station">
           <div class="tour-content">
             <div class="tour-station-num">03</div>
-            <div class="tour-badge" style="background: rgba(192, 38, 211, 0.1); color: #c026d3;">In Beta</div>
+            <div class="tour-badge" style="background: rgba(192, 38, 211, 0.1); color: #c026d3; border: 1px solid rgba(192, 38, 211, 0.3);">In Beta</div>
             <h3 class="tour-app-name">MerchClick</h3>
             <p class="tour-app-tagline">Click Your Merch In</p>
             <p class="tour-app-desc">
@@ -341,8 +339,7 @@
           </div>
           <div class="tour-visuals">
             <div class="tour-screenshot">
-              <!-- <img src="assets/tour/merchclick-app.jpg" alt="MerchClick Mobile App" /> -->
-            </div>
+              <img src="assets/photos/ManagerHotel.png" height="768" width="1024"/></div>
           </div>
         </div>
 
@@ -350,7 +347,7 @@
         <div class="tour-station" style="opacity: 0.6; border-bottom: none;">
           <div class="tour-content">
             <div class="tour-station-num">···</div>
-            <div class="tour-badge" style="background: var(--color-bg-secondary); color: var(--color-text-tertiary);">Under Development</div>
+            <div class="tour-badge" style="background: var(--color-bg-secondary); color: var(--color-text-tertiary); border: 1px solid var(--color-border-subtle);">Under Development</div>
             <h3 class="tour-app-name">More on the way</h3>
             <p class="tour-app-tagline">The Suite Keeps Growing</p>
             <p class="tour-app-desc">
@@ -360,7 +357,7 @@
             </p>
           </div>
           <div class="tour-visuals">
-             <div class="tour-screenshot" style="border-style: dashed; background: transparent;"></div>
+            <div class="tour-screenshot" style="border-style: dashed; background: transparent;"><img src="assets/photos/prod-brothers.png" alt="The Prod Brothers" title="The Prod Brothers" height="768" width="1024"/></div>
           </div>
         </div>
 
