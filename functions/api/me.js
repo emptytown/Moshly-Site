@@ -278,7 +278,17 @@ export async function onRequestDelete({ request, env }) {
         .where(eq(schema.workspaces.ownerId, payload.userId))
         .get();
 
-      const endOfCycle = existingSub?.subscriptions?.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      if (!existingSub) {
+        return new Response(JSON.stringify({
+          error: 'no_subscription',
+          message: 'No active subscription found for this account.'
+        }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      const endOfCycle = existingSub.subscriptions.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
       await db.update(schema.subscriptions)
         .set({ expiresAt: endOfCycle })

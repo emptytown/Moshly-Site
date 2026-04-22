@@ -13,7 +13,18 @@ export async function onRequestPost({ request, env }) {
     const ipRetryAfter = await applyRateLimit(env.AUTH_KV, 'verify-email', `ip:${clientIp}`);
     if (ipRetryAfter) return rateLimitedResponse(ipRetryAfter);
 
-    const { token } = await request.json();
+    let token;
+    try {
+      ({ token } = await request.json());
+    } catch {
+      return new Response(JSON.stringify({
+        error: 'invalid_body',
+        message: 'Invalid request body'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (!token) {
       return new Response(JSON.stringify({ 

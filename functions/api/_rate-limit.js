@@ -14,6 +14,7 @@ const MAX_ATTEMPTS_PER_WINDOW = {
   'verify-email': 10,
   refresh: 20,
   'me-patch': 30,
+  'me-delete': 3,
 };
 
 /**
