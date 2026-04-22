@@ -1,7 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/fifthsense", "destination": "/apps/fifthsense.html" },
-    { "source": "/feeme", "destination": "/apps/feeme.html" }
-  ]
-}

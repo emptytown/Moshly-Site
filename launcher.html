@@ -19,6 +19,25 @@
       --accent: #6b5cff;
       --accent-2: #00d1ff;
       --ok: #4ade80;
+
+      /* Dashboard Mirror Tokens */
+      --color-bg-primary: #0E0F14;
+      --color-bg-secondary: #141624;
+      --color-bg-surface: #1B1E2E;
+      --color-text-primary: #E6E7EB;
+      --color-text-secondary: #A4A7B5;
+      --color-text-tertiary: #7B7F93;
+      --color-accent-primary: #6B5CFF;
+      --color-accent-hover: #7C6DFF;
+      --color-border-subtle: #24273A;
+      --color-border-strong: #2D3048;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --duration-fast: 0.2s;
+      --font-size-xs: 11px;
+      --font-family-base: "Inter", sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -31,6 +50,206 @@
         radial-gradient(circle at 85% 90%, rgba(0, 209, 255, 0.12), transparent 40%),
         var(--bg);
       min-height: 100vh;
+    }
+
+    /* ══ DASHBOARD MIRROR STYLES ══════════════════ */
+    .db-card {
+      background: linear-gradient(180deg, rgba(18, 22, 43, 0.9), rgba(14, 18, 36, 0.88));
+      border: 1px solid rgba(107, 92, 255, 0.24);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      transition: all var(--duration-fast);
+      box-sizing: border-box;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 12px 28px rgba(7, 10, 24, 0.35);
+      margin-bottom: 24px;
+    }
+    .db-card:hover {
+      border-color: rgba(107, 92, 255, 0.5);
+      box-shadow: 0 12px 34px rgba(107, 92, 255, 0.18);
+    }
+    .db-section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+    .db-section-title {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin: 0;
+    }
+    .db-section-subtitle {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+      opacity: 0.7;
+      margin: 0;
+    }
+    .db-apps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+    }
+    .db-app-slot {
+        min-height: 200px;
+        border-radius: var(--radius-lg);
+        transition: all var(--duration-fast);
+        display: flex;
+        flex-direction: column;
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border-subtle);
+        padding: 20px;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+    }
+    .db-app-slot:not(.db-app-slot--empty):hover {
+        border-color: rgba(107, 92, 255, 0.4);
+        transform: translateY(-2px);
+    }
+    .db-app-slot-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--color-bg-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        flex-shrink: 0;
+    }
+    .db-app-slot-icon img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+    }
+    .db-app-slot-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .db-app-slot-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+    }
+    .db-app-slot-desc {
+        font-size: 12px;
+        color: var(--color-text-tertiary);
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+    .db-app-slot-status {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-accent-primary);
+        margin-bottom: 12px;
+        padding: 4px 8px;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-subtle);
+        border-radius: 4px;
+        display: block;
+        width: fit-content;
+    }
+    .db-app-slot-action {
+        margin-top: auto;
+    }
+    .db-app-slot-btn {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-strong);
+        color: var(--color-text-primary);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--duration-fast);
+        text-align: center;
+    }
+    .db-app-slot-btn:hover {
+        background: var(--color-accent-primary);
+        color: #fff;
+        border-color: var(--color-accent-primary);
+    }
+    .db-app-slot--empty {
+        border: 2px dashed rgba(107, 92, 255, 0.25);
+        background: rgba(107, 92, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+    }
+    .db-app-slot--empty:hover {
+        border-color: rgba(107, 92, 255, 0.45);
+        background: rgba(107, 92, 255, 0.06);
+    }
+    .db-app-slot-empty-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .db-app-slot-plus-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 400;
+        opacity: 0.6;
+        transition: all var(--duration-fast);
+    }
+    .db-app-slot--empty:hover .db-app-slot-plus-circle {
+        opacity: 1;
+        transform: scale(1.1);
+        color: var(--color-accent-primary);
+    }
+    .db-app-slot-label {
+        font-size: 13px;
+        font-weight: 600;
+        opacity: 0.8;
+    }
+    .db-hidden { display: none !important; }
+
+    /* Peek Slot Section */
+    .db-peek-section {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-border-subtle);
+    }
+    .db-peek-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
+    }
+    .db-app-slot--peek {
+        border-color: var(--color-accent-primary);
+        background: rgba(107, 92, 255, 0.04);
+    }
+    .db-app-slot--peek .db-app-slot-status {
+        color: #fff;
+        background: var(--color-accent-primary);
+        border-color: var(--color-accent-primary);
+    }
+
+    /* Free Section */
+    .db-free-apps-section {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-border-subtle);
     }
 
     body::before {
@@ -280,10 +499,13 @@
 
     @media (max-width: 860px) {
       .wrap { width: min(700px, 92vw); }
-      .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .db-apps-grid, .db-peek-grid { grid-template-columns: repeat(2, 1fr); }
       .topbar { margin-bottom: 14px; }
       .hero { flex-direction: column; align-items: flex-start; }
       .hero h1 { font-size: clamp(24px, 9vw, 36px); }
+    }
+    @media (max-width: 580px) {
+      .db-apps-grid, .db-peek-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -304,7 +526,33 @@
       </div>
     </section>
 
-    <section class="apps" aria-label="Apps" id="launcherAppsGrid"></section>
+    <div class="db-card">
+        <!-- APP SLOTS SECTION -->
+        <div class="db-section-header">
+            <h2 class="db-section-title">My Apps Slots</h2>
+            <p class="db-section-subtitle">Permanent apps available in your plan.</p>
+        </div>
+        <div class="db-apps-grid" id="dbAppsGrid"></div>
+
+        <!-- Free Apps Section -->
+        <div class="db-free-apps-section" id="dbFreeSection">
+            <div class="db-section-header">
+                <h2 class="db-section-title">Free Apps</h2>
+                <p class="db-section-subtitle">Apps available for everyone.</p>
+            </div>
+            <div class="db-apps-grid" id="dbFreeAppsGrid"></div>
+        </div>
+
+        <!-- PEEK SLOT SECTION -->
+        <div class="db-peek-section db-hidden" id="dbPeekSection">
+            <div class="db-section-header">
+                <h2 class="db-section-title">Peek Slot</h2>
+                <p class="db-section-subtitle">Temporary 24h access to any app.</p>
+            </div>
+            <div class="db-peek-grid" id="dbPeekGrid"></div>
+        </div>
+    </div>
+
     <a class="launcher-pending-alert" id="launcherPendingAlert" href="/connect-more" hidden aria-live="polite">
       <span class="launcher-pending-alert-icon">🕐</span>
       <span id="launcherPendingAlertText">App change pending…</span>
@@ -316,12 +564,49 @@
     </div>
   </div>
 
-  <script src="/app-manifest.js"></script>
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
   <script>
+    // Global APP_CATALOG mirrored from dashboard-logic.js
+    const APP_CATALOG = [
+        { 
+            slug: 'feeme', name: 'FeeMe', description: 'Financial hub', 
+            status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html',
+            type: 'Plan app', categories: ['Business', 'Analytics']
+        },
+        { 
+            slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths', 
+            status: 'live', iconAsset: 'assets/Moshly-Main-Logo-nofill.svg', url: 'apps/fifthsense.html',
+            type: 'Free', categories: ['Learning', 'Interactive']
+        },
+        { 
+            slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', 
+            status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: 'https://brainroom.moshly.io',
+            type: 'Plan app', categories: ['Creative', 'Planning', 'Tools']
+        },
+        { 
+            slug: 'moshly core', name: 'Moshly Core', description: 'Base Platform', 
+            status: 'live', iconAsset: 'assets/Moshly-Main-Logo-darkoutline.svg', url: 'https://moshly.io',
+            type: 'Free', categories: ['Tools']
+        },
+        { 
+            slug: 'app guide', name: 'App Guide', description: 'Tutorials & Help', 
+            status: 'live', iconAsset: 'assets/Moshly-Main-Logo-1.svg', url: 'https://moshly.io/docs',
+            type: 'Free', categories: ['Tour', 'Learning']
+        },
+        { 
+            slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', 
+            status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io',
+            type: 'Plan app', categories: ['Planning', 'Interactive']
+        },
+        { 
+            slug: 'merchclick', name: 'MerchClick', description: 'Merch management', 
+            status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io',
+            type: 'Plan app', categories: ['Business', 'Booking']
+        }
+    ];
+
     // Guard: redirect to login if no session.
-    // Bypass on localhost (dev mock mode) — same pattern as /dashboard.
     (async () => {
       const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
@@ -382,115 +667,174 @@
       });
     })();
 
-    (function renderLauncherApps() {
-      const grid = document.getElementById('launcherAppsGrid');
-      if (!grid) return;
+    function updateLauncherAppsUI(user) {
+        const appsGrid = document.getElementById('dbAppsGrid');
+        const freeGrid = document.getElementById('dbFreeAppsGrid');
+        const peekGrid = document.getElementById('dbPeekGrid');
+        if (!appsGrid) return;
 
-      const user = (() => {
-        try { return JSON.parse(localStorage.getItem('moshly_user') || 'null'); } catch { return null; }
-      })();
-
-      function getLauncherAppCatalog() {
-        const manifest = window.MoshlyAppManifest;
-        if (manifest && typeof manifest.apps === 'function') {
-          return manifest.apps().map(app => ({
-            slug: String(app.slug || '').trim().toLowerCase(),
-            name: app.name || (app.slug ? app.slug.charAt(0).toUpperCase() + app.slug.slice(1) : ''),
-            description: app.description || '',
-            status: String(app.status || 'soon').toLowerCase() === 'live' ? 'live' : 'soon',
-            iconAsset: app.iconAsset || '',
-            url: app.url || '#'
-          })).filter(app => app.slug);
+        // Sync user apps from profile if missing
+        if (!user.apps && user.profile?.connectedApps) {
+            user.apps = user.profile.connectedApps;
         }
-        return [
-          { slug: 'feeme', name: 'FeeMe', description: 'Financial hub', status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'https://feeme.moshly.io' },
-          { slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', status: 'live', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://brainroom.moshly.io' },
-          { slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io' },
-          { slug: 'merchclick', name: 'MerchClick', description: 'Merch management', status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io' }
-        ];
-      }
 
-      function getSuggestedApps(user, catalog) {
-        const allSlugs = catalog.map(a => a.slug);
-        const profile = `${user?.job_title || ''} ${user?.skills || ''}`.toLowerCase();
-        const rules = [
-          { keywords: ['tour', 'routing', 'logistics', 'venue', 'festival'], order: ['rbapp', 'merchclick'] },
-          { keywords: ['booking', 'promoter', 'agent', 'promotora'], order: ['rbapp', 'merchclick'] },
-          { keywords: ['merch', 'retail', 'store', 'merchandise'], order: ['merchclick', 'rbapp'] },
-          { keywords: ['seo', 'marketing', 'digital', 'social'], order: ['merchclick', 'rbapp'] },
-          { keywords: ['sound', 'audio', 'tech', 'production'], order: ['rbapp', 'merchclick'] },
-          { keywords: ['manager', 'artist', 'band', 'music'], order: ['rbapp', 'merchclick'] }
-        ];
-        for (const rule of rules) {
-          if (rule.keywords.some(kw => profile.includes(kw))) {
-            return rule.order.filter(slug => allSlugs.includes(slug)).slice(0, 3);
-          }
-        }
-        return allSlugs.slice(0, 3);
-      }
+        const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
+        const uniqueActiveAppSlugs = [...new Set(activeAppSlugs.map(s => {
+            const normalized = s.toLowerCase().trim();
+            if (normalized === 'fifth sense') return 'fifthsense';
+            if (normalized === 'moshly core') return 'moshly core';
+            if (normalized === 'app guide') return 'app guide';
+            return normalized;
+        }))];
+        const activeApps = APP_CATALOG.filter(a => uniqueActiveAppSlugs.includes(a.slug.toLowerCase().trim()));
 
-      function getRepresentedApps(user, catalog) {
-        const all = catalog.map(a => a.slug);
-        const fromState = Array.isArray(user?.represented_apps) ? user.represented_apps : null;
+        const plan = (user.subscription?.plan || user.plan || 'free').toLowerCase();
+        // Comprehensive slot map for ALL plan names used in dev and production
+        const slotMap = {
+            'free': 0,
+            'solo': 2,
+            'collective': 4,
+            'business': 10,
+            'major': 150,
+            'starter': 3,
+            'pro': 9,
+            'elite': 15,
+            'god': 150,
+            'semi_god': 150
+        };
+        const totalSlots = slotMap[plan] === undefined ? (plan === 'free' ? 0 : 3) : slotMap[plan];
         
-        // Onboarding: if no apps are explicitly configured (null) and user has no active apps, suggest some.
-        // If fromState is [] (empty array), it means the user explicitly opted to show NO apps.
-        if (fromState === null && (!Array.isArray(user?.apps) || user.apps.length === 0)) {
-          return getSuggestedApps(user, catalog);
-        }
+        console.log('Launcher Sync: Slot calculation', { plan, totalSlots, userPlan: user.plan, subPlan: user.subscription?.plan });
 
-        if (fromState === null) return all; // Default: show all if never configured but has apps or not in strict onboarding
-        
-        return fromState.filter(slug => all.includes(slug));
-      }
+        const activeMainApps = activeApps.filter(a => a.type !== 'Free');
 
-      const catalog = getLauncherAppCatalog();
-      const represented = new Set(getRepresentedApps(user, catalog));
-      const active = new Set(Array.isArray(user?.apps) ? user.apps.map(s => String(s).toLowerCase()) : []);
-
-      grid.innerHTML = catalog
-        .filter(app => represented.has(app.slug))
-        .map(app => {
-          const isLive = app.status === 'live';
-          const isActive = active.has(app.slug);
-          const isSoon = app.status === 'soon';
-          const shouldShade = false;
-
-          const cardClass = [
-            isLive ? 'app-card live' : 'app-card coming',
-            shouldShade ? 'shown-inactive' : ''
-          ].join(' ').trim();
-
-          // Apps authenticate independently via the HttpOnly refresh cookie — no token in URL
-          const href = (isLive && isActive) ? (app.url || '#') : 'javascript:void(0)';
-          const targetAttr = (isLive && isActive) ? ' target="_blank" rel="noopener noreferrer"' : ' aria-disabled="true"';
-          
-          const pill = isLive
-            ? '<span class="pill">Live</span>'
-            : '<span class="pill pill-muted">Coming Soon</span>';
-            
-          const statusPill = isLive
-            ? `<span class="pill ${isActive ? 'pill-active' : 'pill-inactive'}">${isActive ? 'Active' : 'Inactive'}</span>`
-            : '';
-
-          const cta = isLive ? (isActive ? 'Open App' : 'Inactive') : 'Coming Soon';
-
-          return `<a class="${cardClass}" href="${href}"${targetAttr}>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-              ${pill}${statusPill}
-            </div>
-            <div>
-              <div class="app-head">
-                <img src="${app.iconAsset || ''}" alt="${app.name || ''}" />
-                <div>
-                  <div class="app-title">${app.name || ''}</div>
-                  <div class="app-sub">${app.description || ''}</div>
+        // 1. Permanent Slots
+        let appsHtml = activeMainApps.map(app => `
+            <a href="${app.url}" class="db-app-slot">
+                <div class="db-app-slot-icon">
+                    <img src="${app.iconAsset}" alt="${app.name}">
                 </div>
-              </div>
-            </div>
-            <span class="cta">${cta}</span>
-          </a>`;
-        }).join('');
+                <div class="db-app-slot-info">
+                    <div class="db-app-slot-name">${app.name}</div>
+                    <div class="db-app-slot-desc">${app.description}</div>
+                    <div class="db-app-slot-status">Live</div>
+                    <div class="db-app-slot-action">
+                        <div class="db-app-slot-btn">Open App</div>
+                    </div>
+                </div>
+            </a>
+        `).join('');
+
+        const usedCount = activeMainApps.length;
+        const baseSlots = parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10);
+        let displayedSlots = Math.max(baseSlots, usedCount < 3 ? 3 : Math.floor(usedCount / 3) * 3 + 3);
+        
+        // Ensure even Free plan shows some empty slots if needed, but here we honor plan limits
+        // for "Permanent Slots". For Free plan, totalSlots is 0.
+        // We ensure we at least show whatever they have connected.
+        const effectiveTotal = Math.max(usedCount, Math.min(totalSlots, displayedSlots));
+        const emptySlotsCount = Math.max(0, effectiveTotal - usedCount);
+
+        console.log('Launcher Sync: Permanent Slot rendering', { usedCount, baseSlots, displayedSlots, totalSlots, effectiveTotal, emptySlotsCount });
+
+        const goToConnector = "window.location.href='/dashboard?open_connector=1'";
+        for (let i = 0; i < emptySlotsCount; i++) {
+            appsHtml += `
+                <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
+                    <div class="db-app-slot-empty-content">
+                        <div class="db-app-slot-plus-circle">+</div>
+                        <span class="db-app-slot-label">Connect App</span>
+                    </div>
+                </a>
+            `;
+        }
+        appsGrid.innerHTML = appsHtml;
+
+        // 2. Free Apps
+        if (freeGrid) {
+            const allFreeApps = APP_CATALOG.filter(a => a.type === 'Free');
+            const activeFreeApps = activeApps.filter(a => a.type === 'Free');
+            
+            let freeHtml = activeFreeApps.map(app => `
+                <a href="${app.url}" class="db-app-slot">
+                    <div class="db-app-slot-icon">
+                        <img src="${app.iconAsset}" alt="${app.name}">
+                    </div>
+                    <div class="db-app-slot-info">
+                        <div class="db-app-slot-name">${app.name}</div>
+                        <div class="db-app-slot-desc">${app.description}</div>
+                        <div class="db-app-slot-status">Free</div>
+                        <div class="db-app-slot-action">
+                            <div class="db-app-slot-btn">Open App</div>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            const usedFreeCount = activeFreeApps.length;
+            let displayedFreeSlots = usedFreeCount < 3 ? 3 : Math.floor(usedFreeCount / 3) * 3 + 3;
+            const emptyFreeSlotsCount = Math.max(0, displayedFreeSlots - usedFreeCount);
+
+            for (let i = 0; i < emptyFreeSlotsCount; i++) {
+                freeHtml += `
+                    <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
+                        <div class="db-app-slot-empty-content">
+                            <div class="db-app-slot-plus-circle">+</div>
+                            <span class="db-app-slot-label">Connect Free App</span>
+                        </div>
+                    </a>
+                `;
+            }
+            freeGrid.innerHTML = freeHtml;
+        }
+
+        // 3. Peek Slot
+        if (peekGrid) {
+            const peekSection = document.getElementById('dbPeekSection');
+            if (peekSection) peekSection.classList.remove('db-hidden');
+            const peekAppSlug = user.peek_app?.toLowerCase();
+            const peekApp = APP_CATALOG.find(a => a.slug === peekAppSlug);
+
+            if (peekApp) {
+                peekGrid.innerHTML = `
+                    <a href="${peekApp.url}" class="db-app-slot db-app-slot--peek">
+                        <div class="db-app-slot-icon">
+                            <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
+                        </div>
+                        <div class="db-app-slot-info">
+                            <div class="db-app-slot-name">${peekApp.name}</div>
+                            <div class="db-app-slot-desc">${peekApp.description}</div>
+                            <div class="db-app-slot-status">Peek Active</div>
+                            <div class="db-app-slot-action">
+                                <div class="db-app-slot-btn">Open App</div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            } else {
+                peekGrid.innerHTML = `
+                    <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
+                        <div class="db-app-slot-empty-content">
+                            <div class="db-app-slot-plus-circle">+</div>
+                            <span class="db-app-slot-label">Try any App (24h)</span>
+                        </div>
+                    </a>
+                `;
+            }
+        }
+    }
+
+    (function initLauncher() {
+        const userStr = localStorage.getItem('moshly_user');
+        const user = (() => {
+            try { return JSON.parse(userStr || 'null'); } catch { return null; }
+        })();
+        if (user) {
+            console.log("Launcher Init: User found", { plan: user.plan, sub: user.subscription?.plan, apps: user.apps?.length });
+            updateLauncherAppsUI(user);
+        } else {
+            console.warn("Launcher Init: No user in localStorage", { userStr });
+        }
     })();
 
     (function syncLauncherName() {

@@ -2743,18 +2743,31 @@
     }
     .db-connector-select {
         width: 100%;
-        padding: 8px 12px;
-        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        border-radius: var(--radius-md);
         border: 1px solid var(--color-border-strong);
-        background: var(--color-bg-primary);
+        background: var(--color-bg-secondary);
         color: var(--color-text-primary);
         font-size: 13px;
+        font-family: var(--font-family-base);
         cursor: pointer;
-        transition: border-color 0.2s;
+        transition: all 0.2s;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%237B7F93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4l2 2 2-2M3 2l2 2 2-2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+    }
+    .db-connector-select:hover {
+        border-color: var(--color-accent-muted);
+        background-color: var(--color-bg-surface);
     }
     .db-connector-select:focus {
         border-color: var(--color-accent-primary);
         outline: none;
+        box-shadow: 0 0 0 3px var(--color-accent-opacity-12);
     }
     .db-app-connector-categories {
         display: flex;
@@ -2796,20 +2809,45 @@
     }
     .db-audit-input,
     .db-audit-select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border-strong);
-      background: var(--color-bg-primary);
-      color: var(--color-text-primary);
-      font-size: var(--font-size-sm);
-      font-family: var(--font-family-base);
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border-strong);
+        background: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        font-size: var(--font-size-sm);
+        font-family: var(--font-family-base);
+        cursor: pointer;
+        transition: all 0.2s;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%237B7F93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4l2 2 2-2M3 2l2 2 2-2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+    }
+    .db-audit-input:hover,
+    .db-audit-select:hover {
+        border-color: var(--color-accent-muted);
+        background-color: var(--color-bg-surface);
+    }
+    .db-audit-input:focus,
+    .db-audit-select:focus {
+        border-color: var(--color-accent-primary);
+        outline: none;
+        box-shadow: 0 0 0 3px var(--color-accent-opacity-12);
+    }
+    .db-audit-input:focus {
+        background-image: none;
+        padding-right: 14px;
+        cursor: text;
     }
     .db-audit-refresh {
       padding: 10px 14px;
       border-radius: var(--radius-md);
       border: 1px solid var(--color-border-strong);
-      background: var(--color-bg-primary);
+      background: var(--color-bg-secondary);
       color: var(--color-text-secondary);
       font-size: var(--font-size-sm);
       font-weight: 600;
@@ -2820,7 +2858,8 @@
     }
     .db-audit-refresh:hover {
       color: var(--color-text-primary);
-      border-color: var(--color-accent-primary);
+      border-color: var(--color-accent-muted);
+      background-color: var(--color-bg-surface);
     }
     .db-audit-list {
       display: flex;
@@ -3002,8 +3041,11 @@
       border-radius:var(--radius-md);
       color:var(--color-text-primary);
       font-family:var(--font-family-base);font-size:13px;font-weight:500;
-      cursor:pointer;-webkit-appearance:none;appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237B7F93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      cursor:pointer;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%237B7F93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4l2 2 2-2M3 2l2 2 2-2'/%3E%3C/svg%3E");
       background-repeat:no-repeat;background-position:right 10px center;
     }
     .db-backup-select:focus { outline:none;border-color:var(--color-accent-primary); }

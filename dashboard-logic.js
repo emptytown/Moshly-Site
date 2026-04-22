@@ -17,27 +17,27 @@ const APP_CATALOG = [
     },
     { 
         slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', 
-        status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: '#',
+        status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: 'https://brainroom.moshly.io',
         type: 'Plan app', categories: ['Creative', 'Planning', 'Tools']
     },
     { 
         slug: 'moshly core', name: 'Moshly Core', description: 'Base Platform', 
-        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-darkoutline.svg', url: '#',
+        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-darkoutline.svg', url: 'https://moshly.io',
         type: 'Free', categories: ['Tools']
     },
     { 
         slug: 'app guide', name: 'App Guide', description: 'Tutorials & Help', 
-        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-1.svg', url: '#',
+        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-1.svg', url: 'https://moshly.io/docs',
         type: 'Free', categories: ['Tour', 'Learning']
     },
     { 
         slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', 
-        status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: '#',
+        status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io',
         type: 'Plan app', categories: ['Planning', 'Interactive']
     },
     { 
         slug: 'merchclick', name: 'MerchClick', description: 'Merch management', 
-        status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: '#',
+        status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
     }
 ];
@@ -102,14 +102,22 @@ async function fetchProjects() {
 }
 
 function updateProjectsUI(projects) {
-    const listEl = document.getElementById('dbProjectsList');
+    const listEl = document.getElementById('db-proj-list');
+    const emptyEl = document.getElementById('db-projects-empty');
     const managerListEl = document.getElementById('dbProjectsManagerList');
+    const countEl = document.getElementById('dbProjectsCount');
     
+    if (countEl) countEl.textContent = projects ? projects.length : 0;
+
     // For the small card list
     if (listEl) {
         if (!projects || projects.length === 0) {
-            listEl.innerHTML = '<div class="db-proj-empty">No projects yet.</div>';
+            if (emptyEl) emptyEl.classList.remove('db-hidden');
+            listEl.classList.add('db-hidden');
+            listEl.innerHTML = '';
         } else {
+            if (emptyEl) emptyEl.classList.add('db-hidden');
+            listEl.classList.remove('db-hidden');
             listEl.innerHTML = projects.slice(0, 5).map(p => `
                 <div class="db-proj-item">
                     <div class="db-proj-icon">${getProjectIcon(p.type)}</div>
@@ -163,6 +171,38 @@ async function submitCreateProject() {
     const description = document.getElementById('dbProjDesc').value;
     const notes = document.getElementById('dbProjNotes').value;
 
+    // Collect Team
+    const team = [];
+    document.querySelectorAll('#dbProjTeamRows .db-proj-dyn-row').forEach(row => {
+        const active = row.querySelector('.db-proj-switch input').checked;
+        const memberName = row.querySelector('.db-proj-team-name').value;
+        const role = row.querySelector('.db-proj-team-role').value;
+        const fee = row.querySelector('.db-proj-team-fee').value;
+        if (memberName || role) {
+            team.push({ active, name: memberName, role, fee });
+        }
+    });
+
+    // Collect Extra Fields
+    const extraFields = [];
+    document.querySelectorAll('#dbProjExtraFields .db-proj-dyn-row').forEach(row => {
+        const active = row.querySelector('.db-proj-switch input').checked;
+        const key = row.querySelector('.db-proj-extra-key').value;
+        const val = row.querySelector('.db-proj-extra-val').value;
+        const sizeBtn = row.querySelector('.db-proj-size-btn.active');
+        const size = sizeBtn ? sizeBtn.textContent : 'S';
+        if (key) {
+            extraFields.push({ active, key, value: val, size });
+        }
+    });
+
+    // Collect AI Chips
+    const aiContextRules = [];
+    document.querySelectorAll('.db-proj-ai-chip').forEach(chip => {
+        const text = chip.textContent.replace('×', '').trim();
+        if (text) aiContextRules.push(text);
+    });
+
     if (!name || !type) {
         alert('Please enter a project name and select a type.');
         return;
@@ -182,8 +222,10 @@ async function submitCreateProject() {
                 genre,
                 location,
                 description,
-                notes
-                // Skipping team, extraFields, aiContextRules for now as they need more complex UI handling
+                notes,
+                team,
+                extraFields,
+                aiContextRules
             })
         });
 
@@ -205,15 +247,59 @@ async function submitCreateProject() {
 
 window.submitCreateProject = submitCreateProject;
 
-// UI Stubs for complex project fields (to be implemented)
-window.addProjectExtraFieldRow = () => console.log('Add project extra field');
-window.addProjectTeamRow = () => console.log('Add project team row');
-window.updateProjectTeamSummary = () => console.log('Update project team summary');
+// UI Stubs for complex project fields
+window.addProjectExtraFieldRow = () => {
+    const list = document.getElementById('dbProjExtraFields');
+    if (!list) return;
+    const row = document.createElement('div');
+    row.className = 'db-proj-dyn-row db-proj-dyn-row--extra';
+    row.innerHTML = `
+        <div class="db-proj-switch">
+            <input type="checkbox" checked>
+            <span class="db-proj-switch-track"></span>
+        </div>
+        <input type="text" class="db-proj-input db-proj-extra-key" placeholder="Field Name (e.g. Rider)">
+        <input type="text" class="db-proj-input db-proj-extra-val" placeholder="Value (e.g. Link)">
+        <div class="db-proj-size-toggle" style="display:flex;">
+            <button class="db-proj-size-btn active" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')" type="button">S</button>
+            <button class="db-proj-size-btn" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')" type="button">M</button>
+        </div>
+        <button class="db-proj-remove" onclick="this.parentElement.remove()" type="button">×</button>
+    `;
+    list.appendChild(row);
+};
+
+window.addProjectTeamRow = () => {
+    const list = document.getElementById('dbProjTeamRows');
+    if (!list) return;
+    const row = document.createElement('div');
+    row.className = 'db-proj-dyn-row';
+    row.innerHTML = `
+        <div class="db-proj-switch">
+            <input type="checkbox" checked>
+            <span class="db-proj-switch-track"></span>
+        </div>
+        <input type="text" class="db-proj-input db-proj-team-name" placeholder="Member Name">
+        <input type="text" class="db-proj-input db-proj-team-role" placeholder="Role">
+        <input type="text" class="db-proj-input db-proj-team-fee" placeholder="Fee">
+        <button class="db-proj-remove" onclick="this.parentElement.remove(); updateProjectTeamSummary();" type="button">×</button>
+    `;
+    list.appendChild(row);
+};
+
+window.updateProjectTeamSummary = () => {
+    const rows = document.querySelectorAll('#dbProjTeamRows .db-proj-dyn-row');
+    const summary = document.getElementById('dbProjTeamSummary');
+    if (summary) {
+        summary.textContent = `${rows.length} member${rows.length === 1 ? '' : 's'} added`;
+    }
+};
+
 window.toggleProjectTeamSection = () => {
-    const body = document.getElementById('dbProjTeamBody');
+    const wrap = document.getElementById('dbProjTeamWrap');
     const btn = document.getElementById('dbProjTeamToggleBtn');
-    if (body) {
-        const isOpen = body.classList.toggle('open');
+    if (wrap) {
+        const isOpen = wrap.classList.toggle('open');
         if (btn) btn.textContent = isOpen ? 'Close Team' : 'Open Team';
     }
 };

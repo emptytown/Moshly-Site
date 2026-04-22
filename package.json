@@ -4,7 +4,7 @@
   "description": "Frontend website for the Moshly universe.",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve . -c serve.json",
+    "start": "npm run dev",
     "dev": "npx wrangler pages dev .",
     "seed:god": "npx wrangler d1 execute moshly-db --local --command \"INSERT OR IGNORE INTO users (id, email, password_hash, name, role, email_verified) VALUES ('god-user-id', 'god@moshly.com', '$2b$10$4soz4cm2Vxa5eHL6QWbx8OU7fhWDYV5yYcFP2JnXb8BCfgXDmUJJq', 'God User', 'god', 1); INSERT OR IGNORE INTO profiles (user_id, first_name, last_name) VALUES ('god-user-id', 'God', 'User'); INSERT OR IGNORE INTO workspaces (id, owner_id, name, slug) VALUES ('god-workspace-id', 'god-user-id', 'God Workspace', 'god-workspace'); INSERT OR IGNORE INTO subscriptions (workspace_id, plan) VALUES ('god-workspace-id', 'major'); INSERT OR IGNORE INTO projects (id, workspace_id, owner_id, name, type) VALUES ('god-project-id', 'god-workspace-id', 'god-user-id', 'God Project', 'production');\""
   },
@@ -14,7 +14,6 @@
   "devDependencies": {
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.1",
-    "serve": "^14.2.4",
     "wrangler": "^4.77.0"
   },
   "dependencies": {
