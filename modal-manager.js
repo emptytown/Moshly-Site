@@ -250,7 +250,9 @@ async function saveProfileChanges() {
 
             cancelProfileEdit();
         } else {
-            alert('Failed to save profile. Please try again.');
+            const detail = data?.detail || data?.message || '';
+            console.error('Profile save failed:', { status: ok, data });
+            alert(detail ? `Failed to save profile: ${detail}` : 'Failed to save profile. Please try again.');
         }
     } catch (e) {
         console.error('Error saving profile:', e);

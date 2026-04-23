@@ -155,28 +155,19 @@ export async function onRequestPatch({ request, env }) {
     if (uxSettings !== undefined) profileUpdate.uxSettings = uxSettings;
     if (connectedApps !== undefined) profileUpdate.connectedApps = connectedApps;
 
-    const updates = [];
     if (Object.keys(userUpdate).length > 0) {
-      updates.push(
-        db.update(schema.users)
-          .set(userUpdate)
-          .where(eq(schema.users.id, payload.userId))
-      );
+      await db.update(schema.users)
+        .set(userUpdate)
+        .where(eq(schema.users.id, payload.userId));
     }
 
     if (Object.keys(profileUpdate).length > 0) {
-      updates.push(
-        db.insert(schema.profiles)
-          .values({ userId: payload.userId, ...profileUpdate })
-          .onConflictDoUpdate({
-            target: schema.profiles.userId,
-            set: profileUpdate,
-          })
-      );
-    }
-
-    if (updates.length > 0) {
-      await db.batch(updates);
+      await db.insert(schema.profiles)
+        .values({ userId: payload.userId, ...profileUpdate })
+        .onConflictDoUpdate({
+          target: schema.profiles.userId,
+          set: profileUpdate,
+        });
     }
 
     console.info('Profile updated', { userId: payload.userId });
@@ -200,10 +191,11 @@ export async function onRequestPatch({ request, env }) {
     });
 
   } catch (error) {
-    console.error('Update profile error:', { error: error.message, userId: payload.userId });
-    return new Response(JSON.stringify({ 
+    console.error('Update profile error:', { error: error.message, stack: error.stack, userId: payload.userId });
+    return new Response(JSON.stringify({
       error: 'server_error',
-      message: 'Server error updating profile' 
+      message: 'Server error updating profile',
+      detail: error.message
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

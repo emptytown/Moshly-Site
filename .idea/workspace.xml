@@ -20,15 +20,6 @@
   <component name="ChangeListManager">
     <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="fix(auth): unlock reset for unverified accounts and clarify login error messages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/attestations.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/.vibecheck/provenance/edits.jsonl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard-logic.js" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard-logic.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modal-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/modal-manager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moshly-ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/moshly-ui.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +27,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="240" />
+    <option name="cachedIndexableFilesCount" value="298" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -67,7 +58,7 @@
     <urls />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="Security Analysis" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6,
@@ -90,7 +81,8 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Ui-fix-dashboard",
+    "git-widget-placeholder": "main",
+    "javascript.preferred.runtime.type.id": "node",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/megacromo/DEV/Moshly/Moshly-Site",
@@ -102,6 +94,7 @@
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
     "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/megacromo/Library/Application Support/JetBrains/IntelliJIdea2026.1/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -131,6 +124,9 @@
       <workItem from="1776293454371" duration="229000" />
       <workItem from="1776293694420" duration="1418000" />
       <workItem from="1776297775980" duration="14828000" />
+      <workItem from="1776441294757" duration="2769000" />
+      <workItem from="1776445916062" duration="12853000" />
+      <workItem from="1776896517059" duration="1955000" />
     </task>
     <task id="LOCAL-00001" summary="Solving forget password functionality">
       <option name="closed" value="true" />
@@ -252,7 +248,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776250303555</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fix(auth): unlock reset for unverified accounts and clarify login error messages">
+      <option name="closed" value="true" />
+      <created>1776478201800</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1776478201801</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
