@@ -1,47 +1,89 @@
-### Connecting MerchPad to Moshly Hub
+# MerchPad ↔ Moshly Hub Integration Guide
 
-To connect MerchPad to the Moshly Hub for Single Sign-On (SSO) and unified user sessions, follow these instructions.
+## How the flow works
 
-#### 1. Redirection Flow
-MerchPad should be accessed through the Moshly Hub dashboard. The Hub will redirect users to MerchPad with a short-lived SSO token.
+1. User is logged into Moshly Hub (moshly.io/dashboard)
+2. User clicks the MerchPad app slot → Hub generates a short-lived SSO token (60s TTL)
+3. Hub redirects user to: `https://merchpad.moshly.io/auth/callback?token=<TOKEN>`
+4. MerchPad receives the token, validates it against the Hub API (server-side)
+5. On success, MerchPad creates its own session cookie and signs the user in
 
-**Endpoint:** `https://merchpad.moshly.io/auth/callback?token=SSO_TOKEN`
+---
 
-#### 2. Validating the Token
-When MerchPad receives a token, it must validate it against the Moshly Hub API.
+## Hub → MerchPad Redirect
 
-**Validation Request:**
-```http
-POST https://api.moshly.io/auth/sso/validate
-Content-Type: application/json
+The Hub's `window.launchApp()` function handles the redirect:
+```
+GET /api/auth/sso/token        ← called by Hub (authenticated)
+Response: { token: "<uuid>", expiresIn: 60 }
 
-{
-  "token": "SSO_TOKEN"
-}
+Redirect → https://merchpad.moshly.io/auth/callback?token=<TOKEN>
 ```
 
-**Success Response:**
+---
+
+## MerchPad: Validate the Token
+
+MerchPad must POST the token to the Hub's verify endpoint **server-side** (to avoid CORS from the browser).
+
+**Endpoint:**
+```
+POST https://api.moshly.io/auth/sso/verify
+Content-Type: application/json
+
+{ "token": "<TOKEN>" }
+```
+
+**Success response (HTTP 200):**
 ```json
 {
-  "ok": true,
+  "success": true,
   "user": {
-    "id": "user_123",
-    "email": "user@example.com",
-    "name": "Artist Name"
+    "id": "user_abc123",
+    "email": "artist@example.com",
+    "role": "user",
+    "plan": "collective"
   }
 }
 ```
 
-#### 3. Asset Reference
-Use the official logo icon located in the Moshly Site assets:
-- **Icon URL:** `https://moshly.io/assets/merchpad-logo-icon.svg`
+**Failure responses:**
+- `400` + `{ "error": "missing_token" }` — token param not sent
+- `401` + `{ "error": "invalid_token" }` — token expired or already used (one-time use)
+- `500` + `{ "error": "server_error" }` — Hub-side failure
 
-#### 4. Hub Integration (for developers)
-If you are developing the MerchPad frontend, you can use the `auth-client.js` from Moshly Core to handle robust session checks:
-```html
-<script src="https://moshly.io/auth-client.js"></script>
-<script>
-  // Check if user has an active Hub session
-  const user = await window.MoshlyAuth.getSessionRobust();
-</script>
+**Important:** Tokens are one-time use — the Hub deletes the token on first successful verify. Never retry a successful verify response.
+
+---
+
+## Dev Environment
+
+Local hub runs on `http://localhost:8788`.
+
+Dev verify endpoint: `http://localhost:8788/api/auth/sso/verify`
+
+MerchPad `.env.local`:
 ```
+VITE_MOSHLY_HUB_URL=http://localhost:8788
+MOSHLY_SSO_VERIFY_URL=http://localhost:8788/api/auth/sso/verify
+```
+
+Production `.env`:
+```
+VITE_MOSHLY_HUB_URL=https://moshly.io
+MOSHLY_SSO_VERIFY_URL=https://api.moshly.io/auth/sso/verify
+```
+
+---
+
+## CORS
+
+`https://merchpad.moshly.io` is whitelisted in the Hub's `functions/api/_cors.js`.
+The token verify call from MerchPad **must be server-side** (Express route) — not from the browser.
+
+---
+
+## Asset Reference
+
+- MerchPad icon: `https://moshly.io/assets/merchpad-logo-icon.svg`
+- Hub logo: `https://moshly.io/assets/Moshly-Main-Logo-nofill.svg`

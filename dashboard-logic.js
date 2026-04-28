@@ -42,6 +42,18 @@ const APP_CATALOG = [
     }
 ];
 
+// SSO launch: generates a 60s token and redirects to the app's /auth/callback
+window.launchApp = async function(appUrl) {
+    try {
+        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token');
+        const data = await res.json();
+        if (!data.token) throw new Error('no token returned');
+        window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
+    } catch (e) {
+        console.error('SSO launch failed:', e);
+    }
+};
+
 async function initDashboard() {
     // 1. Guard: Ensure session
     const ok = await window.MoshlyAuth.requireSession('/login');
@@ -663,9 +675,12 @@ function updateAppsUI(user) {
     let appsHtml = activeMainApps.map(app => {
         const isNew = window._newApps && window._newApps.includes(app.slug);
         const slotClass = isNew ? 'db-app-slot db-app-slot--new' : 'db-app-slot';
-        
+        const linkAttr = app.url.includes('.moshly.io')
+            ? `href="javascript:void(0)" onclick="window.launchApp('${app.url}')"`
+            : `href="${app.url}"`;
+
         return `
-            <a href="${app.url}" class="${slotClass}">
+            <a ${linkAttr} class="${slotClass}">
                 <div class="db-app-slot-icon">
                     <img src="${app.iconAsset}" alt="${app.name}">
                 </div>
@@ -728,8 +743,11 @@ function updateAppsUI(user) {
         const peekApp = APP_CATALOG.find(a => a.slug === peekAppSlug);
 
         if (peekApp) {
+            const peekLinkAttr = peekApp.url.includes('.moshly.io')
+                ? `href="javascript:void(0)" onclick="window.launchApp('${peekApp.url}')"`
+                : `href="${peekApp.url}"`;
             peekGrid.innerHTML = `
-                <a href="${peekApp.url}" class="db-app-slot db-app-slot--peek">
+                <a ${peekLinkAttr} class="db-app-slot db-app-slot--peek">
                     <div class="db-app-slot-icon">
                         <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
                     </div>
