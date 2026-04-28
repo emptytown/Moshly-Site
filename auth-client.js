@@ -253,7 +253,7 @@ const MoshlyAuth = {
           // Validate redirect before navigating — reject absolute/external URLs (F-02)
           const params = new URLSearchParams(window.location.search);
           const redirectParam = params.get('redirect');
-          let dest = isSafeRedirect(redirectParam) ? redirectParam : '//dashboard';
+          let dest = isSafeRedirect(redirectParam) ? redirectParam : '/dashboard';
 
           if (localStorage.getItem('moshly_is_new_signup') === 'true') {
             dest = '/setup-profile.html';

@@ -36,8 +36,8 @@ const APP_CATALOG = [
         type: 'Plan app', categories: ['Planning', 'Interactive']
     },
     { 
-        slug: 'merchclick', name: 'MerchClick', description: 'Merch management', 
-        status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io',
+        slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
+        status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
     }
 ];
@@ -832,7 +832,7 @@ function updateAppConnectorUI(user) {
                     <span class="db-connector-info-usage">${usedSlots} / ${totalSlots} Slots used</span>
                 </div>
                 <div class="db-connector-info-bar">
-                    <div class="db-connector-info-fill" style="width: ${(usedSlots / totalSlots) * 100}%"></div>
+                    <div class="db-connector-info-fill" style="width: ${totalSlots > 0 ? (usedSlots / totalSlots) * 100 : 0}%"></div>
                 </div>
                 <div class="db-connector-info-footer">
                     ${remainingSlots > 0 
@@ -934,34 +934,42 @@ function updateAppConnectorUI(user) {
  * Triggered by filter changes in the UI
  */
 function applyAppFilters() {
-    const user = window.MoshlyAuth.getUser();
+    const user = window._currentUser;
     if (user) updateAppConnectorUI(user);
 }
 
-/**
- * Toggles an app connection for the user and persists to localStorage.
- * Since the backend doesn't seem to support `apps` yet, we use localStorage as the primary store.
- * @param {string} appSlug - The slug of the app to toggle.
- * @param {boolean} isChecked - Whether the app should be connected or disconnected.
- */
-function toggleAppConnection(appSlug, isChecked) {
-    const user = window.MoshlyAuth.getUser();
-    if (!user) return;
+let _saveAppsTimer = null;
 
-    if (!Array.isArray(user.apps)) {
-        user.apps = [];
+function _scheduleSaveApps() {
+    clearTimeout(_saveAppsTimer);
+    _saveAppsTimer = setTimeout(async () => {
+        const user = window._currentUser;
+        if (!user || !Array.isArray(user.apps)) return;
+        try {
+            await window.MoshlyAuth.authFetch('/me', {
+                method: 'PATCH',
+                body: JSON.stringify({ connectedApps: user.apps })
+            });
+        } catch (err) {
+            console.error('Failed to auto-save app choices:', err);
+        }
+    }, 600);
+}
+
+function toggleAppConnection(appSlug, isChecked) {
+    if (!window._currentUser) return;
+
+    if (!Array.isArray(window._currentUser.apps)) {
+        window._currentUser.apps = [];
     }
 
     const normalizedSlug = appSlug.toLowerCase().trim();
 
     if (isChecked) {
-        // Enforce slot limit for non-free apps if needed
-        // For now, the UI disables the "Connect Now" button, but we can add a guard here too.
-        if (!user.apps.some(s => s.toLowerCase().trim() === normalizedSlug)) {
-            user.apps.push(appSlug);
+        if (!window._currentUser.apps.some(s => s.toLowerCase().trim() === normalizedSlug)) {
+            window._currentUser.apps.push(appSlug);
         }
     } else {
-        // Remove both the slug and its alias if they exist
         const aliases = {
             'fifthsense': 'fifth sense',
             'fifth sense': 'fifthsense'
@@ -969,29 +977,33 @@ function toggleAppConnection(appSlug, isChecked) {
         const targetSlugs = [normalizedSlug];
         if (aliases[normalizedSlug]) targetSlugs.push(aliases[normalizedSlug]);
 
-        user.apps = user.apps.filter(s => !targetSlugs.includes(s.toLowerCase().trim()));
+        window._currentUser.apps = window._currentUser.apps.filter(
+            s => !targetSlugs.includes(s.toLowerCase().trim())
+        );
     }
 
-    // Persist to localStorage
-    localStorage.setItem('moshly_user', JSON.stringify(user));
-    
-    // Track newly added apps for animation
+    // Mirror apps into localStorage so MoshlyAuth.getUser() stays consistent
+    const lsUser = window.MoshlyAuth.getUser();
+    if (lsUser) {
+        lsUser.apps = window._currentUser.apps;
+        localStorage.setItem('moshly_user', JSON.stringify(lsUser));
+    }
+
     if (isChecked) {
         if (!window._newApps) window._newApps = [];
         window._newApps.push(appSlug);
     }
 
-    // Refresh UI
-    updateAppsUI(user);
-    updateAppConnectorUI(user);
+    updateAppsUI(window._currentUser);
+    updateAppConnectorUI(window._currentUser);
+
+    _scheduleSaveApps();
 }
 
-/**
- * Saves app choices, closes modal and anchors to the apps section.
- */
 async function saveAppChoices() {
     const user = window._currentUser;
     if (user && Array.isArray(user.apps)) {
+        clearTimeout(_saveAppsTimer);
         try {
             await window.MoshlyAuth.authFetch('/me', {
                 method: 'PATCH',
@@ -1005,8 +1017,7 @@ async function saveAppChoices() {
     if (window.closeAppConnectorModal) {
         window.closeAppConnectorModal();
     }
-    
-    // Anchor to MY APPS SLOTS
+
     const appsSection = document.getElementById('apps');
     if (appsSection) {
         appsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1084,24 +1095,21 @@ async function terminateAccount() {
     }
 
     try {
-        const response = await window.MoshlyAuth.authFetch('/me', {
+        const { ok, data: result } = await window.MoshlyAuth.authFetch('/me', {
             method: 'DELETE',
             body: JSON.stringify({ timing: timing })
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
+        if (ok) {
             if (timing === 'now') {
                 alert("Account terminated immediately. Logging out.");
-                localStorage.clear();
-                window.location.href = '/signup';
+                await window.MoshlyAuth.logout();
             } else {
                 alert("Account scheduled for termination at the end of the cycle. This action cannot be undone.");
                 window.location.reload();
             }
         } else {
-            alert(`Error: ${result.error || 'Failed to terminate account'}`);
+            alert(`Error: ${result?.error || 'Failed to terminate account'}`);
         }
     } catch (err) {
         console.error("Termination Error:", err);

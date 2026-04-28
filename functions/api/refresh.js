@@ -176,7 +176,18 @@ export async function onRequestPost({ request, env }) {
           name: user.name,
           role: user.role,
           plan: subscription?.plan || 'free',
-          profile: profile ? { firstName: profile.firstName, lastName: profile.lastName, jobTitle: profile.jobTitle, organization: profile.organization, bio: profile.bio, skills: profile.skills, location: profile.location } : null,          subscription: subscription ? {
+          profile: profile ? {
+              firstName: profile.firstName,
+              lastName: profile.lastName,
+              jobTitle: profile.jobTitle,
+              organization: profile.organization,
+              bio: profile.bio,
+              skills: profile.skills,
+              location: profile.location,
+              uxSettings: profile.uxSettings ? JSON.parse(profile.uxSettings) : null,
+              connectedApps: profile.connectedApps ? JSON.parse(profile.connectedApps) : [],
+            } : { connectedApps: [], uxSettings: null },
+          subscription: subscription ? {
             plan: subscription.plan,
             pdfExportsLimit: subscription.pdfExportsLimit,
             pdfExportsUsed: subscription.pdfExportsUsed,

@@ -25,7 +25,7 @@ iVBORw0KGgoAAAANSUhEUgAAAwYAAAKgCAYAAAAh9GqTAAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAA
 <path d="M434.443 511.097C422.589 511.097 412.98 520.574 412.98 532.265C412.98 543.955 422.589 553.432 434.443 553.432C446.297 553.432 455.907 543.955 455.907 532.265C455.907 520.574 446.297 511.097 434.443 511.097ZM278.832 511.097C266.978 511.097 257.369 520.574 257.369 532.265C257.369 543.955 266.978 553.432 278.832 553.432C290.686 553.432 300.296 543.955 300.296 532.265C300.296 520.574 290.686 511.097 278.832 511.097Z" fill="none" opacity="1" stroke="#e0e0e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" vectornator:layerName="path"/>
 </g>
 </g>
-<g id="MerchClick" vectornator:layerName="MerchClick" visibility="hidden">
+<g id="MerchPad" vectornator:layerName="MerchPad" visibility="hidden">
 <g opacity="1" vectornator:layerName="1">
 <path d="M280.934 277.518L280.934 284.397C280.934 284.397 282.062 321.116 316.932 321.116C351.802 321.116 352.93 284.397 352.93 284.397L352.93 277.518" fill="none" opacity="1" stroke="#e6e7eb" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="20" vectornator:layerName="path"/>
 <path d="M448.926 308.876L352.93 272.157L280.934 272.157L184.938 308.876L184.938 370.075L232.936 370.075L232.936 541.432L400.928 541.432L400.928 370.075L448.926 370.075L448.926 308.876Z" fill="none" opacity="1" stroke="#e6e7eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" vectornator:layerName="path"/>

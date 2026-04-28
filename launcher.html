@@ -600,8 +600,8 @@
             type: 'Plan app', categories: ['Planning', 'Interactive']
         },
         { 
-            slug: 'merchclick', name: 'MerchClick', description: 'Merch management', 
-            status: 'soon', iconAsset: 'assets/merchclick-logo-icon.svg', url: 'https://merchclick.moshly.io',
+            slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
+            status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
             type: 'Plan app', categories: ['Business', 'Booking']
         }
     ];
@@ -824,16 +824,25 @@
         }
     }
 
-    (function initLauncher() {
+    (async function initLauncher() {
+        try {
+            const { ok, data } = await window.MoshlyAuth.authFetch('/me');
+            if (ok && data.user) {
+                const user = data.user;
+                if (user.profile?.uxSettings?.emptySlots) {
+                    localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
+                }
+                updateLauncherAppsUI(user);
+                return;
+            }
+        } catch (e) {
+            console.warn('Launcher: /me fetch failed, falling back to localStorage', e);
+        }
+        // Fallback to cached user if /me fails
         const userStr = localStorage.getItem('moshly_user');
-        const user = (() => {
-            try { return JSON.parse(userStr || 'null'); } catch { return null; }
-        })();
+        const user = (() => { try { return JSON.parse(userStr || 'null'); } catch { return null; } })();
         if (user) {
-            console.log("Launcher Init: User found", { plan: user.plan, sub: user.subscription?.plan, apps: user.apps?.length });
             updateLauncherAppsUI(user);
-        } else {
-            console.warn("Launcher Init: No user in localStorage", { userStr });
         }
     })();
 
