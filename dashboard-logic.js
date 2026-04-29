@@ -42,15 +42,28 @@ const APP_CATALOG = [
     }
 ];
 
+function _showLaunchError(msg) {
+    const existing = document.getElementById('_sso-error-toast');
+    if (existing) existing.remove();
+    const el = document.createElement('div');
+    el.id = '_sso-error-toast';
+    el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#ff6b6b;border:1px solid #ff6b6b;border-radius:8px;padding:12px 20px;font-size:14px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.4)';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+}
+
 // SSO launch: generates a 60s token and redirects to the app's /auth/callback
 window.launchApp = async function(appUrl) {
     try {
         const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token');
+        if (!res.ok) throw new Error(`server responded ${res.status}`);
         const data = await res.json();
         if (!data.token) throw new Error('no token returned');
         window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
     } catch (e) {
-        console.error('SSO launch failed:', e);
+        console.error('SSO launch failed:', e.message);
+        _showLaunchError('Could not launch app — please try again or refresh the page.');
     }
 };
 
@@ -84,9 +97,19 @@ async function initDashboard() {
                 localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
             }
         }
-        // Sync apps if they exist on profile
-        if (user.profile.connectedApps) {
-            user.apps = user.profile.connectedApps;
+        // Prefer server-side apps; fall back to localStorage if server returned empty
+        const serverApps = Array.isArray(user.profile.connectedApps) ? user.profile.connectedApps : [];
+        if (serverApps.length > 0) {
+            user.apps = serverApps;
+        } else {
+            const lsUser = window.MoshlyAuth.getUser();
+            const lsApps = Array.isArray(lsUser?.apps) ? lsUser.apps : [];
+            user.apps = lsApps;
+            if (lsApps.length > 0) {
+                // Re-sync orphaned localStorage state back to server
+                window._currentUser = user;
+                _scheduleSaveApps();
+            }
         }
     }
 
