@@ -56,7 +56,7 @@ function _showLaunchError(msg) {
 // SSO launch: generates a 60s token and redirects to the app's /auth/callback
 window.launchApp = async function(appUrl) {
     try {
-        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token', { method: 'POST' });
+        const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
         if (!res.ok) throw new Error(`server responded ${res.status}`);
         if (!res.data?.token) throw new Error('no token returned');
         window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(res.data.token)}`;
