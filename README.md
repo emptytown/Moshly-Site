@@ -1,95 +1,121 @@
-# Moshly Site
+# Moshly Hub
 
-A Cloudflare Pages PWA with clean-URL routing, centralized modal/drawer UX, and client-side auth guards.
+Cloudflare Pages PWA — the central hub for the Moshly platform. Handles auth, billing,
+project management, and SSO launch for all `*.moshly.io` apps.
+
+---
 
 ## Tech Stack
-- **Hosting**: Cloudflare Pages + Functions (Wrangler)
-- **Frontend**: HTML/CSS/JS (no framework), PWA patterns
-- **Auth**: `auth-client.js` (uses MoshlyAuth), local/session storage
-- **Styling**: `dashboard.css`, `style.css`, `pricing.css`
-- **UI Behavior**: `moshly-ui.js`, `dashboard-logic.js`, `modal-manager.js`
-- **Routing**: `_redirects` (clean URLs), `functions/_middleware.js`
-- **Database**: Cloudflare D1 (SQLite) via Drizzle ORM
-- **Email**: Resend API
 
-## File Structure (high level)
-```
-.
-├─ _headers
-├─ _redirects
-├─ assets/
-├─ drizzle/
-├─ functions/
-│  ├─ _middleware.js
-│  └─ api/
-│     ├─ projects.js
-│     └─ contact.js
-├─ MoshlyDev/
-│  └─ ViberLogs/*.md (historical notes)
-├─ dashboard.html
-├─ dashboard.css
-├─ dashboard-logic.js
-├─ modal-manager.js
-├─ moshly-ui.js
-├─ auth-client.js
-├─ index.html
-├─ login.html
-├─ signup.html
-├─ setup-profile.html
-├─ join.html
-├─ contact.html
-├─ faq.html
-├─ admin.html
-├─ package.json
-├─ wrangler.toml
-└─ README.md
-```
+| Layer | Technology |
+|---|---|
+| Hosting | Cloudflare Pages + Functions (Wrangler) |
+| Frontend | HTML/CSS/JS (no framework), PWA patterns |
+| Auth | `auth-client.js` (`MoshlyAuth`) — in-memory JWT, HttpOnly refresh cookie |
+| Database | Cloudflare D1 (SQLite) via Drizzle ORM |
+| Email | Resend API |
+| KV | Cloudflare KV (`AUTH_KV`) — refresh tokens, rate limits |
+| Styling | `dashboard.css`, `style.css`, `pricing.css` |
+| UI | `moshly-ui.js`, `dashboard-logic.js`, `modal-manager.js` |
 
-## Plan Allowance
-| Plan | Price (Monthly) | Tools | PDF Exports | AI Credits | Projects |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Free** | €0.00 | Access to future free tools | 0 | Topable | 1 |
-| **Solo** | €4.99 | Pick 2 tools | 12 / month | 500 / month | 1 |
-| **Collective** | €9.99 | Pick 4 tools | 50 / month | 1,250 / month | 3 |
-| **Business** | €24.99 | Pick 10 tools | 100 / month | 2,500 / month | 6 |
-| **Major** | €79.99 | All Moshly tools | 250 / month | 6,000 / month | 15 |
+---
 
 ## Quickstart (Local)
-- Install: `npm i`
-- Run: `npm run dev` (serves on http://localhost:8788)
-- Seed Local DB: `npm run seed:god`
-- Open dashboard: http://localhost:8788/dashboard
-- Login with: `god@moshly.com` / `moshly123`
 
-## Environments
-- Production: Cloudflare Pages project `moshly-site`
-- Preview Deploys: auto via Wrangler or manual `wrangler pages deploy .`
+```bash
+npm install
+npm run dev          # serves at http://localhost:8788
+npm run seed:god     # seeds local D1 with a god-tier test account
+```
 
-## Routing (Clean URLs)
-- Clean URLs are enforced. Always use paths without `.html`.
-  - Examples: `/login`, `/signup`, `/dashboard`, `/contact`, `/faq`
-- `_redirects` maps clean routes to their `.html` files at the edge.
-- Client-side scripts must not redirect to `*.html`. Use clean paths.
+Login: `god@moshly.com` / `moshly123`
+Dashboard: http://localhost:8788/dashboard
 
-## Auth Guard
-- `MoshlyAuth.requireSession(redirect = '/login')`
-- Never pass `*.html` to `requireSession`.
-- Some pages (e.g., `dashboard.html`) run guards in `dashboard-logic.js`.
+---
 
-## Modal/Drawer UX
-- **Spatial Rule**: Navigation (left) vs Actions/Forms (right)
-- **Central Manager**: `modal-manager.js`
-  - Enforces exclusivity, backdrop, escape key, body scroll lock
-  - Right drawers for Profile Edit, Projects, Connectors, etc.
-  - Left drawer for mobile nav
+## Clean URL Policy (CRITICAL)
+
+- **Never** use `.html` in links or `window.location`. Use path-only: `/login`, `/dashboard`.
+- `_redirects` maps clean paths to HTML files at the edge.
+- `_redirects` also redirects `.html` back to clean paths (canonical enforcement).
+- AI agents: never generate `.html` links.
+
+---
+
+## Plan Tiers
+
+| Plan | Price | App Slots | PDF Exports | AI Credits | Projects |
+|---|---|---|---|---|---|
+| Free | €0 | 0 | 0 | topable | 1 |
+| Solo | €4.99/mo | 2 | 12/mo | 500/mo | 1 |
+| Collective | €9.99/mo | 4 | 50/mo | 1,250/mo | 3 |
+| Business | €24.99/mo | 10 | 100/mo | 2,500/mo | 6 |
+| Major | €79.99/mo | 150 | 250/mo | 6,000/mo | 15 |
+
+---
+
+## SSO Architecture
+
+The Hub issues short-lived tokens (60s TTL) for launching `*.moshly.io` apps. Apps verify
+tokens server-side against the Hub. Full details: [`docs/APP_CONNECTION.md`](docs/APP_CONNECTION.md)
+
+**Key rule:** The Hub API is at `https://moshly.io/api/...` — there is no `api.moshly.io`.
+
+### Verified SSO Endpoints
+
+| Step | Method | URL |
+|---|---|---|
+| Generate token | `POST` | `https://moshly.io/api/auth/sso/token` |
+| Verify token | `POST` | `https://moshly.io/api/auth/sso/verify` |
+
+---
 
 ## Deployment
-- Config: `wrangler.toml`
-- Deploy (preview or main): `npx wrangler pages deploy . --project-name moshly-site`
+
+**Auto-deploy:** Push to `main` → Cloudflare Pages builds and deploys automatically.
+
+**Manual preview:**
+```bash
+npx wrangler pages deploy . --project-name moshly-site
+```
+
+**Hard refresh after deploy:** `Cmd+Shift+R` (clears cached JS/CSS).
+
+---
+
+## Documentation
+
+| File | Contents |
+|---|---|
+| `docs/APP_CONNECTION.md` | Master checklist for connecting any `*.moshly.io` app |
+| `docs/STANDARDS.md` | Architecture, clean URLs, routing, deployment |
+| `docs/AUTH.md` | Session management, JWT strategy, protected routes |
+| `docs/CODEX.md` | AI agent operational protocol |
+| `docs/BUGS.md` | Known issues and workarounds |
+| `docs/TODO.md` | Roadmap and pending work |
+
+---
+
+## AI Agent Rules
+
+- Read `docs/STANDARDS.md` before writing any code.
+- Read relevant `docs/` files before touching auth or SSO.
+- **Never use `api.moshly.io`** — it does not exist.
+- **Never use `.html` in links or redirects.**
+- `authFetch` prepends `/api` automatically — never pass `/api/...` to it.
+- Token verify must be server-side (Express) — never from the browser.
+
+---
 
 ## Troubleshooting
-- **Redirect Loops**: ensure all links and `window.location` uses clean paths.
-- **Hard Refresh**: if cached, use `Cmd+Shift+R` / `Ctrl+F5`.
 
-## License
+| Symptom | Fix |
+|---|---|
+| Redirect loops | Verify `_redirects` and `window.location` use clean paths |
+| SSO 500 / DNS error | Check `MOSHLY_SSO_VERIFY_URL` — must be `https://moshly.io/api/auth/sso/verify` |
+| Stale JS/CSS | Hard-refresh: `Cmd+Shift+R` |
+| D1 migration errors | Run `npm run db:migrate` and confirm columns exist |
+
+---
+
 © 2026 Moshly — Contrastdetails Lda. All rights reserved.
