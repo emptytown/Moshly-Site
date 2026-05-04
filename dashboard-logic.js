@@ -15,30 +15,25 @@ const APP_CATALOG = [
         status: 'live', iconAsset: 'assets/Moshly-Main-Logo-nofill.svg', url: 'apps/fifthsense.html',
         type: 'Free', categories: ['Learning', 'Interactive']
     },
-    { 
-        slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace', 
+    {
+        slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace',
         status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: 'https://brainroom.moshly.io',
-        type: 'Plan app', categories: ['Creative', 'Planning', 'Tools']
+        type: 'Plan app', categories: ['Creative', 'Planning', 'Tools'], hidden: true
     },
-    { 
-        slug: 'moshly core', name: 'Moshly Core', description: 'Base Platform', 
-        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-darkoutline.svg', url: 'https://moshly.io',
-        type: 'Free', categories: ['Tools']
-    },
-    { 
-        slug: 'app guide', name: 'App Guide', description: 'Tutorials & Help', 
-        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-1.svg', url: 'https://moshly.io/docs',
-        type: 'Free', categories: ['Tour', 'Learning']
-    },
-    { 
-        slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks', 
+    {
+        slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks',
         status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io',
-        type: 'Plan app', categories: ['Planning', 'Interactive']
+        type: 'Plan app', categories: ['Planning', 'Interactive'], hidden: true
     },
-    { 
+    {
         slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
         status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
+    },
+    {
+        slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
+        status: 'live', iconAsset: 'assets/rank-logo-icon.svg', url: 'https://rank.moshly.io',
+        type: 'Plan app', categories: ['Business']
     }
 ];
 
@@ -889,6 +884,7 @@ function updateAppConnectorUI(user) {
     const categoryFilter = document.getElementById('dbAppCategoryFilter')?.value || 'all';
 
     const filteredCatalog = APP_CATALOG.filter(app => {
+        if (app.hidden) return false;
         const matchesType = typeFilter === 'all' || app.type === typeFilter;
         const matchesCategory = categoryFilter === 'all' || app.categories.includes(categoryFilter);
         return matchesType && matchesCategory;

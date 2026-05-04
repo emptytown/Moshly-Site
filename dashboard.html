@@ -883,11 +883,11 @@
 
     <!-- ─── APP CONNECTOR MODAL ────────────────── -->
     <div class="db-manager-modal-overlay" id="dbAppConnectorOverlay">
-        <div class="db-manager-modal-backdrop" onclick="closeAppConnectorModal()"></div>
+        <div class="db-manager-modal-backdrop" onclick="saveAppChoices()"></div>
             <div class="db-manager-modal">
                     <div class="db-manager-modal-header">
                         <h3 class="db-manager-modal-title">APP Connector</h3>
-                        <button aria-label="Close" class="db-proj-modal-close" onclick="closeAppConnectorModal()" type="button">
+                        <button aria-label="Close" class="db-proj-modal-close" onclick="saveAppChoices()" type="button">
                             ×
                         </button>
                     </div>
@@ -945,7 +945,7 @@
                         </div>
                     </div>
                     <div class="db-manager-modal-footer">
-                        <button class="db-proj-cancel" onclick="closeAppConnectorModal()" type="button">Close</button>
+                        <button class="db-proj-cancel" onclick="saveAppChoices()" type="button">Close</button>
                         <button class="db-btn-primary" onclick="saveAppChoices()" type="button">Save Choices</button>
                     </div>
             </div>
@@ -970,6 +970,7 @@
 
                         <option value="feeme">FeeME</option>
                         <option value="merchpad">MerchPad</option>
+                        <option value="rank">Rank</option>
                         <option value="moshly">Moshly Core</option>
                     </select>
                     <label for="dbAuditFilterActor"></label>
