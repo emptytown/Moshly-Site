@@ -16,16 +16,6 @@ const APP_CATALOG = [
         type: 'Free', categories: ['Learning', 'Interactive']
     },
     {
-        slug: 'brainroom', name: 'BrainRoom', description: 'AI-powered workspace',
-        status: 'live', iconAsset: 'assets/BrainRoom-icon-svg.svg', url: 'https://brainroom.moshly.io',
-        type: 'Plan app', categories: ['Creative', 'Planning', 'Tools'], hidden: true
-    },
-    {
-        slug: 'rbapp', name: 'RBapp', description: 'Interactive Roadbooks',
-        status: 'soon', iconAsset: 'assets/rbapp-logo-icon.svg', url: 'https://rbapp.moshly.io',
-        type: 'Plan app', categories: ['Planning', 'Interactive'], hidden: true
-    },
-    {
         slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
         status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
@@ -849,7 +839,11 @@ function updateAppConnectorUI(user) {
     const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
     
     // Normalize aliases for usage calculation
-    const usageSlugs = activeAppSlugs.map(s => (s === 'fifth sense' ? 'fifthsense' : s));
+    const usageSlugs = activeAppSlugs.map(s => {
+        const normalized = s.toLowerCase().trim();
+        if (normalized === 'fifth sense') return 'fifthsense';
+        return normalized;
+    });
     const uniqueUsageSlugs = [...new Set(usageSlugs)];
     
     // Only count non-free apps towards the usage limit

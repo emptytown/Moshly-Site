@@ -555,8 +555,9 @@
     <div class="adm-modal-row" style="align-items:flex-start;">
       <label style="padding-top:4px;">Apps</label>
       <div class="adm-apps-checkboxes" id="editApps">
-        <label><input type="checkbox" value="rbapp" /> RBapp</label>
+        <label><input type="checkbox" value="feeme" /> FeeMe</label>
         <label><input type="checkbox" value="merchpad" /> MerchPad</label>
+        <label><input type="checkbox" value="rank" /> Rank</label>
       </div>
     </div>
     <div class="adm-modal-actions">
@@ -600,7 +601,6 @@
 
   const FLAGS = [
     { key: 'flag_login_enabled',      name: 'Login',       desc: 'Allow new logins' },
-    { key: 'flag_maintenance_rbapp',  name: 'RBapp',       desc: 'RBapp maintenance mode' },
     { key: 'flag_maintenance_moshly', name: 'Moshly Site', desc: 'Moshly maintenance mode' },
   ];
 
@@ -646,8 +646,9 @@
 
   // ── APP CATALOG ──
   const APP_CATALOG = [
-    { slug: 'rbapp',      name: 'RBapp',      icon: 'assets/rbapp-logo-icon.svg' },
+    { slug: 'feeme',    name: 'FeeMe',    icon: 'assets/feeme-logo-icon.svg' },
     { slug: 'merchpad', name: 'MerchPad', icon: 'assets/merchpad-logo-icon.svg' },
+    { slug: 'rank',     name: 'Rank',     icon: 'assets/rank-logo-icon.svg' },
   ];
   const STATUS_OPTIONS = [
     { value: '',            label: '— Manifest default —' },
