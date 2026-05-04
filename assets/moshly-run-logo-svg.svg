@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 774 672" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<g id="Layer-1" vectornator:layerName="Layer 1">
+<text fill="#a718da" font-family="Arial-Black" font-size="300" opacity="1" stroke="none" text-anchor="start" transform="matrix(1 0 0 1 164.866 198.06)" vectornator:layerName="Text 1" vectornator:width="479.973" x="0" y="0">
+<tspan textLength="433.447" x="0" y="330.176"><![CDATA[Rn]]></tspan>
+</text>
+</g>
+<g id="Layer-1-copy" vectornator:layerName="Layer 1 copy" visibility="hidden">
+<text fill="#a718da" font-family="Arial-Black" font-size="300" opacity="0" stroke="none" text-anchor="start" transform="matrix(1 0 0 1 164.866 198.06)" vectornator:layerName="Text 1" vectornator:width="479.973" x="0" y="0">
+<tspan textLength="433.447" x="0" y="330.176"><![CDATA[Rk]]></tspan>
+</text>
+</g>
+<g id="Layer-2" vectornator:layerName="Layer 2">
+<path d="M193.318 92.3729C163.1 92.3729 138.603 116.869 138.603 147.087L138.603 533.764C138.603 563.61 162.798 587.804 192.643 587.804L577.911 587.804C609.129 587.804 634.437 562.497 634.437 531.278L634.437 288.006C634.437 261.916 613.287 240.765 587.197 240.765L587.197 240.765L574.761 240.765C536.331 240.765 476.314 240.765 476.314 240.765L587.197 92.3729L193.318 92.3729Z" fill="none" opacity="1" stroke="#a718da" stroke-linecap="butt" stroke-linejoin="round" stroke-width="20" vectornator:layerName="OUTLINE"/>
+<path d="M205.625 106.008C177.636 106.053 154.97 128.755 154.97 156.743L154.97 523.83C154.97 550.819 176.847 572.699 203.835 572.702L569.773 572.749C595.358 572.752 616.092 551.997 616.063 526.413L615.802 291.965C615.779 271.937 599.537 255.713 579.509 255.713L453.298 255.713C451.209 255.713 450.003 253.344 451.231 251.655L557.557 105.451L205.625 106.008Z" fill="none" opacity="1" stroke="#a718da" stroke-linecap="butt" stroke-linejoin="round" stroke-width="20" vectornator:layerName="OUTLINE 1"/>
+</g>
+</svg>
