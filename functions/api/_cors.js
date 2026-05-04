@@ -1,4 +1,4 @@
-const ALLOWED_ORIGINS = ['https://moshly.io', 'http://localhost:8788', 'https://fifthsense.moshly.io', 'https://merchpad.moshly.io'];
+const ALLOWED_ORIGINS = ['https://moshly.io', 'http://localhost:8788', 'https://fifthsense.moshly.io', 'https://merchpad.moshly.io', 'https://rank.moshly.io'];
 
 export function getAllowedOrigin(request) {
   const origin = request?.headers?.get('Origin') || '';
