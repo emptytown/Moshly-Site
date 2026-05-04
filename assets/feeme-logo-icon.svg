@@ -18,7 +18,7 @@ iVBORw0KGgoAAAANSUhEUgAAAwYAAAKgCAYAAAAh9GqTAAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAA
 <path d="M473.429 84.6311L473.429 233.595L641.839 233.595" fill="none" opacity="1" stroke="#cc9aff" stroke-linecap="butt" stroke-linejoin="round" stroke-width="27" vectornator:layerName="Curve 5"/>
 <path d="M396.665 90.7487L476.429 90.7487L635.631 222.441L635.417 293.217" fill="none" opacity="1" stroke="#a718da" stroke-linecap="butt" stroke-linejoin="round" stroke-width="20" vectornator:layerName="Curve 3"/>
 </g>
-<g id="RBapp---VAN" vectornator:layerName="RBapp - VAN" visibility="hidden">
+<g id="legacy-layer" vectornator:layerName="legacy-layer" visibility="hidden">
 <g opacity="1" vectornator:layerName="1">
 <path d="M459.926 457.786L404.577 453.484C399.978 453.124 396.125 449.912 395.009 445.498L380.784 389.383" fill="none" opacity="1" stroke="#e0e0e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" vectornator:layerName="path"/>
 <path d="M257.369 532.265L235.905 532.265C227.014 532.265 219.808 525.158 219.808 516.389L219.808 405.258C219.808 396.49 227.014 389.383 235.905 389.383L410.554 389.383C418.63 389.383 426.019 393.854 429.684 400.951L457.114 454.098L472.74 473.572C475.739 477.308 477.37 481.938 477.37 486.706L477.37 521.681C477.37 527.528 472.568 532.265 466.639 532.265L455.907 532.265M412.98 532.265L300.296 532.265" fill="none" opacity="1" stroke="#e0e0e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" vectornator:layerName="path"/>
