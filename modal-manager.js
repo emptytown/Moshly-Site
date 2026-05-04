@@ -131,7 +131,13 @@ function closeMobDrawer() {
 // Global Listeners for Phase 1
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        ModalManager.closeAll();
+        // Save app choices before closing if the connector modal is open
+        if (document.getElementById('dbAppConnectorOverlay')?.classList.contains('open') &&
+            typeof window.saveAppChoices === 'function') {
+            window.saveAppChoices();
+        } else {
+            ModalManager.closeAll();
+        }
         if (typeof window.closeModal === 'function') window.closeModal(); // Support legacy auth modals
         if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu(); // Support landing mobile menu
     }
