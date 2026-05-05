@@ -200,8 +200,8 @@
     }
 
     .app-icon-shape img {
-      width: 42px;
-      height: 42px;
+      width: 86%;
+      height: 86%;
       object-fit: contain;
     }
 
@@ -390,14 +390,14 @@
       }
     ];
 
-    // Per-app icon gradients
+    // Per-app icon gradients — orange family, slightly different tones
     const APP_ICON_COLORS = {
-      feeme:      'linear-gradient(145deg, #1a6ed8 0%, #0c3e9e 100%)',
-      fifthsense: 'linear-gradient(145deg, #7c3aed 0%, #4c1d95 100%)',
-      rank:       'linear-gradient(145deg, #f59e0b 0%, #b45309 100%)',
-      merchpad:   'linear-gradient(145deg, #059669 0%, #064e3b 100%)',
+      feeme:      'linear-gradient(145deg, #FF7043 0%, #E64A19 100%)',
+      fifthsense: 'linear-gradient(145deg, #FFB74D 0%, #F57C00 100%)',
+      rank:       'linear-gradient(145deg, #FF8A65 0%, #D84315 100%)',
+      merchpad:   'linear-gradient(145deg, #FFA000 0%, #E65100 100%)',
     };
-    const FALLBACK_ICON_COLOR = 'linear-gradient(145deg, #2d3561 0%, #1a1f3e 100%)';
+    const FALLBACK_ICON_COLOR = 'linear-gradient(145deg, #FF8C42 0%, #CC5500 100%)';
 
     // Records that the user launched from the Launcher so the spoke knows where to return.
     function markLaunchOrigin() {
