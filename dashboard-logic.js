@@ -5,24 +5,24 @@
 
 // Global APP_CATALOG with types and categories
 const APP_CATALOG = [
-    { 
-        slug: 'feeme', name: 'FeeMe', description: 'Financial hub', 
-        status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html',
+    {
+        slug: 'feeme', name: 'FeeMe', description: 'Financial hub',
+        status: 'live', iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/feeme.html',
         type: 'Plan app', categories: ['Business', 'Analytics']
     },
-    { 
-        slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths', 
-        status: 'live', iconAsset: 'assets/Moshly-Main-Logo-nofill.svg', url: 'apps/fifthsense.html',
+    {
+        slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths',
+        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-png.png', url: '/apps/fifthsense.html',
         type: 'Free', categories: ['Learning', 'Interactive']
     },
     {
         slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
-        status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
+        status: 'soon', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
     },
     {
         slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
-        status: 'live', iconAsset: 'assets/moshly-run-logo-svg.svg', url: 'https://rank.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
         type: 'Plan app', categories: ['Business']
     }
 ];
