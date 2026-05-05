@@ -4,6 +4,14 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
+# SW must never be served from cache — browser needs latest version on every load.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Manifest can be short-lived cached.
+/manifest.json
+  Cache-Control: no-cache
+
 /api/*
   Access-Control-Allow-Origin: https://moshly.io
   Access-Control-Allow-Methods: GET, POST, OPTIONS

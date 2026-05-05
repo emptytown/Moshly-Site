@@ -22,7 +22,7 @@ const APP_CATALOG = [
     },
     {
         slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
-        status: 'live', iconAsset: 'assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
+        status: 'live', iconAsset: 'assets/moshly-run-logo-svg.svg', url: 'https://rank.moshly.io',
         type: 'Plan app', categories: ['Business']
     }
 ];

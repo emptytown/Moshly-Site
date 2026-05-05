@@ -27,6 +27,7 @@ export async function onRequestPost({ request, env }) {
     const ssoData = {
       userId: payload.userId,
       email: payload.email,
+      name: payload.name,
       role: payload.role,
       plan: payload.plan,
       generatedAt: Date.now()

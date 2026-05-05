@@ -2,945 +2,669 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#070a14" />
-  <title>Moshly Apps</title>
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Moshly" />
+  <title>Moshly</title>
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #070a14;
-      --panel: rgba(18, 22, 43, 0.92);
-      --panel-border: rgba(107, 92, 255, 0.28);
-      --text: #e8ecff;
-      --muted: #9aa0be;
-      --accent: #6b5cff;
-      --accent-2: #00d1ff;
-      --ok: #4ade80;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      /* Dashboard Mirror Tokens */
-      --color-bg-primary: #0E0F14;
-      --color-bg-secondary: #141624;
-      --color-bg-surface: #1B1E2E;
-      --color-text-primary: #E6E7EB;
-      --color-text-secondary: #A4A7B5;
-      --color-text-tertiary: #7B7F93;
-      --color-accent-primary: #6B5CFF;
-      --color-accent-hover: #7C6DFF;
-      --color-border-subtle: #24273A;
-      --color-border-strong: #2D3048;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --space-md: 16px;
-      --space-lg: 24px;
-      --duration-fast: 0.2s;
-      --font-size-xs: 11px;
-      --font-family-base: "Inter", sans-serif;
-    }
-
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: Inter, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(107, 92, 255, 0.2), transparent 35%),
-        radial-gradient(circle at 85% 90%, rgba(0, 209, 255, 0.12), transparent 40%),
-        var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      background: #070a14;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 15% 8%, rgba(107,92,255,0.2), transparent 55%),
+        radial-gradient(ellipse 60% 50% at 85% 90%, rgba(0,209,255,0.1), transparent 55%);
+      background-attachment: fixed;
+      color: #fff;
       min-height: 100vh;
-    }
-
-    /* ══ DASHBOARD MIRROR STYLES ══════════════════ */
-    .db-card {
-      background: linear-gradient(180deg, rgba(18, 22, 43, 0.9), rgba(14, 18, 36, 0.88));
-      border: 1px solid rgba(107, 92, 255, 0.24);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      transition: all var(--duration-fast);
-      box-sizing: border-box;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 12px 28px rgba(7, 10, 24, 0.35);
-      margin-bottom: 24px;
-    }
-    .db-card:hover {
-      border-color: rgba(107, 92, 255, 0.5);
-      box-shadow: 0 12px 34px rgba(107, 92, 255, 0.18);
-    }
-    .db-section-header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 20px;
-    }
-    .db-section-title {
-      font-size: var(--font-size-xs);
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--color-text-tertiary);
-      margin: 0;
-    }
-    .db-section-subtitle {
-      font-size: 11px;
-      color: var(--color-text-tertiary);
-      opacity: 0.7;
-      margin: 0;
-    }
-    .db-apps-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-md);
-        margin-bottom: var(--space-lg);
-    }
-    .db-app-slot {
-        min-height: 200px;
-        border-radius: var(--radius-lg);
-        transition: all var(--duration-fast);
-        display: flex;
-        flex-direction: column;
-        background: var(--color-bg-secondary);
-        border: 1px solid var(--color-border-subtle);
-        padding: 20px;
-        text-decoration: none;
-        color: inherit;
-        position: relative;
-    }
-    .db-app-slot:not(.db-app-slot--empty):hover {
-        border-color: rgba(107, 92, 255, 0.4);
-        transform: translateY(-2px);
-    }
-    .db-app-slot-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: var(--color-bg-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        flex-shrink: 0;
-    }
-    .db-app-slot-icon img {
-        width: 32px;
-        height: 32px;
-        object-fit: contain;
-    }
-    .db-app-slot-info {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-    .db-app-slot-name {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 4px;
-    }
-    .db-app-slot-desc {
-        font-size: 12px;
-        color: var(--color-text-tertiary);
-        margin-bottom: 12px;
-        line-height: 1.4;
-    }
-    .db-app-slot-status {
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--color-accent-primary);
-        margin-bottom: 12px;
-        padding: 4px 8px;
-        background: var(--color-bg-primary);
-        border: 1px solid var(--color-border-subtle);
-        border-radius: 4px;
-        display: block;
-        width: fit-content;
-    }
-    .db-app-slot-action {
-        margin-top: auto;
-    }
-    .db-app-slot-btn {
-        width: 100%;
-        padding: 8px 12px;
-        border-radius: var(--radius-md);
-        background: var(--color-bg-primary);
-        border: 1px solid var(--color-border-strong);
-        color: var(--color-text-primary);
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--duration-fast);
-        text-align: center;
-    }
-    .db-app-slot-btn:hover {
-        background: var(--color-accent-primary);
-        color: #fff;
-        border-color: var(--color-accent-primary);
-    }
-    .db-app-slot--empty {
-        border: 2px dashed rgba(107, 92, 255, 0.25);
-        background: rgba(107, 92, 255, 0.03);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        color: var(--color-text-tertiary);
-        cursor: pointer;
-    }
-    .db-app-slot--empty:hover {
-        border-color: rgba(107, 92, 255, 0.45);
-        background: rgba(107, 92, 255, 0.06);
-    }
-    .db-app-slot-empty-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-    }
-    .db-app-slot-plus-circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid currentColor;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: 400;
-        opacity: 0.6;
-        transition: all var(--duration-fast);
-    }
-    .db-app-slot--empty:hover .db-app-slot-plus-circle {
-        opacity: 1;
-        transform: scale(1.1);
-        color: var(--color-accent-primary);
-    }
-    .db-app-slot-label {
-        font-size: 13px;
-        font-weight: 600;
-        opacity: 0.8;
-    }
-    .db-hidden { display: none !important; }
-
-    /* Peek Slot Section */
-    .db-peek-section {
-        margin-top: 32px;
-        padding-top: 24px;
-        border-top: 1px solid var(--color-border-subtle);
-    }
-    .db-peek-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-md);
-    }
-    .db-app-slot--peek {
-        border-color: var(--color-accent-primary);
-        background: rgba(107, 92, 255, 0.04);
-    }
-    .db-app-slot--peek .db-app-slot-status {
-        color: #fff;
-        background: var(--color-accent-primary);
-        border-color: var(--color-accent-primary);
-    }
-
-    /* Free Section */
-    .db-free-apps-section {
-        margin-top: 32px;
-        padding-top: 24px;
-        border-top: 1px solid var(--color-border-subtle);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(rgba(71, 84, 153, 0.22) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-      opacity: 0.45;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .wrap {
-      position: relative;
-      z-index: 1;
-      width: min(980px, 92vw);
+      max-width: 520px;
       margin: 0 auto;
-      padding: 28px 0 56px;
+      padding: 0 24px calc(80px + env(safe-area-inset-bottom, 16px));
     }
 
+    /* ── Topbar ──────────────────────────────────────────── */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      padding-top: calc(20px + env(safe-area-inset-top, 0px));
+      padding-bottom: 4px;
     }
 
     .brand {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-weight: 800;
+      font-size: 15px;
       letter-spacing: -0.02em;
+      color: #fff;
+      text-decoration: none;
     }
 
     .brand img {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border-radius: 999px;
-      border: 1px solid var(--panel-border);
-      padding: 10px 16px;
+    .dashboard-link {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
       text-decoration: none;
-      cursor: pointer;
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+      transition: color 0.15s;
+    }
+    .dashboard-link:hover { color: rgba(255,255,255,0.85); }
+
+    /* ── Welcome ─────────────────────────────────────────── */
+    .welcome {
+      padding: 28px 0 32px;
     }
 
-    .btn:hover { transform: translateY(-1px); border-color: rgba(107, 92, 255, 0.6); }
-
-    .btn-primary {
-      color: white;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-color: transparent;
-      box-shadow: 0 10px 24px rgba(107, 92, 255, 0.32);
-    }
-
-    .btn-ghost {
-      color: var(--text);
-      background: rgba(16, 20, 40, 0.75);
-    }
-
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(28px, 5vw, 42px);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
+    .welcome-name {
+      font-size: clamp(28px, 8vw, 38px);
       font-weight: 900;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
     }
 
-    .hero p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
+    .welcome-name span {
+      background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.6));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     #launcher-live-datetime {
-      margin: 10px 0 0;
-      display: inline-flex;
+      display: flex;
       align-items: baseline;
-      gap: 22px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(107, 92, 255, 0.25);
-      background: rgba(15, 20, 42, 0.55);
-      color: #aab0ce;
+      gap: 10px;
+      margin-top: 10px;
+      color: rgba(255,255,255,0.35);
       font-size: 13px;
-      letter-spacing: 0.01em;
     }
 
     .launcher-time {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      color: #f2f5ff;
-      text-shadow: 0 0 14px rgba(107, 92, 255, 0.38);
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: -0.01em;
     }
 
-    .apps {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .launcher-pending-alert {
+    /* ── Pending alert ───────────────────────────────────── */
+    .pending-alert {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 14px;
+      gap: 8px;
+      margin-bottom: 24px;
       padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(107,92,255,.42);
-      background: linear-gradient(180deg, rgba(107,92,255,.15), rgba(107,92,255,.07));
+      border-radius: 12px;
+      border: 1px solid rgba(107,92,255,0.4);
+      background: rgba(107,92,255,0.1);
       color: #c4b8ff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
-      transition: border-color .16s, background .16s;
+      transition: background 0.15s;
     }
-    .launcher-pending-alert[hidden] { display: none !important; }
-    .launcher-pending-alert:hover { border-color: rgba(107,92,255,.7); background: rgba(107,92,255,.22); }
-    .launcher-pending-alert-icon { font-size: 16px; flex-shrink: 0; }
-    .launcher-pending-alert-cta { margin-left: auto; font-size: 11px; font-weight: 700; white-space: nowrap; opacity: .7; }
+    .pending-alert:hover { background: rgba(107,92,255,0.2); }
+    .pending-alert[hidden] { display: none !important; }
+    .pending-alert-cta { margin-left: auto; opacity: 0.6; font-size: 11px; }
 
-    .app-card {
-      position: relative;
-      border: 1px solid rgba(107, 92, 255, 0.24);
-      background: var(--panel);
-      border-radius: 18px;
-      margin: 15px;
-      padding: 11px;
-      text-decoration: none;
-      color: inherit;
-      min-height: 192px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      -webkit-backdrop-filter: blur(6px);
-      backdrop-filter: blur(6px);
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    /* ── Section wrapper ─────────────────────────────────── */
+    .icon-section {
+      margin-bottom: 36px;
     }
 
-    .app-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(107, 92, 255, 0.6);
-      box-shadow: 0 14px 28px rgba(10, 14, 35, 0.55);
-    }
+    .icon-section[hidden] { display: none !important; }
 
-    /* App visível mas não activado — shaded */
-    .app-card.shown-inactive {
-      opacity: 0.42;
-      filter: saturate(0.3);
-      pointer-events: none;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid rgba(74, 222, 128, 0.35);
-      color: var(--ok);
-      border-radius: 999px;
+    .section-label {
       font-size: 11px;
       font-weight: 700;
-      padding: 4px 10px;
-      width: fit-content;
-      background: rgba(74, 222, 128, 0.08);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 16px;
     }
 
-    .pill-muted {
-      color: #a6abca;
-      border-color: rgba(107, 113, 150, 0.34);
-      background: rgba(44, 49, 74, 0.4);
+    /* ── Icon grid: 3 cols mobile → 4 tablet → 5 desktop ── */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      row-gap: 4px;
+      column-gap: 0;
     }
 
-    .pill-active {
-      background: rgba(74, 222, 128, 0.12);
-      color: var(--ok);
-      border-color: rgba(74, 222, 128, 0.2);
+    @media (min-width: 480px) {
+      .icon-grid { grid-template-columns: repeat(4, 1fr); }
+      .wrap { max-width: 600px; }
     }
 
-    .pill-inactive {
-      background: rgba(154, 160, 190, 0.1);
-      color: #9aa0be;
-      border-color: rgba(154, 160, 190, 0.2);
+    @media (min-width: 640px) {
+      .icon-grid { grid-template-columns: repeat(5, 1fr); }
+      .wrap { max-width: 700px; }
     }
 
-    .app-head {
+    /* ── App icon item ───────────────────────────────────── */
+    .app-icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 6px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* iOS squircle: ~22% border-radius of 72px icon */
+    .app-icon-shape {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 14px 0 8px;
-    }
-
-    .app-head img {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-
-    .app-title { font-weight: 800; letter-spacing: -0.02em; }
-    .app-sub { color: var(--muted); font-size: 12px; }
-
-    .cta {
-      margin-top: 14px;
-      display: inline-flex;
-      align-items: center;
       justify-content: center;
-      width: 100%;
-      height: 38px;
-      border-radius: 12px;
+      position: relative;
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.55),
+        0 1px 4px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+      transition: transform 0.12s ease, opacity 0.12s ease;
+      overflow: hidden;
+    }
+
+    .app-icon-item:active .app-icon-shape {
+      transform: scale(0.88);
+      opacity: 0.75;
+    }
+
+    .app-icon-shape img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    /* Empty slot */
+    .app-icon-shape--empty {
+      background: rgba(255,255,255,0.04) !important;
+      box-shadow: none !important;
+      border: 1.5px dashed rgba(255,255,255,0.15) !important;
+    }
+
+    .app-empty-plus {
+      font-size: 26px;
+      font-weight: 200;
+      color: rgba(255,255,255,0.25);
+      line-height: 1;
+    }
+
+    /* Coming soon: greyscale + dimmed */
+    .app-icon-item--soon {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .app-icon-item--soon .app-icon-shape {
+      filter: saturate(0.3);
+      opacity: 0.45;
+    }
+
+    /* Badges (top-right of icon) */
+    .app-badge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      border-radius: 4px;
+      padding: 2px 4px;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    .app-badge--peek {
+      background: #6b5cff;
+    }
+
+    /* Icon label */
+    .app-icon-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.82);
+      text-align: center;
+      max-width: 72px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+      line-height: 1.2;
+    }
+
+    /* ── Fixed bottom dock ───────────────────────────────── */
+    .dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      padding: 10px 24px calc(10px + env(safe-area-inset-bottom, 12px));
+      background: rgba(7,10,20,0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      z-index: 10;
+    }
+
+    .dock-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 28px;
+      border-radius: 999px;
+      background: rgba(107,92,255,0.18);
+      border: 1px solid rgba(107,92,255,0.32);
+      color: #c4b8ff;
       font-size: 13px;
       font-weight: 700;
-      border: 1px solid rgba(107, 92, 255, 0.34);
-      background: rgba(17, 21, 45, 0.75);
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+      letter-spacing: -0.01em;
     }
 
-    .app-card.live .cta { color: #dfe4ff; }
-    .app-card.coming .cta { color: #9fa7cb; }
-
-    .footer-cta {
-      margin-top: 18px;
-      display: flex;
-      justify-content: center;
+    .dock-btn:hover {
+      background: rgba(107,92,255,0.3);
+      border-color: rgba(107,92,255,0.5);
     }
 
-    @media (max-width: 860px) {
-      .wrap { width: min(700px, 92vw); }
-      .db-apps-grid, .db-peek-grid { grid-template-columns: repeat(2, 1fr); }
-      .topbar { margin-bottom: 14px; }
-      .hero { flex-direction: column; align-items: flex-start; }
-      .hero h1 { font-size: clamp(24px, 9vw, 36px); }
-    }
-    @media (max-width: 580px) {
-      .db-apps-grid, .db-peek-grid { grid-template-columns: 1fr; }
+    .dock-btn svg {
+      opacity: 0.75;
+      flex-shrink: 0;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+
     <header class="topbar">
-      <div class="brand">
+      <a class="brand" href="/">
         <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
-        <span>Moshly Apps</span>
-      </div>
-      <a class="btn btn-ghost" href="/dashboard" id="launcherBackToDashboardTop">View Full Dashboard</a>
+        Moshly
+      </a>
+      <a class="dashboard-link" href="/dashboard" id="launcherBackToDashboardTop">Dashboard →</a>
     </header>
 
-    <section class="hero">
-      <div>
-        <h1>Welcome, <span data-first-name>UserName</span></h1>
-        <p id="launcher-live-datetime" aria-live="polite"><span>--/--/----</span><span class="launcher-time">--:--:--</span></p>
+    <section class="welcome">
+      <div class="welcome-name"><span data-first-name>…</span></div>
+      <div id="launcher-live-datetime" aria-live="polite">
+        <span>--/--/----</span>
+        <span class="launcher-time">--:--</span>
       </div>
     </section>
 
-    <div class="db-card">
-        <!-- APP SLOTS SECTION -->
-        <div class="db-section-header">
-            <h2 class="db-section-title">My Apps Slots</h2>
-            <p class="db-section-subtitle">Permanent apps available in your plan.</p>
-        </div>
-        <div class="db-apps-grid" id="dbAppsGrid"></div>
-
-        <!-- Free Apps Section -->
-        <div class="db-free-apps-section" id="dbFreeSection">
-            <div class="db-section-header">
-                <h2 class="db-section-title">Free Apps</h2>
-                <p class="db-section-subtitle">Apps available for everyone.</p>
-            </div>
-            <div class="db-apps-grid" id="dbFreeAppsGrid"></div>
-        </div>
-
-        <!-- PEEK SLOT SECTION -->
-        <div class="db-peek-section db-hidden" id="dbPeekSection">
-            <div class="db-section-header">
-                <h2 class="db-section-title">Peek Slot</h2>
-                <p class="db-section-subtitle">Temporary 24h access to any app.</p>
-            </div>
-            <div class="db-peek-grid" id="dbPeekGrid"></div>
-        </div>
-    </div>
-
-    <a class="launcher-pending-alert" id="launcherPendingAlert" href="/connect-more" hidden aria-live="polite">
-      <span class="launcher-pending-alert-icon">🕐</span>
+    <a class="pending-alert" id="launcherPendingAlert" href="/dashboard?open_connector=1" hidden aria-live="polite">
+      <span>🕐</span>
       <span id="launcherPendingAlertText">App change pending…</span>
-      <span class="launcher-pending-alert-cta">Manage →</span>
+      <span class="pending-alert-cta">Manage →</span>
     </a>
 
-    <div class="footer-cta">
-      <a class="btn btn-primary" href="/dashboard" id="launcherBackToDashboardBottom">View Full Dashboard</a>
+    <!-- Plan Apps -->
+    <div class="icon-section" id="mainAppsSection">
+      <div class="section-label">My Apps</div>
+      <div class="icon-grid" id="dbAppsGrid"></div>
     </div>
+
+    <!-- Free Apps -->
+    <div class="icon-section" id="freeAppsSection" hidden>
+      <div class="section-label">Free</div>
+      <div class="icon-grid" id="dbFreeAppsGrid"></div>
+    </div>
+
+    <!-- Peek Slot -->
+    <div class="icon-section" id="dbPeekSection" hidden>
+      <div class="section-label">Peek — 24h</div>
+      <div class="icon-grid" id="dbPeekGrid"></div>
+    </div>
+
   </div>
+
+  <!-- Bottom dock: return to dashboard -->
+  <nav class="dock">
+    <a class="dock-btn" href="/dashboard" id="launcherBackToDashboardBottom">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+      Full Dashboard
+    </a>
+  </nav>
 
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
   <script>
-    // Global APP_CATALOG mirrored from dashboard-logic.js
     const APP_CATALOG = [
-        { 
-            slug: 'feeme', name: 'FeeMe', description: 'Financial hub', 
-            status: 'live', iconAsset: 'assets/feeme-logo-icon.svg', url: 'apps/feeme.html',
-            type: 'Plan app', categories: ['Business', 'Analytics']
-        },
-        { 
-            slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths', 
-            status: 'live', iconAsset: 'assets/Moshly-Main-Logo-nofill.svg', url: 'apps/fifthsense.html',
-            type: 'Free', categories: ['Learning', 'Interactive']
-        },
-        {
-            slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
-            status: 'soon', iconAsset: 'assets/merchpad-logo-icon.svg', url: 'https://merchpad.moshly.io',
-            type: 'Plan app', categories: ['Business', 'Booking']
-        },
-        {
-            slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
-            status: 'live', iconAsset: 'assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
-            type: 'Plan app', categories: ['Business']
-        }
+      {
+        slug: 'feeme', name: 'FeeMe', status: 'live',
+        iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/feeme.html',
+        type: 'Plan app', categories: ['Business', 'Analytics']
+      },
+      {
+        slug: 'fifthsense', name: 'Fifth Sense', status: 'live',
+        iconAsset: '/assets/moshly-FifhtSense-logo-png.png', url: '/apps/fifthsense.html',
+        type: 'Free', categories: ['Learning', 'Interactive']
+      },
+      {
+        slug: 'merchpad', name: 'MerchPad', status: 'soon',
+        iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
+        type: 'Plan app', categories: ['Business', 'Booking']
+      },
+      {
+        slug: 'rank', name: 'Rank', status: 'live',
+        iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
+        type: 'Plan app', categories: ['Business']
+      }
     ];
 
-    // SSO launch: generates a 60s token and redirects to the app's /auth/callback
+    // Per-app icon gradients
+    const APP_ICON_COLORS = {
+      feeme:      'linear-gradient(145deg, #1a6ed8 0%, #0c3e9e 100%)',
+      fifthsense: 'linear-gradient(145deg, #7c3aed 0%, #4c1d95 100%)',
+      rank:       'linear-gradient(145deg, #f59e0b 0%, #b45309 100%)',
+      merchpad:   'linear-gradient(145deg, #059669 0%, #064e3b 100%)',
+    };
+    const FALLBACK_ICON_COLOR = 'linear-gradient(145deg, #2d3561 0%, #1a1f3e 100%)';
+
+    // Records that the user launched from the Launcher so the spoke knows where to return.
+    function markLaunchOrigin() {
+      try { localStorage.setItem('moshly_hub_return', 'launcher'); } catch (_) {}
+    }
+
+    // SSO launch for external spoke apps (rank.moshly.io, merchpad.moshly.io).
     window.launchApp = async function(appUrl) {
-        try {
-            const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token');
-            const data = await res.json();
-            if (!data.token) throw new Error('no token returned');
-            window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
-        } catch (e) {
-            console.error('SSO launch failed:', e);
-        }
+      markLaunchOrigin();
+      try {
+        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token');
+        const data = await res.json();
+        if (!data.token) throw new Error('no SSO token returned');
+        window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
+      } catch (err) {
+        console.error('[Launcher] SSO launch failed:', err);
+      }
     };
 
-    // Guard: redirect to login if no session.
+    // Auth guard
     (async () => {
-      const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-      const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
+      const isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const useDevMock = isLocalDev && new URLSearchParams(location.search).get('dev_mock') !== '0';
+
       if (!useDevMock) {
         const ok = await window.MoshlyAuth.requireSession('/login');
         if (!ok) return;
       }
 
+      // ── Sync "View Full Dashboard" links ─────────────────
+      const DASH_RETURN_KEY = 'moshly_dash_return_dashboard_v1';
+      const KNOWN_DEV_PLANS = new Set(['free','solo','collective','business','major','god','semi_god']);
 
-    const DASH_RETURN_STORAGE_KEY = 'moshly_dash_return_dashboard_v1';
-
-    (function syncBackToDashboardLinks() {
-      const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-      const knownDevPlans = new Set(['free', 'solo', 'collective', 'business', 'major', 'god', 'semi_god']);
-      const resolveTarget = () => {
+      function resolveDashboardTarget() {
         const params = new URLSearchParams(window.location.search);
-        const returnDashFromQuery = (params.get('return_dashboard') || '').trim();
-        const returnDashFromStorage = (localStorage.getItem(DASH_RETURN_STORAGE_KEY) || '').trim();
-        const returnDash = returnDashFromQuery || returnDashFromStorage;
+        const fromQuery = (params.get('return_dashboard') || '').trim();
+        const fromStorage = (localStorage.getItem(DASH_RETURN_KEY) || '').trim();
+        const candidate = fromQuery || fromStorage;
 
-        if (returnDash) {
+        if (candidate) {
           try {
-            const parsed = new URL(returnDash, window.location.origin);
-            if (parsed.origin === window.location.origin && /\/dashboard\.html$/.test(parsed.pathname)) {
+            const parsed = new URL(candidate, window.location.origin);
+            if (parsed.origin === window.location.origin && /\/dashboard(\.html)?$/.test(parsed.pathname)) {
               const target = `${parsed.pathname}${parsed.search}${parsed.hash}`;
-              localStorage.setItem(DASH_RETURN_STORAGE_KEY, target);
+              localStorage.setItem(DASH_RETURN_KEY, target);
               return target;
             }
-          } catch {
-            // Ignore malformed values and try localhost fallback.
-          }
+          } catch (_) {}
         }
 
-        if (isLocalDevHost) {
+        if (isLocalDev) {
           try {
             const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
             const plan = String(user?.plan || '').toLowerCase();
-            if (knownDevPlans.has(plan)) {
+            if (KNOWN_DEV_PLANS.has(plan)) {
               return `/dashboard?dev_plan=${encodeURIComponent(plan)}&dev_mock=1`;
             }
-          } catch {
-            // Ignore parse errors and use default target.
-          }
+          } catch (_) {}
         }
 
         return '/dashboard';
-      };
+      }
 
-      const target = resolveTarget();
-      const top = document.getElementById('launcherBackToDashboardTop');
-      const bottom = document.getElementById('launcherBackToDashboardBottom');
-      [top, bottom].forEach((btn) => {
-        if (!btn) return;
-        btn.setAttribute('href', target);
-        btn.onclick = function () {
-          this.setAttribute('href', resolveTarget());
-        };
-      });
-    })();
+      (function syncDashboardLinks() {
+        const target = resolveDashboardTarget();
+        ['launcherBackToDashboardTop', 'launcherBackToDashboardBottom'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.setAttribute('href', target);
+          el.addEventListener('click', function () {
+            this.setAttribute('href', resolveDashboardTarget());
+          });
+        });
+      })();
 
-    function updateLauncherAppsUI(user) {
-        const appsGrid = document.getElementById('dbAppsGrid');
-        const freeGrid = document.getElementById('dbFreeAppsGrid');
-        const peekGrid = document.getElementById('dbPeekGrid');
+      // ── Build icon HTML ───────────────────────────────────
+      function buildIconHTML(app, badge) {
+        const color = APP_ICON_COLORS[app.slug] || FALLBACK_ICON_COLOR;
+        const isSoon = app.status === 'soon';
+        const isExternal = app.url.startsWith('https://');
+        const badgeHTML = badge
+          ? `<span class="app-badge${badge === 'Peek' ? ' app-badge--peek' : ''}">${badge}</span>`
+          : isSoon ? `<span class="app-badge">Soon</span>` : '';
+
+        const iconInner = `
+          <div class="app-icon-shape" style="background:${color}">
+            <img src="${app.iconAsset}" alt="${app.name}" loading="lazy">
+            ${badgeHTML}
+          </div>
+          <span class="app-icon-label">${app.name}</span>`;
+
+        if (isSoon) {
+          return `<div class="app-icon-item app-icon-item--soon">${iconInner}</div>`;
+        }
+        if (isExternal) {
+          return `<a class="app-icon-item" href="javascript:void(0)" onclick="window.launchApp('${app.url}')">${iconInner}</a>`;
+        }
+        return `<a class="app-icon-item" href="${app.url}" onclick="markLaunchOrigin()">${iconInner}</a>`;
+      }
+
+      function buildEmptySlotHTML(label) {
+        return `
+          <a class="app-icon-item" href="javascript:void(0)" onclick="window.location.href='/dashboard?open_connector=1'">
+            <div class="app-icon-shape app-icon-shape--empty">
+              <span class="app-empty-plus">+</span>
+            </div>
+            <span class="app-icon-label">${label}</span>
+          </a>`;
+      }
+
+      // ── Render app grids ──────────────────────────────────
+      function updateLauncherAppsUI(user) {
+        const appsGrid    = document.getElementById('dbAppsGrid');
+        const freeGrid    = document.getElementById('dbFreeAppsGrid');
+        const peekGrid    = document.getElementById('dbPeekGrid');
+        const freeSection = document.getElementById('freeAppsSection');
+        const peekSection = document.getElementById('dbPeekSection');
+
         if (!appsGrid) return;
 
-        // Sync user apps from profile if missing
         if (!user.apps && user.profile?.connectedApps) {
-            user.apps = user.profile.connectedApps;
+          user.apps = user.profile.connectedApps;
         }
 
-        const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
-        const uniqueActiveAppSlugs = [...new Set(activeAppSlugs.map(s => {
-            const normalized = s.toLowerCase().trim();
-            if (normalized === 'fifth sense') return 'fifthsense';
-            return normalized;
-        }))];
-        const activeApps = APP_CATALOG.filter(a => uniqueActiveAppSlugs.includes(a.slug.toLowerCase().trim()));
+        const activeAppSlugs = Array.isArray(user.apps)
+          ? [...new Set(user.apps.map((s) => {
+              const n = s.toLowerCase().trim();
+              return n === 'fifth sense' ? 'fifthsense' : n;
+            }))]
+          : [];
+
+        const activeApps = APP_CATALOG.filter((a) =>
+          activeAppSlugs.includes(a.slug.toLowerCase())
+        );
 
         const plan = (user.subscription?.plan || user.plan || 'free').toLowerCase();
-        // Comprehensive slot map for ALL plan names used in dev and production
-        const slotMap = {
-            'free': 0,
-            'solo': 2,
-            'collective': 4,
-            'business': 10,
-            'major': 150,
-            'starter': 3,
-            'pro': 9,
-            'elite': 15,
-            'god': 150,
-            'semi_god': 150
+        const SLOT_MAP = {
+          free: 0, solo: 2, collective: 4, business: 10,
+          major: 150, starter: 3, pro: 9, elite: 15, god: 150, semi_god: 150,
         };
-        const totalSlots = slotMap[plan] === undefined ? (plan === 'free' ? 0 : 3) : slotMap[plan];
-        
-        console.log('Launcher Sync: Slot calculation', { plan, totalSlots, userPlan: user.plan, subPlan: user.subscription?.plan });
+        const totalSlots = SLOT_MAP[plan] ?? (plan === 'free' ? 0 : 3);
 
-        const activeMainApps = activeApps.filter(a => a.type !== 'Free');
+        // 1. Plan apps
+        const activeMainApps = activeApps.filter((a) => a.type !== 'Free');
+        let appsHtml = activeMainApps.map((a) => buildIconHTML(a, null)).join('');
 
-        // 1. Permanent Slots
-        let appsHtml = activeMainApps.map(app => {
-            const linkAttr = app.url.includes('.moshly.io')
-                ? `href="javascript:void(0)" onclick="window.launchApp('${app.url}')"`
-                : `href="${app.url}"`;
-            return `
-            <a ${linkAttr} class="db-app-slot">
-                <div class="db-app-slot-icon">
-                    <img src="${app.iconAsset}" alt="${app.name}">
-                </div>
-                <div class="db-app-slot-info">
-                    <div class="db-app-slot-name">${app.name}</div>
-                    <div class="db-app-slot-desc">${app.description}</div>
-                    <div class="db-app-slot-status">Live</div>
-                    <div class="db-app-slot-action">
-                        <div class="db-app-slot-btn">Open App</div>
-                    </div>
-                </div>
-            </a>
-        `;
-        }).join('');
+        const usedCount    = activeMainApps.length;
+        const baseSlots    = Math.max(3, parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10));
+        const displaySlots = Math.max(baseSlots, usedCount < 3 ? 3 : Math.ceil(usedCount / 3) * 3);
+        const effectiveTotal = Math.max(usedCount, Math.min(totalSlots, displaySlots));
+        const emptyCount   = Math.max(0, effectiveTotal - usedCount);
 
-        const usedCount = activeMainApps.length;
-        const baseSlots = parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10);
-        let displayedSlots = Math.max(baseSlots, usedCount < 3 ? 3 : Math.floor(usedCount / 3) * 3 + 3);
-        
-        // Ensure even Free plan shows some empty slots if needed, but here we honor plan limits
-        // for "Permanent Slots". For Free plan, totalSlots is 0.
-        // We ensure we at least show whatever they have connected.
-        const effectiveTotal = Math.max(usedCount, Math.min(totalSlots, displayedSlots));
-        const emptySlotsCount = Math.max(0, effectiveTotal - usedCount);
-
-        console.log('Launcher Sync: Permanent Slot rendering', { usedCount, baseSlots, displayedSlots, totalSlots, effectiveTotal, emptySlotsCount });
-
-        const goToConnector = "window.location.href='/dashboard?open_connector=1'";
-        for (let i = 0; i < emptySlotsCount; i++) {
-            appsHtml += `
-                <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
-                    <div class="db-app-slot-empty-content">
-                        <div class="db-app-slot-plus-circle">+</div>
-                        <span class="db-app-slot-label">Connect App</span>
-                    </div>
-                </a>
-            `;
-        }
+        for (let i = 0; i < emptyCount; i++) appsHtml += buildEmptySlotHTML('Add App');
         appsGrid.innerHTML = appsHtml;
 
-        // 2. Free Apps
-        if (freeGrid) {
-            const allFreeApps = APP_CATALOG.filter(a => a.type === 'Free');
-            const activeFreeApps = activeApps.filter(a => a.type === 'Free');
-            
-            let freeHtml = activeFreeApps.map(app => `
-                <a href="${app.url}" class="db-app-slot">
-                    <div class="db-app-slot-icon">
-                        <img src="${app.iconAsset}" alt="${app.name}">
-                    </div>
-                    <div class="db-app-slot-info">
-                        <div class="db-app-slot-name">${app.name}</div>
-                        <div class="db-app-slot-desc">${app.description}</div>
-                        <div class="db-app-slot-status">Free</div>
-                        <div class="db-app-slot-action">
-                            <div class="db-app-slot-btn">Open App</div>
-                        </div>
-                    </div>
-                </a>
-            `).join('');
-
-            const usedFreeCount = activeFreeApps.length;
-            let displayedFreeSlots = usedFreeCount < 3 ? 3 : Math.floor(usedFreeCount / 3) * 3 + 3;
-            const emptyFreeSlotsCount = Math.max(0, displayedFreeSlots - usedFreeCount);
-
-            for (let i = 0; i < emptyFreeSlotsCount; i++) {
-                freeHtml += `
-                    <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
-                        <div class="db-app-slot-empty-content">
-                            <div class="db-app-slot-plus-circle">+</div>
-                            <span class="db-app-slot-label">Connect Free App</span>
-                        </div>
-                    </a>
-                `;
-            }
-            freeGrid.innerHTML = freeHtml;
+        // 2. Free apps
+        const activeFreeApps = activeApps.filter((a) => a.type === 'Free');
+        if (activeFreeApps.length > 0 && freeGrid && freeSection) {
+          let freeHtml = activeFreeApps.map((a) => buildIconHTML(a, null)).join('');
+          const emptyFreeCount = Math.max(0, 3 - activeFreeApps.length);
+          for (let i = 0; i < emptyFreeCount; i++) freeHtml += buildEmptySlotHTML('Explore');
+          freeGrid.innerHTML = freeHtml;
+          freeSection.hidden = false;
         }
 
-        // 3. Peek Slot
-        if (peekGrid) {
-            const peekSection = document.getElementById('dbPeekSection');
-            if (peekSection) peekSection.classList.remove('db-hidden');
-            const peekAppSlug = user.peek_app?.toLowerCase();
-            const peekApp = APP_CATALOG.find(a => a.slug === peekAppSlug);
-
-            if (peekApp) {
-                const peekLinkAttr = peekApp.url.includes('.moshly.io')
-                    ? `href="javascript:void(0)" onclick="window.launchApp('${peekApp.url}')"`
-                    : `href="${peekApp.url}"`;
-                peekGrid.innerHTML = `
-                    <a ${peekLinkAttr} class="db-app-slot db-app-slot--peek">
-                        <div class="db-app-slot-icon">
-                            <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
-                        </div>
-                        <div class="db-app-slot-info">
-                            <div class="db-app-slot-name">${peekApp.name}</div>
-                            <div class="db-app-slot-desc">${peekApp.description}</div>
-                            <div class="db-app-slot-status">Peek Active</div>
-                            <div class="db-app-slot-action">
-                                <div class="db-app-slot-btn">Open App</div>
-                            </div>
-                        </div>
-                    </a>
-                `;
-            } else {
-                peekGrid.innerHTML = `
-                    <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="${goToConnector}">
-                        <div class="db-app-slot-empty-content">
-                            <div class="db-app-slot-plus-circle">+</div>
-                            <span class="db-app-slot-label">Try any App (24h)</span>
-                        </div>
-                    </a>
-                `;
-            }
-        }
-    }
-
-    (async function initLauncher() {
-        try {
-            const { ok, data } = await window.MoshlyAuth.authFetch('/me');
-            if (ok && data.user) {
-                const user = data.user;
-                if (user.profile?.uxSettings?.emptySlots) {
-                    localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
-                }
-                updateLauncherAppsUI(user);
-                return;
-            }
-        } catch (e) {
-            console.warn('Launcher: /me fetch failed, falling back to localStorage', e);
-        }
-        // Fallback to cached user if /me fails
-        const userStr = localStorage.getItem('moshly_user');
-        const user = (() => { try { return JSON.parse(userStr || 'null'); } catch { return null; } })();
-        if (user) {
-            updateLauncherAppsUI(user);
-        }
-    })();
-
-    (function syncLauncherName() {
-      const params = new URLSearchParams(window.location.search);
-      let firstName = (params.get('first') || '').trim();
-
-      if (!firstName) {
-        try {
-          const cachedUser = JSON.parse(localStorage.getItem('moshly_user') || 'null');
-          if (cachedUser && typeof cachedUser.name === 'string') {
-            firstName = cachedUser.name.split(' ')[0] || '';
+        // 3. Peek slot
+        if (peekGrid && peekSection) {
+          const peekApp = APP_CATALOG.find((a) => a.slug === (user.peek_app || '').toLowerCase());
+          if (peekApp) {
+            peekGrid.innerHTML = buildIconHTML(peekApp, 'Peek');
+            peekSection.hidden = false;
           }
-        } catch (_) {
-          // Ignore parse errors and keep fallback value.
         }
       }
 
-      const safeName = firstName || 'UserName';
-      document.querySelectorAll('[data-first-name]').forEach((el) => {
-        el.textContent = safeName;
-      });
-    })();
-
-    (async function syncLauncherPendingAlert() {
-      const el = document.getElementById('launcherPendingAlert');
-      const textEl = document.getElementById('launcherPendingAlertText');
-      if (!el || !textEl) return;
-      const formatPendingIn = (effectiveAt) => {
-        const diff = new Date(effectiveAt) - Date.now();
-        if (diff <= 0) return null;
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const parts = [];
-        if (d) parts.push(`${d}d`);
-        if (h) parts.push(`${h}h`);
-        parts.push(`${m}m`);
-        return parts.join(' ');
-      };
-      try {
-        const isLocalDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-        const useDevMock = isLocalDevHost && new URLSearchParams(location.search).get('dev_mock') !== '0';
-        let pending = null;
-        if (useDevMock) {
-          const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
-          pending = user?.pending_change ?? null;
-        } else {
-          const res = await window.MoshlyAuth.authFetch('/apps/state');
-          if (res.ok && res.data) pending = res.data.pending_change ?? null;
+      // ── Init: fetch user, fall back to cache ──────────────
+      (async function initLauncher() {
+        try {
+          const { ok, data } = await window.MoshlyAuth.authFetch('/me');
+          if (ok && data.user) {
+            const user = data.user;
+            if (user.profile?.uxSettings?.emptySlots) {
+              localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
+            }
+            updateLauncherAppsUI(user);
+            return;
+          }
+        } catch (err) {
+          console.warn('[Launcher] /me fetch failed, using cache:', err);
         }
-        if (!pending?.effective_at) return;
-        const label = formatPendingIn(pending.effective_at);
-        if (!label) return;
-        textEl.textContent = `App change effective in ${label}`;
-        el.hidden = false;
-        setInterval(() => {
-          const l = formatPendingIn(pending.effective_at);
-          if (!l) { el.hidden = true; return; }
-          textEl.textContent = `App change effective in ${l}`;
-        }, 30000);
-      } catch (_) { /* silent */ }
-    })();
+        try {
+          const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+          if (user) updateLauncherAppsUI(user);
+        } catch (_) {}
+      })();
 
-    (function syncLauncherClock() {
-      const el = document.getElementById('launcher-live-datetime');
-      if (!el) return;
-
-      const locale = navigator.language || 'pt-PT';
-      const formatNow = () => {
-        const now = new Date();
-        const dateText = now.toLocaleDateString(locale, {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
+      // ── Sync user name ────────────────────────────────────
+      (function syncName() {
+        let firstName = (new URLSearchParams(location.search).get('first') || '').trim();
+        if (!firstName) {
+          try {
+            const u = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+            firstName = u?.name?.split(' ')[0] || '';
+          } catch (_) {}
+        }
+        document.querySelectorAll('[data-first-name]').forEach((el) => {
+          el.textContent = firstName || 'Hey';
         });
-        const timeText = now.toLocaleTimeString(locale, {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        return { dateText, timeText };
-      };
+      })();
 
-      const paint = () => {
-        const { dateText, timeText } = formatNow();
-        el.innerHTML = '<span>' + dateText + '</span><span class="launcher-time">' + timeText + '</span>';
-      };
+      // ── Pending app-change alert ──────────────────────────
+      (async function syncPendingAlert() {
+        const alertEl = document.getElementById('launcherPendingAlert');
+        const textEl  = document.getElementById('launcherPendingAlertText');
+        if (!alertEl || !textEl) return;
 
-      paint();
-      setInterval(() => {
+        function formatTimeLeft(effectiveAt) {
+          const diff = new Date(effectiveAt) - Date.now();
+          if (diff <= 0) return null;
+          const d = Math.floor(diff / 86400000);
+          const h = Math.floor((diff % 86400000) / 3600000);
+          const m = Math.floor((diff % 3600000) / 60000);
+          return [d && `${d}d`, h && `${h}h`, `${m}m`].filter(Boolean).join(' ');
+        }
+
+        try {
+          let pending = null;
+          if (useDevMock) {
+            const u = JSON.parse(localStorage.getItem('moshly_user') || 'null');
+            pending = u?.pending_change ?? null;
+          } else {
+            const res = await window.MoshlyAuth.authFetch('/apps/state');
+            if (res.ok && res.data) pending = res.data.pending_change ?? null;
+          }
+          if (!pending?.effective_at) return;
+
+          const label = formatTimeLeft(pending.effective_at);
+          if (!label) return;
+          textEl.textContent = `App change in ${label}`;
+          alertEl.hidden = false;
+
+          setInterval(() => {
+            const l = formatTimeLeft(pending.effective_at);
+            if (!l) { alertEl.hidden = true; return; }
+            textEl.textContent = `App change in ${l}`;
+          }, 30000);
+        } catch (_) {}
+      })();
+
+      // ── Live clock ────────────────────────────────────────
+      (function syncClock() {
+        const el = document.getElementById('launcher-live-datetime');
+        if (!el) return;
+        const locale = navigator.language || 'pt-PT';
+
+        function paint() {
+          const now = new Date();
+          const date = now.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
+          const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+          el.innerHTML = `<span>${date}</span><span class="launcher-time">${time}</span>`;
+        }
+
         paint();
-      }, 1000);
-    })();
-    })();
+        setInterval(paint, 30000);
+      })();
+
+    })(); // end auth guard
   </script>
 </body>
 </html>

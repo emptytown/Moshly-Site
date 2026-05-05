@@ -143,6 +143,7 @@ export async function onRequestPost({ request, env }) {
     const newAccessToken = await new SignJWT({
       userId: user.id,
       email: user.email,
+      name: user.name,
       role: user.role,
       plan: subscription?.plan || 'free',
     })

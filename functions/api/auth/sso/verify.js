@@ -49,6 +49,7 @@ export async function onRequestPost({ request, env }) {
       user: {
         id: ssoData.userId,
         email: ssoData.email,
+        name: ssoData.name,
         role: ssoData.role,
         plan: ssoData.plan
       }

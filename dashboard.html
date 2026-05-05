@@ -5,6 +5,13 @@
     <meta content="width=device-width,initial-scale=1" name="viewport"/>
     <title>Moshly — Dashboard</title>
     <link href="/assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <link rel="manifest" href="/manifest.json"/>
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png"/>
+    <meta name="theme-color" content="#0E0F14"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="apple-mobile-web-app-title" content="Moshly"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
@@ -1055,6 +1062,16 @@
 <script src="/modal-manager.js"></script>
 <script src="/moshly-ui.js"></script>
 <script src="dashboard-logic.js"></script>
+<script>
+  // Mark that the user is operating from the Dashboard so spokes know where to return.
+  try { localStorage.setItem('moshly_hub_return', 'dashboard'); } catch (_) {}
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(function (err) {
+      console.warn('[Dashboard] SW registration failed:', err);
+    });
+  }
+</script>
 
 </body>
 </html>
