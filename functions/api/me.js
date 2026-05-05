@@ -76,6 +76,7 @@ export async function onRequestGet({ request, env }) {
           aiCreditsLimit: subscription.aiCreditsLimit,
           aiCreditsUsed: subscription.aiCreditsUsed,
           expiresAt: subscription.expiresAt,
+          appChangedAt: subscription.appChangedAt,
         } : null,
       }
     }), {
@@ -141,6 +142,48 @@ export async function onRequestPatch({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
 
   try {
+    // Validate app changes for paid plans (once per billing cycle)
+    if (connectedApps !== undefined) {
+      const result = await db.select({
+        profile: schema.profiles,
+        subscription: schema.subscriptions,
+        workspace: schema.workspaces
+      })
+      .from(schema.profiles)
+      .leftJoin(schema.workspaces, eq(schema.workspaces.ownerId, schema.profiles.userId))
+      .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
+      .where(eq(schema.profiles.userId, payload.userId))
+      .get();
+
+      const { profile, subscription } = result || {};
+      const isPaidPlan = subscription?.plan && subscription.plan !== 'free';
+
+      if (isPaidPlan && profile?.connectedApps) {
+        const currentApps = JSON.parse(profile.connectedApps || '[]');
+        const newApps = body.connectedApps;
+        const appsChanged = JSON.stringify(currentApps.sort()) !== JSON.stringify(newApps.sort());
+
+        if (appsChanged && subscription.appChangedAt && subscription.expiresAt) {
+          const now = new Date();
+          const appChangedDate = new Date(subscription.appChangedAt);
+          const expiresDate = new Date(subscription.expiresAt);
+
+          if (appChangedDate < expiresDate) {
+            const timeRemaining = Math.ceil((expiresDate - now) / (1000 * 60 * 60));
+            return new Response(JSON.stringify({
+              error: 'app_change_locked',
+              message: 'Paid app slots can only be changed once per billing cycle',
+              nextChangeAt: subscription.expiresAt,
+              hoursRemaining: Math.max(0, timeRemaining)
+            }), {
+              status: 423,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        }
+      }
+    }
+
     const userUpdate = {};
     if (name !== undefined) userUpdate.name = name;
     if (avatarUrl !== undefined) userUpdate.avatarUrl = avatarUrl;
@@ -168,6 +211,20 @@ export async function onRequestPatch({ request, env }) {
           target: schema.profiles.userId,
           set: profileUpdate,
         });
+    }
+
+    // Track app change timestamp for paid plans
+    if (connectedApps !== undefined) {
+      const workspace = await db.select()
+        .from(schema.workspaces)
+        .where(eq(schema.workspaces.ownerId, payload.userId))
+        .get();
+
+      if (workspace) {
+        await db.update(schema.subscriptions)
+          .set({ appChangedAt: new Date() })
+          .where(eq(schema.subscriptions.workspaceId, workspace.id));
+      }
     }
 
     console.info('Profile updated', { userId: payload.userId });

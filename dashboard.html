@@ -1040,6 +1040,24 @@
         </div>
     </div>
 
+    <!-- ─── APP DISCONNECT MODAL ───────────────── -->
+    <div class="db-modal-overlay db-modal--confirm" id="dbAppDisconnectOverlay">
+        <div class="db-modal-backdrop" onclick="closeAppDisconnectModal()"></div>
+        <div class="db-modal-content">
+            <div class="db-modal-header">
+                <h3 class="db-modal-title">Disconnect App?</h3>
+            </div>
+            <div class="db-modal-body">
+                <p id="dbDisconnectWarning">This slot will be unusable until the end of the next billing cycle.</p>
+                <div class="db-disconnect-timer" id="dbDisconnectTimer"></div>
+            </div>
+            <div class="db-modal-footer">
+                <button class="db-btn-secondary" onclick="closeAppDisconnectModal()">Keep App</button>
+                <button class="db-btn-danger" id="dbDisconnectConfirmBtn" onclick="confirmAppDisconnect()">Disconnect App</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ─── SIGN OUT CONFIRMATION MODAL ────────── -->
     <div class="db-modal-overlay db-modal--confirm" id="dbSignOutOverlay">
         <div class="db-modal-backdrop" onclick="closeSignOutConfirmation()"></div>

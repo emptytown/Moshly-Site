@@ -3,6 +3,123 @@
  * Fetches real data from the Hub API and populates the UI.
  */
 
+// Blacklist storage format: { appSlug: expiresAt_timestamp }
+function getBlacklistedApps(subscriptionExpiresAt) {
+    const blacklist = JSON.parse(localStorage.getItem('moshly_app_blacklist') || '{}');
+    const now = Date.now();
+    const cleanBlacklist = {};
+
+    for (const [slug, expiresAt] of Object.entries(blacklist)) {
+        if (expiresAt > now) {
+            cleanBlacklist[slug] = expiresAt;
+        }
+    }
+
+    localStorage.setItem('moshly_app_blacklist', JSON.stringify(cleanBlacklist));
+    return Object.keys(cleanBlacklist);
+}
+
+function addToBlacklist(appSlug, subscriptionExpiresAt) {
+    const blacklist = JSON.parse(localStorage.getItem('moshly_app_blacklist') || '{}');
+    blacklist[appSlug] = subscriptionExpiresAt;
+    localStorage.setItem('moshly_app_blacklist', JSON.stringify(blacklist));
+}
+
+function getTimeUntilNextCycle(subscriptionExpiresAt) {
+    const now = new Date();
+    const expiresDate = new Date(subscriptionExpiresAt);
+    const diff = expiresDate - now;
+
+    if (diff <= 0) return 'Expired';
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+    if (days > 0) return `${days}d ${hours}h`;
+    return `${hours}h`;
+}
+
+window.openAppDisconnectModal = function(appSlug) {
+    window._pendingDisconnectApp = appSlug;
+    const overlay = document.getElementById('dbAppDisconnectOverlay');
+    const timerEl = document.getElementById('dbDisconnectTimer');
+
+    if (overlay && window._currentUser?.subscription?.expiresAt) {
+        const timeLeft = getTimeUntilNextCycle(window._currentUser.subscription.expiresAt);
+        if (timerEl) {
+            timerEl.textContent = `Renews in: ${timeLeft}`;
+        }
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+window.closeAppDisconnectModal = function() {
+    const overlay = document.getElementById('dbAppDisconnectOverlay');
+    if (overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        window._pendingDisconnectApp = null;
+    }
+};
+
+window.confirmAppDisconnect = async function() {
+    const appSlug = window._pendingDisconnectApp;
+    if (!appSlug) return;
+
+    // Remove from connected apps
+    if (Array.isArray(window._currentUser.apps)) {
+        const aliases = {
+            'fifthsense': 'fifth sense',
+            'fifth sense': 'fifthsense'
+        };
+        const targetSlugs = [appSlug.toLowerCase().trim()];
+        if (aliases[appSlug.toLowerCase().trim()]) {
+            targetSlugs.push(aliases[appSlug.toLowerCase().trim()]);
+        }
+
+        window._currentUser.apps = window._currentUser.apps.filter(
+            s => !targetSlugs.includes(s.toLowerCase().trim())
+        );
+    }
+
+    // Add to blacklist until next cycle
+    if (window._currentUser.subscription?.expiresAt) {
+        addToBlacklist(appSlug, window._currentUser.subscription.expiresAt);
+    }
+
+    // Save to server
+    try {
+        const res = await window.MoshlyAuth.authFetch('/me', {
+            method: 'PATCH',
+            body: JSON.stringify({ connectedApps: window._currentUser.apps })
+        });
+
+        if (!res.ok && res.status === 423) {
+            const data = await res.json();
+            alert(`⏳ ${data.message}\n\nYou can change apps again when your cycle renews.`);
+            closeAppDisconnectModal();
+            return;
+        }
+
+        if (!res.ok) {
+            alert('Failed to disconnect app. Please try again.');
+            closeAppDisconnectModal();
+            return;
+        }
+    } catch (err) {
+        console.error('Failed to save app disconnect:', err);
+        alert('An error occurred. Please try again.');
+        closeAppDisconnectModal();
+        return;
+    }
+
+    // Update UI on success
+    updateAppsUI(window._currentUser);
+    updateAppConnectorUI(window._currentUser);
+    closeAppDisconnectModal();
+};
+
 // Global APP_CATALOG with types and categories
 const APP_CATALOG = [
     {
@@ -12,7 +129,7 @@ const APP_CATALOG = [
     },
     {
         slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths',
-        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-png.png', url: '/apps/fifthsense.html',
+        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', url: '/apps/fifthsense.html',
         type: 'Free', categories: ['Learning', 'Interactive']
     },
     {
@@ -667,7 +784,7 @@ function updateAppsUI(user) {
     const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
     // Ensure we only have one entry per app (handle aliases)
     const uniqueActiveAppSlugs = [...new Set(activeAppSlugs.map(s => (s === 'fifth sense' ? 'fifthsense' : s)))];
-    
+
     const activeApps = APP_CATALOG.filter(a => uniqueActiveAppSlugs.includes(a.slug.toLowerCase().trim()));
 
     // Determine slot capacity based on plan
@@ -679,24 +796,46 @@ function updateAppsUI(user) {
     const activeMainApps = activeApps.filter(a => a.type !== 'Free');
     const activeFreeApps = activeApps.filter(a => a.type === 'Free');
 
+    // Get blacklisted apps for this cycle
+    const blacklistedApps = getBlacklistedApps(user.subscription?.expiresAt);
+
     let appsHtml = activeMainApps.map(app => {
         const isNew = window._newApps && window._newApps.includes(app.slug);
-        const slotClass = isNew ? 'db-app-slot db-app-slot--new' : 'db-app-slot';
+        const isBlacklisted = blacklistedApps.includes(app.slug);
+        const slotClass = isBlacklisted
+            ? 'db-app-slot db-app-slot--blacklisted'
+            : isNew ? 'db-app-slot db-app-slot--new' : 'db-app-slot';
         const linkAttr = app.url.includes('.moshly.io')
             ? `href="javascript:void(0)" onclick="window.launchApp('${app.url}')"`
             : `href="${app.url}"`;
 
+        const disconnectBtn = isBlacklisted ? '' : `
+            <button class="db-app-disconnect-btn" onclick="event.preventDefault(); event.stopPropagation(); openAppDisconnectModal('${app.slug}')" title="Disconnect app">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        `;
+
+        const statusText = isBlacklisted ? 'Locked until next cycle' : 'Live';
+
         return `
-            <a ${linkAttr} class="${slotClass}">
+            <a ${isBlacklisted ? 'href="javascript:void(0)"' : linkAttr} class="${slotClass}">
+                ${disconnectBtn}
                 <div class="db-app-slot-icon">
                     <img src="${app.iconAsset}" alt="${app.name}">
                 </div>
                 <div class="db-app-slot-info">
-                    <div class="db-app-slot-name">${app.name}</div>
+                    <div class="db-app-slot-header">
+                        <div class="db-app-slot-name">${app.name}</div>
+                        <div class="db-app-slot-status">${statusText}</div>
+                    </div>
                     <div class="db-app-slot-desc">${app.description}</div>
-                    <div class="db-app-slot-status">Live</div>
                     <div class="db-app-slot-action">
-                        <button class="db-app-slot-btn" type="button">Use App</button>
+                        <button class="db-app-slot-btn" type="button" ${isBlacklisted ? 'disabled' : ''}>
+                            ${isBlacklisted ? 'Locked' : 'Use App'}
+                        </button>
                     </div>
                 </div>
             </a>

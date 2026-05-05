@@ -1364,11 +1364,17 @@
         flex: 1;
     }
 
+    .db-app-slot-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
     .db-app-slot-name {
         font-size: 15px;
         font-weight: 700;
         color: var(--color-text-primary);
-        margin-bottom: 4px;
     }
 
     .db-app-slot-desc {
@@ -1384,13 +1390,13 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         color: var(--color-accent-primary);
-        margin-bottom: 12px;
         padding: 4px 8px;
         background: var(--color-bg-primary);
         border: 1px solid var(--color-border-subtle);
         border-radius: 4px;
-        display: block;
-        width: fit-content;
+        display: inline-block;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .db-app-slot-action {
@@ -1461,6 +1467,55 @@
         font-size: 13px;
         font-weight: 600;
         letter-spacing: 0.02em;
+    }
+
+    /* Disconnect Button */
+    .db-app-disconnect-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        transition: all var(--duration-fast);
+        z-index: 10;
+    }
+
+    .db-app-disconnect-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(255, 107, 107, 0.5);
+    }
+
+    .db-app-disconnect-btn svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2.5;
+    }
+
+    /* Blacklisted Slot State */
+    .db-app-slot--blacklisted {
+        opacity: 0.6;
+        border-color: rgba(255, 107, 107, 0.3);
+        background: rgba(255, 107, 107, 0.02);
+        cursor: not-allowed;
+    }
+
+    .db-app-slot--blacklisted:hover {
+        border-color: rgba(255, 107, 107, 0.3);
+        transform: none;
+    }
+
+    .db-app-slot--blacklisted .db-app-slot-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
     /* Peek Slot Section */
@@ -3625,7 +3680,27 @@
         transition: all .2s;
     }
     .db-btn-secondary:hover { background: var(--color-bg-primary); color: var(--color-text-primary); }
-  
+
+    .db-btn-danger {
+        background: #ff6b6b; color: #fff;
+        border: none; padding: 10px 24px; border-radius: 99px;
+        font-weight: 600; cursor: pointer;
+        transition: background .2s, transform .2s;
+    }
+    .db-btn-danger:hover { background: #ff5252; transform: translateY(-1px); }
+
+    .db-disconnect-timer {
+        padding: 12px 16px;
+        background: rgba(255, 107, 107, 0.08);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #ff6b6b;
+        text-align: center;
+        margin-top: 12px;
+    }
+
 
 /* App Connector Enhancements */
 .db-connector-info {
