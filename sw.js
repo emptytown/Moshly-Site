@@ -1,10 +1,9 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
-// App shell: everything needed to render the Hub without network.
-// External spokes (rank.moshly.io, merchpad.moshly.io) are not cached here —
-// they live on separate origins and require network for SSO.
+// Hub shell only — spoke pages (feeme, fifthsense) are NOT pre-cached here
+// so the SW never intercepts their navigation and returns a stale/wrong response.
 const SHELL_ASSETS = [
   '/',
   '/launcher',
@@ -19,8 +18,6 @@ const SHELL_ASSETS = [
   '/assets/favicon.ico',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
-  '/apps/fifthsense.html',
-  '/apps/feeme.html',
 ];
 
 // These paths always hit the network first; cache is only the offline fallback.

@@ -1341,9 +1341,9 @@
     }
 
     .db-app-slot-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
         background: var(--color-bg-primary);
         display: flex;
         align-items: center;
@@ -1353,8 +1353,8 @@
     }
 
     .db-app-slot-icon img {
-        width: 32px;
-        height: 32px;
+        width: 92%;
+        height: 92%;
         object-fit: contain;
     }
 

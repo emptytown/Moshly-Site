@@ -414,6 +414,11 @@
         window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
       } catch (err) {
         console.error('[Launcher] SSO launch failed:', err);
+        const toast = document.createElement('div');
+        toast.textContent = 'Could not connect — try again';
+        toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid rgba(255,100,50,.5);color:#ff8a65;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;pointer-events:none';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
       }
     };
 
@@ -495,7 +500,7 @@
         if (isExternal) {
           return `<a class="app-icon-item" href="javascript:void(0)" onclick="window.launchApp('${app.url}')">${iconInner}</a>`;
         }
-        return `<a class="app-icon-item" href="${app.url}" onclick="markLaunchOrigin()">${iconInner}</a>`;
+        return `<a class="app-icon-item" href="javascript:void(0)" onclick="markLaunchOrigin(); window.location.href='${app.url}'">${iconInner}</a>`;
       }
 
       function buildEmptySlotHTML(label) {
