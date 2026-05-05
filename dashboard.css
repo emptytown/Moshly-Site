@@ -1348,14 +1348,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
         flex-shrink: 0;
+        padding: 0;
     }
 
-    .db-app-slot-icon img {
-        width: 92%;
-        height: 92%;
+    .db-app-slot-icon img,
+    .db-app-slot-icon svg {
+        width: 36px;
+        height: 36px;
         object-fit: contain;
+        flex-shrink: 0;
     }
 
     .db-app-slot-info {

@@ -134,7 +134,7 @@ const APP_CATALOG = [
     },
     {
         slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
-        status: 'soon', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
     },
     {
