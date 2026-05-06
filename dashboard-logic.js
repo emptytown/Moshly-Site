@@ -248,12 +248,12 @@ function updateProjectsUI(projects) {
     // For the small card list
     if (listEl) {
         if (!projects || projects.length === 0) {
-            if (emptyEl) emptyEl.classList.remove('db-hidden');
-            listEl.classList.add('db-hidden');
+            if (emptyEl) emptyEl.style.display = '';
+            listEl.style.display = 'none';
             listEl.innerHTML = '';
         } else {
-            if (emptyEl) emptyEl.classList.add('db-hidden');
-            listEl.classList.remove('db-hidden');
+            if (emptyEl) emptyEl.style.display = 'none';
+            listEl.style.display = '';
             listEl.innerHTML = projects.slice(0, 5).map(p => `
                 <div class="db-proj-item">
                     <div class="db-proj-icon">${getProjectIcon(p.type)}</div>
