@@ -204,6 +204,7 @@
       height: 100%;
       object-fit: cover;
       border-radius: inherit;
+      transform: scale(1.15);
     }
 
     /* Empty slot */
@@ -588,6 +589,10 @@
             if (user.profile?.uxSettings?.emptySlots) {
               localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
             }
+            const firstName = (user.name || '').split(' ')[0] || (user.profile?.firstName) || '';
+            if (firstName) {
+              document.querySelectorAll('[data-first-name]').forEach((el) => { el.textContent = firstName; });
+            }
             updateLauncherAppsUI(user);
             return;
           }
@@ -662,12 +667,12 @@
         function paint() {
           const now = new Date();
           const date = now.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
-          const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+          const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           el.innerHTML = `<span>${date}</span><span class="launcher-time">${time}</span>`;
         }
 
         paint();
-        setInterval(paint, 30000);
+        setInterval(paint, 1000);
       })();
 
     })(); // end auth guard
