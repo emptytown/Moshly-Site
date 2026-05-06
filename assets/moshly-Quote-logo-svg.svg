@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="67.2836 67.2836 889.433 889.433" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient gradientTransform="matrix(889.433 889.433 -889.433 889.433 67.2836 67.2836)" gradientUnits="userSpaceOnUse" id="LinearGradient" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0" stop-color="#4c82fc"/>
+<stop offset="1" stop-color="#3a30e0"/>
+</linearGradient>
+</defs>
+<g id="Layer">
+<g opacity="1">
+<clipPath clip-rule="nonzero" id="ClipPath">
+<path d="M67.2836 67.2836L956.716 67.2836L956.716 67.2836L956.716 956.716L956.716 956.716L67.2836 956.716L67.2836 956.716L67.2836 67.2836L67.2836 67.2836Z"/>
+</clipPath>
+<g clip-path="url(#ClipPath)">
+<path d="M764.006 67.2836L259.994 67.2836C153.563 67.2836 67.2836 153.563 67.2836 259.994L67.2836 764.006C67.2836 870.437 153.563 956.716 259.994 956.716L764.006 956.716C870.437 956.716 956.716 870.437 956.716 764.006L956.716 259.994C956.716 153.563 870.437 67.2836 764.006 67.2836Z" fill="url(#LinearGradient)" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M289.642 200.698L541.648 200.698L704.71 348.937L704.71 778.83C704.71 798.595 694.827 808.478 675.063 808.478L274.818 808.478C255.053 808.478 245.17 798.595 245.17 778.83L245.17 245.17C245.17 215.522 259.994 200.698 289.642 200.698Z" fill="#ffffff" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M541.648 200.698L704.71 348.937L541.648 348.937L541.648 200.698Z" fill="#a5c4fd" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M334.113 541.648L430.469 638.004L623.179 415.645" fill="none" opacity="1" stroke="#6b5cff" stroke-linecap="round" stroke-linejoin="round" stroke-width="50"/>
+</g>
+</g>
+</g>
+</svg>
