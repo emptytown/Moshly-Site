@@ -200,9 +200,10 @@
     }
 
     .app-icon-shape img {
-      width: 86%;
-      height: 86%;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
     }
 
     /* Empty slot */
@@ -375,11 +376,11 @@
       },
       {
         slug: 'fifthsense', name: 'Fifth Sense', status: 'live',
-        iconAsset: '/assets/moshly-FifhtSense-logo-png.png', url: '/apps/fifthsense.html',
+        iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', url: '/apps/fifthsense.html',
         type: 'Free', categories: ['Learning', 'Interactive']
       },
       {
-        slug: 'merchpad', name: 'MerchPad', status: 'soon',
+        slug: 'merchpad', name: 'MerchPad', status: 'live',
         iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
       },
@@ -408,7 +409,7 @@
     window.launchApp = async function(appUrl) {
       markLaunchOrigin();
       try {
-        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token');
+        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token', { method: 'POST' });
         const data = await res.json();
         if (!data.token) throw new Error('no SSO token returned');
         window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
