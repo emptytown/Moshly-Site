@@ -145,126 +145,228 @@
       margin-bottom: 16px;
     }
 
-    /* ── Icon grid: 3 cols mobile → 4 tablet → 5 desktop ── */
-    .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      row-gap: 8px;
-      column-gap: 8px;
-    }
-
-    @media (min-width: 480px) {
-      .icon-grid { grid-template-columns: repeat(4, 1fr); }
-      .wrap { max-width: 600px; }
-    }
-
-    @media (min-width: 640px) {
-      .icon-grid { grid-template-columns: repeat(5, 1fr); }
-      .wrap { max-width: 700px; }
-    }
-
-    /* ── App icon item ───────────────────────────────────── */
-    .app-icon-item {
+    /* ── App card list ───────────────────────────────────── */
+    .app-card-list {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 6px;
+      gap: 10px;
+    }
+
+    /* ── App card ─────────────────────────────────────────── */
+    .app-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
       text-decoration: none;
       color: inherit;
-      cursor: pointer;
+      cursor: default;
+      transition: background 0.15s, border-color 0.15s;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
+    .app-card:hover {
+      background: rgba(255,255,255,0.065);
+      border-color: rgba(255,255,255,0.13);
+    }
 
-    /* iOS squircle: ~22% border-radius of 72px icon */
-    .app-icon-shape {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
+    .app-card-top {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      box-shadow:
-        0 4px 20px rgba(0,0,0,0.55),
-        0 1px 4px rgba(0,0,0,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.12);
-      transition: transform 0.12s ease, opacity 0.12s ease;
+      gap: 14px;
+    }
+
+    /* Icon — spans 2 text rows */
+    .app-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
       overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
     }
-
-    .app-icon-item:active .app-icon-shape {
-      transform: scale(0.88);
-      opacity: 0.75;
-    }
-
-    .app-icon-shape img {
+    .app-card-icon img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: inherit;
       transform: scale(1.15);
+      display: block;
     }
 
-    /* Empty slot */
-    .app-icon-shape--empty {
-      background: rgba(255,255,255,0.04) !important;
-      box-shadow: none !important;
-      border: 1.5px dashed rgba(255,255,255,0.15) !important;
+    .app-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
-
-    .app-empty-plus {
-      font-size: 26px;
-      font-weight: 200;
-      color: rgba(255,255,255,0.25);
-      line-height: 1;
-    }
-
-    /* Coming soon: greyscale + dimmed */
-    .app-icon-item--soon {
-      pointer-events: none;
-      cursor: default;
-    }
-
-    .app-icon-item--soon .app-icon-shape {
-      filter: saturate(0.3);
-      opacity: 0.45;
-    }
-
-    /* Badges (top-right of icon) */
-    .app-badge {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .app-card-name {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
       color: #fff;
-      background: rgba(0,0,0,0.6);
-      border-radius: 4px;
-      padding: 2px 4px;
-      line-height: 1.4;
-      backdrop-filter: blur(4px);
+      line-height: 1.15;
     }
-
-    .app-badge--peek {
-      background: #6b5cff;
-    }
-
-    /* Icon label */
-    .app-icon-label {
+    .app-card-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3);
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #4ade80;
+      width: fit-content;
+    }
+    .app-card-live::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #4ade80;
+      flex-shrink: 0;
+    }
+    .app-card-soon {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      width: fit-content;
+    }
+    .app-card-peek-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(107,92,255,0.2);
+      border: 1px solid rgba(107,92,255,0.35);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #c4b8ff;
+      width: fit-content;
+    }
+
+    .app-card-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.45;
+      padding: 0 2px;
+    }
+
+    /* Use App button */
+    .app-card-use {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .app-card-use:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.22);
       color: rgba(255,255,255,0.82);
-      text-align: center;
-      max-width: 72px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.7);
-      line-height: 1.2;
+    }
+    .app-card-use:active {
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Cancel X — top right, hover only */
+    .app-card-cancel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid rgba(255,100,100,0.3);
+      color: rgba(255,100,100,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.12s ease, background 0.12s, color 0.12s, border-color 0.12s;
+      font-family: inherit;
+    }
+    .app-card:hover .app-card-cancel {
+      opacity: 1;
+    }
+    .app-card-cancel:hover {
+      background: rgba(255,80,80,0.15);
+      border-color: rgba(255,100,100,0.6);
+      color: rgba(255,120,120,0.9);
+    }
+
+    /* Coming soon card */
+    .app-card--soon {
+      pointer-events: none;
+      opacity: 0.45;
+      filter: saturate(0.3);
+    }
+
+    /* Empty slot card */
+    .app-card-empty {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: transparent;
+      border: 1.5px dashed rgba(255,255,255,0.1);
+      text-decoration: none;
+      color: rgba(255,255,255,0.28);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .app-card-empty:hover {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.45);
+    }
+    .app-card-empty-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 200;
+      flex-shrink: 0;
+    }
+    .app-card-empty-label {
+      font-size: 13px;
+      font-weight: 500;
     }
 
     /* ── Fixed bottom dock ───────────────────────────────── */
@@ -338,19 +440,19 @@
     <!-- Plan Apps -->
     <div class="icon-section" id="mainAppsSection">
       <div class="section-label">My Apps</div>
-      <div class="icon-grid" id="dbAppsGrid"></div>
+      <div class="app-card-list" id="dbAppsGrid"></div>
     </div>
 
     <!-- Free Apps -->
     <div class="icon-section" id="freeAppsSection" hidden>
       <div class="section-label">Free</div>
-      <div class="icon-grid" id="dbFreeAppsGrid"></div>
+      <div class="app-card-list" id="dbFreeAppsGrid"></div>
     </div>
 
     <!-- Peek Slot -->
     <div class="icon-section" id="dbPeekSection" hidden>
       <div class="section-label">Peek — 24h</div>
-      <div class="icon-grid" id="dbPeekGrid"></div>
+      <div class="app-card-list" id="dbPeekGrid"></div>
     </div>
 
   </div>
@@ -373,33 +475,29 @@
       {
         slug: 'feeme', name: 'FeeMe', status: 'live',
         iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/feeme.html',
-        type: 'Plan app', categories: ['Business', 'Analytics']
+        type: 'Plan app', categories: ['Business', 'Analytics'],
+        desc: 'Fee management for independent artists'
       },
       {
         slug: 'fifthsense', name: 'Fifth Sense', status: 'live',
         iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', url: '/apps/fifthsense.html',
-        type: 'Free', categories: ['Learning', 'Interactive']
+        type: 'Free', categories: ['Learning', 'Interactive'],
+        desc: 'Interactive music & learning experience'
       },
       {
         slug: 'merchpad', name: 'MerchPad', status: 'live',
         iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Booking']
+        type: 'Plan app', categories: ['Business', 'Booking'],
+        desc: 'Merchandise booking and management'
       },
       {
         slug: 'rank', name: 'Rank', status: 'live',
         iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
-        type: 'Plan app', categories: ['Business']
+        type: 'Plan app', categories: ['Business'],
+        desc: 'SEO visibility tool for independent artists'
       }
     ];
 
-    // Per-app icon gradients — orange family, slightly different tones
-    const APP_ICON_COLORS = {
-      feeme:      'linear-gradient(145deg, #FF7043 0%, #E64A19 100%)',
-      fifthsense: 'linear-gradient(145deg, #FFB74D 0%, #F57C00 100%)',
-      rank:       'linear-gradient(145deg, #FF8A65 0%, #D84315 100%)',
-      merchpad:   'linear-gradient(145deg, #FFA000 0%, #E65100 100%)',
-    };
-    const FALLBACK_ICON_COLOR = 'linear-gradient(145deg, #FF8C42 0%, #CC5500 100%)';
 
     // Records that the user launched from the Launcher so the spoke knows where to return.
     function markLaunchOrigin() {
@@ -480,38 +578,50 @@
         });
       })();
 
-      // ── Build icon HTML ───────────────────────────────────
-      function buildIconHTML(app, badge) {
-        const color = APP_ICON_COLORS[app.slug] || FALLBACK_ICON_COLOR;
+      // ── Build card HTML ───────────────────────────────────
+      function buildCardHTML(app, peekBadge) {
         const isSoon = app.status === 'soon';
         const isExternal = app.url.startsWith('https://');
-        const badgeHTML = badge
-          ? `<span class="app-badge${badge === 'Peek' ? ' app-badge--peek' : ''}">${badge}</span>`
-          : isSoon ? `<span class="app-badge">Soon</span>` : '';
 
-        const iconInner = `
-          <div class="app-icon-shape" style="background:none">
-            <img src="${app.iconAsset}" alt="${app.name}" loading="lazy">
-            ${badgeHTML}
-          </div>
-          <span class="app-icon-label">${app.name}</span>`;
+        let statusBadge;
+        if (peekBadge) {
+          statusBadge = `<span class="app-card-peek-badge">Peek — 24h</span>`;
+        } else if (isSoon) {
+          statusBadge = `<span class="app-card-soon">Soon</span>`;
+        } else {
+          statusBadge = `<span class="app-card-live">Live</span>`;
+        }
 
-        if (isSoon) {
-          return `<div class="app-icon-item app-icon-item--soon">${iconInner}</div>`;
-        }
-        if (isExternal) {
-          return `<a class="app-icon-item" href="javascript:void(0)" onclick="window.launchApp('${app.url}')">${iconInner}</a>`;
-        }
-        return `<a class="app-icon-item" href="javascript:void(0)" onclick="markLaunchOrigin(); window.location.href='${app.url}'">${iconInner}</a>`;
+        const launchAttr = isExternal
+          ? `onclick="window.launchApp('${app.url}')"`
+          : `onclick="markLaunchOrigin(); window.location.href='${app.url}'"`;
+
+        const cancelBtn = isSoon ? '' : `<button class="app-card-cancel" aria-label="Remove app" onclick="event.stopPropagation()">×</button>`;
+        const descHTML = app.desc ? `<div class="app-card-desc">${app.desc}</div>` : '';
+        const useBtn = isSoon ? '' : `<button class="app-card-use" ${launchAttr}>Use App</button>`;
+
+        return `
+          <div class="app-card${isSoon ? ' app-card--soon' : ''}">
+            ${cancelBtn}
+            <div class="app-card-top">
+              <div class="app-card-icon">
+                <img src="${app.iconAsset}" alt="${app.name}" loading="lazy">
+              </div>
+              <div class="app-card-meta">
+                <div class="app-card-name">${app.name}</div>
+                ${statusBadge}
+              </div>
+            </div>
+            ${descHTML}
+            ${useBtn}
+          </div>`;
       }
 
       function buildEmptySlotHTML(label) {
         return `
-          <a class="app-icon-item" href="javascript:void(0)" onclick="window.location.href='/dashboard?open_connector=1'">
-            <div class="app-icon-shape app-icon-shape--empty">
-              <span class="app-empty-plus">+</span>
-            </div>
-            <span class="app-icon-label">${label}</span>
+          <a class="app-card-empty" href="/dashboard?open_connector=1">
+            <div class="app-card-empty-icon">+</div>
+            <span class="app-card-empty-label">${label}</span>
           </a>`;
       }
 
@@ -549,7 +659,7 @@
 
         // 1. Plan apps
         const activeMainApps = activeApps.filter((a) => a.type !== 'Free');
-        let appsHtml = activeMainApps.map((a) => buildIconHTML(a, null)).join('');
+        let appsHtml = activeMainApps.map((a) => buildCardHTML(a, null)).join('');
 
         const usedCount    = activeMainApps.length;
         const baseSlots    = Math.max(3, parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10));
@@ -563,7 +673,7 @@
         // 2. Free apps
         const activeFreeApps = activeApps.filter((a) => a.type === 'Free');
         if (activeFreeApps.length > 0 && freeGrid && freeSection) {
-          let freeHtml = activeFreeApps.map((a) => buildIconHTML(a, null)).join('');
+          let freeHtml = activeFreeApps.map((a) => buildCardHTML(a, null)).join('');
           const emptyFreeCount = Math.max(0, 3 - activeFreeApps.length);
           for (let i = 0; i < emptyFreeCount; i++) freeHtml += buildEmptySlotHTML('Explore');
           freeGrid.innerHTML = freeHtml;
@@ -574,7 +684,7 @@
         if (peekGrid && peekSection) {
           const peekApp = APP_CATALOG.find((a) => a.slug === (user.peek_app || '').toLowerCase());
           if (peekApp) {
-            peekGrid.innerHTML = buildIconHTML(peekApp, 'Peek');
+            peekGrid.innerHTML = buildCardHTML(peekApp, 'Peek');
             peekSection.hidden = false;
           }
         }
