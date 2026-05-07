@@ -823,20 +823,20 @@ function updateAppsUI(user) {
         return `
             <a ${isBlacklisted ? 'href="javascript:void(0)"' : linkAttr} class="${slotClass}">
                 ${disconnectBtn}
-                <div class="db-app-slot-icon">
-                    <img src="${app.iconAsset}" alt="${app.name}">
-                </div>
-                <div class="db-app-slot-info">
-                    <div class="db-app-slot-header">
+                <div class="db-app-slot-top">
+                    <div class="db-app-slot-icon">
+                        <img src="${app.iconAsset}" alt="${app.name}">
+                    </div>
+                    <div class="db-app-slot-meta">
                         <div class="db-app-slot-name">${app.name}</div>
                         <div class="db-app-slot-status">${statusText}</div>
                     </div>
-                    <div class="db-app-slot-desc">${app.description}</div>
-                    <div class="db-app-slot-action">
-                        <button class="db-app-slot-btn" type="button" ${isBlacklisted ? 'disabled' : ''}>
-                            ${isBlacklisted ? 'Locked' : 'Use App'}
-                        </button>
-                    </div>
+                </div>
+                <div class="db-app-slot-desc">${app.description}</div>
+                <div class="db-app-slot-action">
+                    <button class="db-app-slot-btn" type="button" ${isBlacklisted ? 'disabled' : ''}>
+                        ${isBlacklisted ? 'Locked' : 'Use App'}
+                    </button>
                 </div>
             </a>
         `;
@@ -894,16 +894,18 @@ function updateAppsUI(user) {
                 : `href="${peekApp.url}"`;
             peekGrid.innerHTML = `
                 <a ${peekLinkAttr} class="db-app-slot db-app-slot--peek">
-                    <div class="db-app-slot-icon">
-                        <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
-                    </div>
-                    <div class="db-app-slot-info">
-                        <div class="db-app-slot-name">${peekApp.name}</div>
-                        <div class="db-app-slot-desc">${peekApp.description}</div>
-                        <div class="db-app-slot-status">Peek Active</div>
-                        <div class="db-app-slot-action">
-                            <button class="db-app-slot-btn" type="button">Use App</button>
+                    <div class="db-app-slot-top">
+                        <div class="db-app-slot-icon">
+                            <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
                         </div>
+                        <div class="db-app-slot-meta">
+                            <div class="db-app-slot-name">${peekApp.name}</div>
+                            <div class="db-app-slot-status">Peek Active</div>
+                        </div>
+                    </div>
+                    <div class="db-app-slot-desc">${peekApp.description}</div>
+                    <div class="db-app-slot-action">
+                        <button class="db-app-slot-btn" type="button">Use App</button>
                     </div>
                 </a>
             `;
