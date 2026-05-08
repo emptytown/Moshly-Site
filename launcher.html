@@ -410,10 +410,10 @@
     window.launchApp = async function(appUrl) {
       markLaunchOrigin();
       try {
-        const res = await window.MoshlyAuth.authFetch('/api/auth/sso/token', { method: 'POST' });
-        const data = await res.json();
-        if (!data.token) throw new Error('no SSO token returned');
-        window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(data.token)}`;
+        const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
+        if (!res.ok) throw new Error(`server responded ${res.status}`);
+        if (!res.data?.token) throw new Error('no SSO token returned');
+        window.location.href = `${appUrl}/auth/callback?token=${encodeURIComponent(res.data.token)}`;
       } catch (err) {
         console.error('[Launcher] SSO launch failed:', err);
         const toast = document.createElement('div');
