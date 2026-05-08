@@ -4,6 +4,11 @@ import { verifyJWT } from './_middleware_auth';
 import { eq, and } from 'drizzle-orm';
 import { corsOptionsResponse } from './_cors';
 
+function tryParseJSON(value, fallback) {
+  if (!value) return fallback;
+  try { return JSON.parse(value); } catch { return fallback; }
+}
+
 export async function onRequestPost({ request, env }) {
   const payload = await verifyJWT(request, env);
   if (!payload) {
@@ -102,7 +107,14 @@ export async function onRequestGet({ request, env }) {
       .where(eq(schema.projects.ownerId, payload.userId))
       .all();
 
-    return new Response(JSON.stringify({ success: true, projects: results }), {
+    const projects = results.map(p => ({
+      ...p,
+      team:           tryParseJSON(p.team, []),
+      extraFields:    tryParseJSON(p.extraFields, []),
+      aiContextRules: tryParseJSON(p.aiContextRules, []),
+    }));
+
+    return new Response(JSON.stringify({ success: true, projects }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });

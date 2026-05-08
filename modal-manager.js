@@ -69,6 +69,36 @@ function closeProfileOverlay() {
     ModalManager.close('dbProfileOverlay');
 }
 
+function fillTeamRows(team, readonly) {
+    const list = document.getElementById('dbProjTeamRows');
+    if (!list) return;
+    list.innerHTML = '';
+    const members = Array.isArray(team) ? team : [];
+    members.forEach(member => {
+        if (window.addProjectTeamRow) window.addProjectTeamRow();
+        const row = list.lastElementChild;
+        if (!row) return;
+        const nameEl = row.querySelector('.db-proj-team-name');
+        const roleEl = row.querySelector('.db-proj-team-role');
+        const feeEl  = row.querySelector('.db-proj-team-fee');
+        const toggle = row.querySelector('.db-proj-switch input');
+        if (nameEl) nameEl.value = member.name || '';
+        if (roleEl) roleEl.value = member.role || '';
+        if (feeEl)  feeEl.value  = member.fee  || '';
+        if (toggle) {
+            toggle.checked = member.active !== false;
+            row.classList.toggle('db-proj-card--inactive', !toggle.checked);
+        }
+        if (readonly) {
+            [nameEl, roleEl, feeEl].forEach(el => { if (el) el.disabled = true; });
+            if (toggle) toggle.disabled = true;
+            const removeBtn = row.querySelector('.db-proj-card-remove');
+            if (removeBtn) removeBtn.hidden = true;
+        }
+    });
+    if (window.updateProjectTeamSummary) window.updateProjectTeamSummary();
+}
+
 function openProjectModal(projectId, mode) {
     const titleEl = document.querySelector('.db-proj-modal-title');
     const confirmBtn = document.getElementById('dbProjConfirmBtn');
@@ -108,6 +138,7 @@ function openProjectModal(projectId, mode) {
         if (mode === 'view') {
             if (titleEl) titleEl.textContent = project.name;
             setFieldsReadonly(true);
+            fillTeamRows(project.team, true);
             if (confirmBtn) {
                 confirmBtn.textContent = 'Edit';
                 confirmBtn.onclick = () => { closeProjectModal(); openProjectModal(projectId, 'edit'); };
@@ -116,6 +147,7 @@ function openProjectModal(projectId, mode) {
         } else if (mode === 'edit') {
             if (titleEl) titleEl.textContent = 'Edit Project';
             setFieldsReadonly(false);
+            fillTeamRows(project.team, false);
             if (confirmBtn) {
                 confirmBtn.textContent = 'Save Changes';
                 confirmBtn.onclick = () => window.submitEditProject && window.submitEditProject(projectId);
@@ -123,13 +155,16 @@ function openProjectModal(projectId, mode) {
             if (cancelBtn) cancelBtn.textContent = 'Cancel';
         }
     } else {
-        // Create mode — reset all fields
+        // Create mode — reset all fields and clear any leftover rows
         if (titleEl) titleEl.textContent = 'New Project';
         if (nameInput) nameInput.value = '';
         if (genreInput) genreInput.value = '';
         if (locationInput) locationInput.value = '';
         if (descInput) descInput.value = '';
         if (notesInput) notesInput.value = '';
+        const teamRows = document.getElementById('dbProjTeamRows');
+        if (teamRows) teamRows.innerHTML = '';
+        if (window.updateProjectTeamSummary) window.updateProjectTeamSummary();
         const defaultType = document.querySelector('.db-proj-type-btn[data-type="artist"]');
         if (defaultType) defaultType.classList.add('active');
         setFieldsReadonly(false);

@@ -1349,6 +1349,34 @@ async function submitEditProject(projectId) {
     const description = document.getElementById('dbProjDesc')?.value?.trim();
     const notes = document.getElementById('dbProjNotes')?.value?.trim();
 
+    // Collect Team
+    const team = [];
+    document.querySelectorAll('#dbProjTeamRows .db-proj-dyn-row').forEach(row => {
+        const active = row.querySelector('.db-proj-switch input')?.checked ?? true;
+        const memberName = row.querySelector('.db-proj-team-name')?.value ?? '';
+        const role = row.querySelector('.db-proj-team-role')?.value ?? '';
+        const fee = row.querySelector('.db-proj-team-fee')?.value ?? '';
+        if (memberName || role) team.push({ active, name: memberName, role, fee });
+    });
+
+    // Collect Extra Fields
+    const extraFields = [];
+    document.querySelectorAll('#dbProjExtraFields .db-proj-dyn-row').forEach(row => {
+        const active = row.querySelector('.db-proj-switch input')?.checked ?? true;
+        const key = row.querySelector('.db-proj-extra-key')?.value ?? '';
+        const val = row.querySelector('.db-proj-extra-val')?.value ?? '';
+        const sizeBtn = row.querySelector('.db-proj-size-btn.active');
+        const size = sizeBtn ? sizeBtn.textContent : 'S';
+        if (key) extraFields.push({ active, key, value: val, size });
+    });
+
+    // Collect AI Chips
+    const aiContextRules = [];
+    document.querySelectorAll('.db-proj-ai-chip').forEach(chip => {
+        const text = chip.textContent.replace('×', '').trim();
+        if (text) aiContextRules.push(text);
+    });
+
     if (!name || !type) {
         alert('Please enter a project name and select a type.');
         return;
@@ -1361,7 +1389,7 @@ async function submitEditProject(projectId) {
     try {
         const { ok, data } = await window.MoshlyAuth.authFetch(`/projects/${encodeURIComponent(projectId)}`, {
             method: 'PATCH',
-            body: JSON.stringify({ name, type, genre, location, description, notes })
+            body: JSON.stringify({ name, type, genre, location, description, notes, team, extraFields, aiContextRules })
         });
         if (ok) {
             closeProjectModal();

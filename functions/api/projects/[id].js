@@ -34,7 +34,7 @@ export async function onRequestPatch({ request, env, params }) {
 
   try {
     const body = await request.json();
-    const { name, type, genre, location, description, notes } = body;
+    const { name, type, genre, location, description, notes, team, extraFields, aiContextRules } = body;
 
     if (!name || !type) {
       return new Response(JSON.stringify({ error: 'missing_fields', message: 'Name and Type are required' }), {
@@ -44,7 +44,12 @@ export async function onRequestPatch({ request, env, params }) {
     }
 
     await db.update(schema.projects)
-      .set({ name, type, genre, location, description, notes })
+      .set({
+        name, type, genre, location, description, notes,
+        team:           team !== undefined           ? JSON.stringify(team)           : existing.team,
+        extraFields:    extraFields !== undefined    ? JSON.stringify(extraFields)    : existing.extraFields,
+        aiContextRules: aiContextRules !== undefined ? JSON.stringify(aiContextRules) : existing.aiContextRules,
+      })
       .where(and(eq(schema.projects.id, projectId), eq(schema.projects.ownerId, payload.userId)))
       .run();
 
