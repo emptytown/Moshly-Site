@@ -258,7 +258,8 @@ function buildProjectBar(project) {
     const safeId = escapeHtml(project.id);
 
     return `
-        <button class="db-proj-bar" onclick="openProjectModal('${safeId}','view')" type="button">
+        <div class="db-proj-bar" role="button" tabindex="0" onclick="openProjectModal('${safeId}','view')"
+             onkeydown="if(event.key==='Enter'||event.key===' ')openProjectModal('${safeId}','view')">
             <div class="db-proj-icon">${icon}</div>
             <div class="db-proj-bar-info">
                 <div class="db-proj-name">${escapeHtml(project.name)}</div>
@@ -280,7 +281,7 @@ function buildProjectBar(project) {
                     </svg>
                 </button>
             </div>
-        </button>`;
+        </div>`;
 }
 
 function buildEmptyProjectSlot() {
