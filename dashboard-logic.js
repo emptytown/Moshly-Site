@@ -120,11 +120,23 @@ window.confirmAppDisconnect = async function() {
     closeAppDisconnectModal();
 };
 
+window._dashProjects = [];
+
+const PROJECT_SLOT_MAP = {
+    'free': 1, 'solo': 3, 'collective': 5, 'business': 15, 'major': 999
+};
+
+function escapeHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // Global APP_CATALOG with types and categories
 const APP_CATALOG = [
     {
         slug: 'quote', name: 'Quote', description: 'Financial hub',
-        status: 'live', iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/quote.html',
+        status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', url: '/apps/quote.html',
         type: 'Plan app', categories: ['Business', 'Analytics']
     },
     {
@@ -237,36 +249,69 @@ async function fetchProjects() {
     }
 }
 
-function updateProjectsUI(projects) {
-    const listEl = document.getElementById('db-proj-list');
-    const emptyEl = document.getElementById('db-projects-empty');
-    const managerListEl = document.getElementById('dbProjectsManagerList');
-    const countEl = document.getElementById('dbProjectsCount');
-    
-    if (countEl) countEl.textContent = projects ? projects.length : 0;
+function buildProjectBar(project) {
+    const icon = getProjectIcon(project.type);
+    const typeLabel = project.type
+        ? (project.type.charAt(0).toUpperCase() + project.type.slice(1))
+        : '';
+    const meta = [typeLabel, project.location].filter(Boolean).join(' · ');
+    const safeId = escapeHtml(project.id);
 
-    // For the small card list
-    if (listEl) {
-        if (!projects || projects.length === 0) {
-            if (emptyEl) emptyEl.classList.remove('db-hidden');
-            listEl.classList.add('db-hidden');
-            listEl.innerHTML = '';
-        } else {
-            if (emptyEl) emptyEl.classList.add('db-hidden');
-            listEl.classList.remove('db-hidden');
-            listEl.innerHTML = projects.slice(0, 5).map(p => `
-                <div class="db-proj-item">
-                    <div class="db-proj-icon">${getProjectIcon(p.type)}</div>
-                    <div class="db-proj-info">
-                        <div class="db-proj-name">${p.name}</div>
-                        <div class="db-proj-meta">${p.type.charAt(0).toUpperCase() + p.type.slice(1)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
+    return `
+        <button class="db-proj-bar" onclick="openProjectModal('${safeId}','view')" type="button">
+            <div class="db-proj-icon">${icon}</div>
+            <div class="db-proj-bar-info">
+                <div class="db-proj-name">${escapeHtml(project.name)}</div>
+                ${meta ? `<div class="db-proj-meta">${escapeHtml(meta)}</div>` : ''}
+            </div>
+            <div class="db-proj-bar-actions">
+                <button class="db-proj-bar-btn" title="Edit"
+                    onclick="event.stopPropagation(); openProjectModal('${safeId}','edit')" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                </button>
+                <button class="db-proj-bar-btn db-proj-bar-btn--delete" title="Delete"
+                    onclick="event.stopPropagation(); deleteProject('${safeId}')" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                    </svg>
+                </button>
+            </div>
+        </button>`;
+}
+
+function buildEmptyProjectSlot() {
+    return `
+        <button class="db-proj-bar db-proj-bar--empty" onclick="openProjectModal()" type="button">
+            <span class="db-proj-bar-plus">+</span>
+            <span class="db-proj-bar-empty-label">New Project</span>
+        </button>`;
+}
+
+function updateProjectsUI(projects) {
+    const slotListEl = document.getElementById('dbProjSlotList');
+    const availEl = document.getElementById('dbProjAvail');
+    const managerListEl = document.getElementById('dbProjectsManagerList');
+
+    const plan = (window._currentUser?.subscription?.plan || 'free').toLowerCase();
+    const totalSlots = PROJECT_SLOT_MAP[plan] ?? 1;
+    const used = projects ? projects.length : 0;
+    const remaining = Math.max(0, totalSlots - used);
+
+    window._dashProjects = projects || [];
+
+    if (availEl) availEl.textContent = `${used} / ${totalSlots}`;
+
+    if (slotListEl) {
+        let html = (projects || []).map(buildProjectBar).join('');
+        if (remaining > 0) html += buildEmptyProjectSlot();
+        slotListEl.innerHTML = html;
     }
 
-    // For the manager modal
+    // Keep manager modal in sync
     if (managerListEl) {
         if (!projects || projects.length === 0) {
             managerListEl.innerHTML = '<div class="db-manager-empty">No projects found. Create your first one to get started!</div>';
@@ -275,10 +320,10 @@ function updateProjectsUI(projects) {
                 <div class="db-manager-item">
                     <div class="db-manager-item-icon">${getProjectIcon(p.type)}</div>
                     <div class="db-manager-item-info">
-                        <div class="db-manager-item-name">${p.name}</div>
-                        <div class="db-manager-item-meta">${p.type} · ${p.location || 'No location'}</div>
+                        <div class="db-manager-item-name">${escapeHtml(p.name)}</div>
+                        <div class="db-manager-item-meta">${escapeHtml(p.type)} · ${escapeHtml(p.location || 'No location')}</div>
                     </div>
-                    <button class="db-manager-item-btn" onclick="openProjectDetails('${p.id}')">View</button>
+                    <button class="db-manager-item-btn" onclick="openProjectModal('${escapeHtml(p.id)}','view')">View</button>
                 </div>
             `).join('');
         }
@@ -1288,8 +1333,64 @@ async function terminateAccount() {
     }
 }
 
+async function submitEditProject(projectId) {
+    const name = document.getElementById('dbProjName')?.value?.trim();
+    const typeBtn = document.querySelector('.db-proj-type-btn.active');
+    const type = typeBtn?.getAttribute('data-type') || null;
+    const genre = document.getElementById('dbProjGenre')?.value?.trim();
+    const location = document.getElementById('dbProjBasedOn')?.value?.trim();
+    const description = document.getElementById('dbProjDesc')?.value?.trim();
+    const notes = document.getElementById('dbProjNotes')?.value?.trim();
+
+    if (!name || !type) {
+        alert('Please enter a project name and select a type.');
+        return;
+    }
+
+    const btn = document.getElementById('dbProjConfirmBtn');
+    const originalText = btn?.textContent;
+    if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+    try {
+        const { ok, data } = await window.MoshlyAuth.authFetch(`/projects/${encodeURIComponent(projectId)}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ name, type, genre, location, description, notes })
+        });
+        if (ok) {
+            closeProjectModal();
+            fetchProjects();
+        } else {
+            alert(data?.error || 'Failed to update project.');
+        }
+    } catch (err) {
+        console.error('Edit project error:', err);
+        alert('An error occurred. Please try again.');
+    } finally {
+        if (btn) { btn.textContent = originalText; btn.disabled = false; }
+    }
+}
+
+async function deleteProject(projectId) {
+    if (!confirm('Delete this project? This cannot be undone.')) return;
+    try {
+        const { ok, data } = await window.MoshlyAuth.authFetch(`/projects/${encodeURIComponent(projectId)}`, {
+            method: 'DELETE'
+        });
+        if (ok) {
+            fetchProjects();
+        } else {
+            alert(data?.error || 'Failed to delete project.');
+        }
+    } catch (err) {
+        console.error('Delete project error:', err);
+        alert('An error occurred. Please try again.');
+    }
+}
+
 // Export to window so the HTML onclick can find it
 window.handleDangerAction = handleDangerAction;
+window.submitEditProject = submitEditProject;
+window.deleteProject = deleteProject;
 window.handlePhotoFileChange = handlePhotoFileChange;
 window.updateUXSettings = updateUXSettings;
 

@@ -3614,6 +3614,94 @@
     }
 
     /* ══ PROJECTS SECTION ═════════════════════════ */
+
+    /* Slot-based project list */
+    .db-proj-avail {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      margin-left: auto;
+      font-weight: 500;
+    }
+
+    .db-proj-slot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 6px;
+    }
+
+    .db-proj-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      cursor: pointer;
+      transition: background var(--duration-fast), border-color var(--duration-fast);
+      width: 100%;
+      text-align: left;
+      color: var(--color-text-primary);
+      font-family: var(--font-family-base);
+    }
+
+    .db-proj-bar:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.12); }
+    .db-proj-bar:active { transform: scale(0.99); }
+
+    .db-proj-bar-info { flex: 1; min-width: 0; }
+
+    .db-proj-bar-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .db-proj-bar-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--duration-fast), color var(--duration-fast);
+      flex-shrink: 0;
+    }
+
+    .db-proj-bar-btn:hover { background: rgba(255,255,255,.08); color: var(--color-text-primary); }
+    .db-proj-bar-btn--delete:hover { background: rgba(255,80,80,.12); color: #ff6b6b; }
+
+    .db-proj-bar--empty {
+      border-style: dashed;
+      border-color: rgba(255,255,255,.1);
+      background: transparent;
+      justify-content: center;
+      gap: 8px;
+      color: var(--color-text-tertiary);
+    }
+
+    .db-proj-bar--empty:hover {
+      background: rgba(107,92,255,.06);
+      border-color: rgba(107,92,255,.35);
+      color: var(--color-text-secondary);
+    }
+
+    .db-proj-bar-plus {
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .db-proj-bar-empty-label {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+    }
+
+
     .db-projects-empty {
       display: flex; flex-direction: column; align-items: flex-start;
       padding: 18px 0 6px; text-align: left; gap: 10px;

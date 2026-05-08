@@ -69,7 +69,77 @@ function closeProfileOverlay() {
     ModalManager.close('dbProfileOverlay');
 }
 
-function openProjectModal() {
+function openProjectModal(projectId, mode) {
+    const titleEl = document.querySelector('.db-proj-modal-title');
+    const confirmBtn = document.getElementById('dbProjConfirmBtn');
+    const cancelBtn = document.querySelector('.db-proj-cancel');
+    const nameInput = document.getElementById('dbProjName');
+    const genreInput = document.getElementById('dbProjGenre');
+    const locationInput = document.getElementById('dbProjBasedOn');
+    const descInput = document.getElementById('dbProjDesc');
+    const notesInput = document.getElementById('dbProjNotes');
+
+    const setFieldsReadonly = (readonly) => {
+        [nameInput, genreInput, locationInput, descInput, notesInput].forEach(el => {
+            if (el) el.disabled = readonly;
+        });
+        document.querySelectorAll('.db-proj-type-btn').forEach(b => {
+            b.disabled = readonly;
+            b.style.pointerEvents = readonly ? 'none' : '';
+        });
+    };
+
+    // Reset type selection
+    document.querySelectorAll('.db-proj-type-btn').forEach(b => b.classList.remove('active'));
+
+    if (mode && projectId) {
+        const project = (window._dashProjects || []).find(p => String(p.id) === String(projectId));
+        if (!project) { ModalManager.open('dbProjModalOverlay', { closeOthers: true }); return; }
+
+        if (nameInput) nameInput.value = project.name || '';
+        if (genreInput) genreInput.value = project.genre || '';
+        if (locationInput) locationInput.value = project.location || '';
+        if (descInput) descInput.value = project.description || '';
+        if (notesInput) notesInput.value = project.notes || '';
+
+        const typeBtn = document.querySelector(`.db-proj-type-btn[data-type="${project.type}"]`);
+        if (typeBtn) typeBtn.classList.add('active');
+
+        if (mode === 'view') {
+            if (titleEl) titleEl.textContent = project.name;
+            setFieldsReadonly(true);
+            if (confirmBtn) {
+                confirmBtn.textContent = 'Edit';
+                confirmBtn.onclick = () => { closeProjectModal(); openProjectModal(projectId, 'edit'); };
+            }
+            if (cancelBtn) cancelBtn.textContent = 'Close';
+        } else if (mode === 'edit') {
+            if (titleEl) titleEl.textContent = 'Edit Project';
+            setFieldsReadonly(false);
+            if (confirmBtn) {
+                confirmBtn.textContent = 'Save Changes';
+                confirmBtn.onclick = () => window.submitEditProject && window.submitEditProject(projectId);
+            }
+            if (cancelBtn) cancelBtn.textContent = 'Cancel';
+        }
+    } else {
+        // Create mode — reset all fields
+        if (titleEl) titleEl.textContent = 'New Project';
+        if (nameInput) nameInput.value = '';
+        if (genreInput) genreInput.value = '';
+        if (locationInput) locationInput.value = '';
+        if (descInput) descInput.value = '';
+        if (notesInput) notesInput.value = '';
+        const defaultType = document.querySelector('.db-proj-type-btn[data-type="artist"]');
+        if (defaultType) defaultType.classList.add('active');
+        setFieldsReadonly(false);
+        if (confirmBtn) {
+            confirmBtn.textContent = 'Create Project';
+            confirmBtn.onclick = () => window.submitCreateProject && window.submitCreateProject();
+        }
+        if (cancelBtn) cancelBtn.textContent = 'Cancel';
+    }
+
     ModalManager.open('dbProjModalOverlay', { closeOthers: true });
 }
 
