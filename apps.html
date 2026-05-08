@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apps — Moshly</title>
+  <meta name="description" content="Focused micro-tools built for the music industry. From music theory to tour logistics and market intelligence." />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    :root {
+      --container-padding: 40px;
+    }
+
+    /* Page-specific styles */
+    .apps-hero {
+      padding: 120px var(--container-padding) var(--space-2xl);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(107, 92, 255, 0.1) 0%, transparent 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero-orb {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto var(--space-2xl);
+      animation: slide-up 0.6s var(--ease-out) both;
+    }
+    .hero-orb-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1px solid var(--color-accent-opacity-30);
+      animation: orbit 8s linear infinite;
+    }
+    .hero-orb-ring::before {
+      content: ''; position: absolute; top: -3px; left: 50%;
+      transform: translateX(-50%); width: 6px; height: 6px;
+      background: var(--color-accent-primary); border-radius: 50%;
+      box-shadow: 0 0 12px var(--color-accent-primary);
+    }
+    .hero-orb-ring-2 {
+      position: absolute; inset: 16px; border-radius: 50%;
+      border: 1px solid var(--color-magenta-opacity-15);
+      animation: counter-orbit 12s linear infinite;
+    }
+    .hero-orb-ring-2::before {
+      content: ''; position: absolute; bottom: -3px; left: 50%;
+      transform: translateX(-50%); width: 5px; height: 5px;
+      background: #C026D3; border-radius: 50%;
+      box-shadow: 0 0 10px #C026D3;
+    }
+    .hero-orb-core {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 64px; height: 64px;
+      background: var(--gradient-subtle); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      animation: glow 3s ease-in-out infinite;
+    }
+    .hero-orb-core svg { width: 28px; height: 28px; fill: #fff; }
+    .apps-hero-eyebrow {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-uppercase);
+      text-transform: uppercase;
+      color: var(--color-accent-primary);
+      margin-bottom: var(--space-md);
+      animation: slide-up 0.6s var(--ease-out) 0.1s both;
+      opacity: 0.8;
+    }
+    .apps-hero-title {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 900;
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: 1.05;
+      margin-bottom: var(--space-lg);
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slide-up 0.7s var(--ease-out) 0.2s both;
+      display: inline-block;
+    }
+    .apps-hero-subtitle {
+      font-size: clamp(16px, 2.2vw, 20px);
+      color: var(--color-text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.65;
+      animation: slide-up 0.7s var(--ease-out) 0.3s both;
+    }
+
+    /* Apps list */
+    .apps-section {
+      position: relative;
+      z-index: 2;
+      padding: 100px var(--container-padding);
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    @media (min-width: 1025px) and (max-width: 1440px) {
+      .apps-section {
+        padding-left: 120px;
+        padding-right: 120px;
+      }
+    }
+
+    .app-card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-2xl);
+      padding: 80px 90px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--space-2xl);
+      align-items: center;
+      transition: all var(--duration-base) var(--ease-in-out);
+      position: relative;
+      overflow: hidden;
+    }
+    .app-card:nth-child(even) {
+      background: linear-gradient(135deg, var(--color-bg-surface) 0%, #151828 100%);
+      direction: rtl;
+    }
+    .app-card:nth-child(even) > * {
+      direction: ltr;
+    }
+    .app-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-accent-opacity-30), transparent);
+      opacity: 0;
+      transition: opacity var(--duration-base);
+    }
+    .app-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+    }
+    .app-card:hover::before {
+      opacity: 1;
+    }
+
+    .app-card:nth-child(1) .app-logo-wrap, .app-card:nth-child(1) .app-visual { --app-color: #6B5CFF; }
+    .app-card:nth-child(2) .app-logo-wrap, .app-card:nth-child(2) .app-visual { --app-color: #C026D3; }
+    .app-card:nth-child(3) .app-logo-wrap, .app-card:nth-child(3) .app-visual { --app-color: #00E5FF; }
+    .app-card:nth-child(4) .app-logo-wrap, .app-card:nth-child(4) .app-visual { --app-color: #FBBF24; }
+    .app-card:nth-child(5) .app-logo-wrap, .app-card:nth-child(5) .app-visual { --app-color: #6B5CFF; }
+
+    .app-logo-glow, .app-visual-glow { background: var(--app-color); }
+
+    .app-card:nth-child(1) .app-eyebrow { color: #6B5CFF; }
+    .app-card:nth-child(2) .app-eyebrow { color: #C026D3; }
+    .app-card:nth-child(3) .app-eyebrow { color: #00E5FF; }
+    .app-card:nth-child(4) .app-eyebrow { color: #FBBF24; }
+    .app-card:nth-child(5) .app-eyebrow { color: #6B5CFF; }
+
+    .app-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    .app-header-main {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .app-logo-wrap {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+    .app-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-lg);
+      position: relative;
+      z-index: 2;
+    }
+    .app-logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      filter: blur(28px);
+      opacity: 0.25;
+      z-index: 1;
+      border-radius: 50%;
+    }
+
+    .app-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .app-eyebrow {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-uppercase);
+      text-transform: uppercase;
+      color: var(--color-accent-primary);
+      opacity: 0.8;
+      order: 2;
+    }
+    .app-title {
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.1;
+      order: 1;
+    }
+
+    .app-description {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--color-text-secondary);
+      margin: 0;
+      max-width: 520px;
+    }
+
+    .app-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .phone-mockup {
+      width: 100%;
+      max-width: 220px;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+    }
+    .app-visual-glow {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      background: radial-gradient(circle, var(--color-accent-opacity-22) 0%, transparent 70%);
+      filter: blur(40px);
+      z-index: 1;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      font-weight: var(--font-weight-bold);
+      font-size: 16px;
+      text-decoration: none;
+      transition: all var(--duration-fast) var(--ease-out);
+      width: fit-content;
+      background: var(--gradient-subtle);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(107, 92, 255, 0.2);
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(107, 92, 255, 0.35);
+      filter: brightness(1.1);
+    }
+
+    @media (max-width: 1024px) {
+      .app-header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+      }
+      .app-card {
+        grid-template-columns: 1fr;
+        padding: 100px 100px;
+        gap: var(--space-xl);
+      }
+      .app-card:nth-child(even) {
+        direction: ltr;
+      }
+      .app-visual {
+        order: -1;
+      }
+    }
+    @media (max-width: 768px) {
+      .apps-hero { padding: 120px var(--space-lg) var(--space-xl); }
+      .apps-section { padding: 70px var(--space-lg); }
+      .app-card { padding: 70px ; }
+      .app-title { font-size: 32px; }
+    }
+    @media (max-width: 480px) {
+      .apps-hero { padding: 100px var(--space-md) var(--space-lg); }
+      .apps-section { padding: 70px var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient glow blobs -->
+  <div class="glow-blob glow-blob--purple"></div>
+  <div class="glow-blob glow-blob--magenta"></div>
+  <div class="glow-blob glow-blob--cyan"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
+        <span class="nav-logo-text">Moshly</span>
+      </a>
+      <div class="nav-links">
+        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/#roadmap" class="nav-link">Roadmap</a>
+        <a href="/app-tour" class="nav-link">Tour</a>
+        <a href="/pricing" class="nav-link">Pricing</a>
+        <a href="/login" class="nav-login-btn" id="nav-login-btn">Log In</a>
+        <a id="nav-dash-btn" href="/dashboard" class="nav-login-btn u-hidden">Dashboard →</a>
+      </div>
+      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+        <span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
+      <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
+      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <a href="/login" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
+      <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="apps-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-orb">
+      <div class="hero-orb-ring"></div>
+      <div class="hero-orb-ring-2"></div>
+      <div class="hero-orb-core">
+        <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z" /></svg>
+      </div>
+    </div>
+    <p class="apps-hero-eyebrow">The Suite</p>
+    
+    <h1 class="apps-hero-title">Moshly Apps</h1>
+    <p class="apps-hero-subtitle">Focused micro-tools built for the music industry — from music theory to tour logistics and market intelligence.</p>
+  </header>
+
+  <!-- APPS LIST -->
+  <main class="apps-section">
+
+    <!-- 1. FifthSense -->
+    <section class="app-card">
+      <div class="app-content">
+        <div class="app-header-main">
+          <div class="app-logo-wrap">
+            <div class="app-logo-glow"></div>
+            <img src="/assets/moshly-FifhtSense-logo-svg.svg" alt="FifthSense Logo" class="app-logo-img" />
+          </div>
+          <div class="app-title-group">
+            <p class="app-eyebrow">Interactive Circle of Fifths</p>
+            <h2 class="app-title">FifthSense</h2>
+          </div>
+        </div>
+        
+        <p class="app-description">
+          FifthSense is an interactive Circle of Fifths reference tool built for musicians, producers, and educators. It provides real-time harmonic relationships, chord progressions, and key signatures with visual feedback. The app features three distinct visual themes (Darkly, Coder, Moshly) to adapt to different workflow contexts and accessibility needs.
+        </p>
+
+        <a href="https://fifthsense.moshly.io" class="cta-button">Try FifthSense →</a>
+      </div>
+
+      <div class="app-visual">
+        <div class="app-visual-glow"></div>
+        <img src="/assets/photos/iphoneFifthS.png" alt="FifthSense App Mockup" class="phone-mockup" />
+      </div>
+    </section>
+
+    <!-- 2. MerchPad -->
+    <section class="app-card">
+      <div class="app-content">
+        <div class="app-header-main">
+          <div class="app-logo-wrap">
+            <div class="app-logo-glow"></div>
+            <img src="/assets/moshly-merchpad-logo-svg.svg" alt="MerchPad Logo" class="app-logo-img" />
+          </div>
+          <div class="app-title-group">
+            <p class="app-eyebrow">Live Event POS</p>
+            <h2 class="app-title">MerchPad</h2>
+          </div>
+        </div>
+        
+        <p class="app-description">
+          MerchPad is a purpose-built point-of-sale interface designed for live event merchandise sales, optimized for tour managers and street teams. The interface features a large Tally Counter-style button layout with real-time stock visualization, ensuring you never miss a sale due to unclear availability.
+        </p>
+
+        <a href="/waitlist?app=merchpad" class="cta-button">Join Waitlist →</a>
+      </div>
+
+      <div class="app-visual">
+        <div class="app-visual-glow"></div>
+        <img src="/assets/photos/iphonemerch.png" alt="MerchPad App Mockup" class="phone-mockup" />
+      </div>
+    </section>
+
+    <!-- 3. Quote -->
+    <section class="app-card">
+      <div class="app-content">
+        <div class="app-header-main">
+          <div class="app-logo-wrap">
+            <div class="app-logo-glow"></div>
+            <img src="/assets/moshly-Quote-logo-svg.svg" alt="Quote Logo" class="app-logo-img" />
+          </div>
+          <div class="app-title-group">
+            <p class="app-eyebrow">Fee Estimation & Proposals</p>
+            <h2 class="app-title">Quote</h2>
+          </div>
+        </div>
+        
+        <p class="app-description">
+          Quote is a streamlined artist fee estimation and proposal generator designed for promoters, festival organizers, and booking agents. Input artist details and event parameters to generate professional PDF proposals in seconds, enabling transparent negotiations with clear audit trails.
+        </p>
+
+        <a href="https://quote.moshly.io" class="cta-button">Start Quoting →</a>
+      </div>
+
+      <div class="app-visual">
+        <div class="app-visual-glow"></div>
+        <img src="/assets/moshly-Quote-logo-svg.svg" alt="Quote App Mockup" class="phone-mockup" />
+      </div>
+    </section>
+
+    <!-- 4. Rank -->
+    <section class="app-card">
+      <div class="app-content">
+        <div class="app-header-main">
+          <div class="app-logo-wrap">
+            <div class="app-logo-glow"></div>
+            <img src="/assets/moshly-rank-logo-svg.svg" alt="Rank Logo" class="app-logo-img" />
+          </div>
+          <div class="app-title-group">
+            <p class="app-eyebrow">Market Intelligence</p>
+            <h2 class="app-title">Rank</h2>
+          </div>
+        </div>
+        
+        <p class="app-description">
+          Rank is a competitive intelligence and pricing analytics dashboard for artists and managers. Compare fee positioning against peers, track market trends, and optimize pricing strategy with forecasting models and regional heat maps — transforming fee-setting into informed strategy.
+        </p>
+
+        <a href="/waitlist?app=rank" class="cta-button">Join Waitlist →</a>
+      </div>
+
+      <div class="app-visual">
+        <div class="app-visual-glow"></div>
+        <img src="/assets/moshly-rank-logo-svg.svg" alt="Rank App Mockup" class="phone-mockup" />
+      </div>
+    </section>
+
+    <!-- 5. Run -->
+    <section class="app-card">
+      <div class="app-content">
+        <div class="app-header-main">
+          <div class="app-logo-wrap">
+            <div class="app-logo-glow"></div>
+            <img src="/assets/moshly-run-logo-svg.svg" alt="Run Logo" class="app-logo-img" />
+          </div>
+          <div class="app-title-group">
+            <p class="app-eyebrow">Tour Logistics</p>
+            <h2 class="app-title">Run</h2>
+          </div>
+        </div>
+        
+        <p class="app-description">
+          Run is an interactive roadbook and logistical command center for touring professionals. Manage itineraries, venue details, and real-time crew coordination. Mobile-first design ensures accessibility in the field, with offline access to critical data and push notifications for updates.
+        </p>
+
+        <a href="/waitlist?app=run" class="cta-button">Join Waitlist →</a>
+      </div>
+
+      <div class="app-visual">
+        <div class="app-visual-glow"></div>
+        <img src="/assets/moshly-run-logo-svg.svg" alt="Run App Mockup" class="phone-mockup" />
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
+        <span>Moshly.io</span>
+      </div>
+      <p class="footer-tagline">Micro-tools for the music industry.</p>
+      <div class="footer-links">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/faq">FAQ</a>
+        <a href="/contact">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
+        <span class="theme-toggle-icon theme-toggle-icon--sun">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="theme-toggle-icon theme-toggle-icon--moon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/moshly-ui.js"></script>
+  <script src="/auth-client.js"></script>
+  <script>
+    (async () => {
+      const user = await MoshlyAuth.getSession();
+      const loginBtn = document.getElementById('nav-login-btn');
+      const dashBtn = document.getElementById('nav-dash-btn');
+      const mLoginBtn = document.getElementById('mobile-nav-login-btn');
+      const mDashBtn = document.getElementById('mobile-nav-dash-btn');
+      if (user) {
+        if (loginBtn) loginBtn.classList.add('u-hidden');
+        if (dashBtn) dashBtn.classList.remove('u-hidden');
+        if (mLoginBtn) mLoginBtn.classList.add('u-hidden');
+        if (mDashBtn) mDashBtn.classList.remove('u-hidden');
+      }
+    })();
+  </script>
+</body>
+</html>
