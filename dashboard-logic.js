@@ -436,10 +436,11 @@ window.addProjectExtraFieldRow = () => {
     const row = document.createElement('div');
     row.className = 'db-proj-dyn-row db-proj-dyn-row--extra';
     row.innerHTML = `
-        <div class="db-proj-switch">
-            <input type="checkbox" checked>
+        <label class="db-proj-switch db-proj-switch--labeled">
+            <input type="checkbox" checked onchange="this.closest('.db-proj-dyn-row--extra').classList.toggle('db-proj-card--inactive',!this.checked)">
+            <span class="db-proj-switch-label">Active</span>
             <span class="db-proj-switch-track"></span>
-        </div>
+        </label>
         <input type="text" class="db-proj-input db-proj-extra-key" placeholder="Field Name (e.g. Rider)">
         <input type="text" class="db-proj-input db-proj-extra-val" placeholder="Value (e.g. Link)">
         <div class="db-proj-size-toggle" style="display:flex;">
@@ -455,16 +456,21 @@ window.addProjectTeamRow = () => {
     const list = document.getElementById('dbProjTeamRows');
     if (!list) return;
     const row = document.createElement('div');
-    row.className = 'db-proj-dyn-row';
+    row.className = 'db-proj-dyn-row db-proj-team-card';
     row.innerHTML = `
-        <div class="db-proj-switch">
-            <input type="checkbox" checked>
-            <span class="db-proj-switch-track"></span>
+        <div class="db-proj-card-row">
+            <input type="text" class="db-proj-input db-proj-team-name" placeholder="Member Name">
+            <label class="db-proj-switch db-proj-switch--labeled">
+                <input type="checkbox" checked onchange="this.closest('.db-proj-team-card').classList.toggle('db-proj-card--inactive',!this.checked)">
+                <span class="db-proj-switch-label">Active</span>
+                <span class="db-proj-switch-track"></span>
+            </label>
         </div>
-        <input type="text" class="db-proj-input db-proj-team-name" placeholder="Member Name">
-        <input type="text" class="db-proj-input db-proj-team-role" placeholder="Role">
-        <input type="text" class="db-proj-input db-proj-team-fee" placeholder="Fee">
-        <button class="db-proj-remove" onclick="this.parentElement.remove(); updateProjectTeamSummary();" type="button">×</button>
+        <div class="db-proj-card-row">
+            <input type="text" class="db-proj-input db-proj-team-role" placeholder="Role">
+            <input type="number" class="db-proj-input db-proj-team-fee" placeholder="0" min="0">
+        </div>
+        <button class="db-proj-card-remove" onclick="this.closest('.db-proj-team-card').remove(); updateProjectTeamSummary();" type="button">×</button>
     `;
     list.appendChild(row);
 };

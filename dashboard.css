@@ -1893,25 +1893,76 @@
       box-shadow: 0 2px 8px rgba(5,10,24,.24);
       transition: transform var(--duration-fast), box-shadow var(--duration-fast);
     }
-    .db-proj-switch input:checked + .db-proj-switch-track {
+    .db-proj-switch input:checked ~ .db-proj-switch-track {
       border-color: rgba(78, 70, 255, .35);
       background: linear-gradient(135deg, #4e46ff 0%, #7f2bff 100%);
       box-shadow: inset 0 1px 2px rgba(0,0,0,.14), 0 0 0 3px rgba(78, 70, 255, .14);
     }
-    .db-proj-switch input:checked + .db-proj-switch-track::after {
+    .db-proj-switch input:checked ~ .db-proj-switch-track::after {
       transform: translateX(16px);
     }
 
     .db-proj-switch-label {
       font-size: 10px;
-      color: var(--color-text-tertiary);
-      font-weight: 600;
-      letter-spacing: .02em;
+      font-weight: 700;
+      letter-spacing: .07em;
       text-transform: uppercase;
-      margin-left: 5px;
       white-space: nowrap;
+      color: rgba(255,255,255,.28);
+      transition: color .15s;
+      margin-right: 6px;
     }
-    .db-proj-switch--labeled { gap: 0; }
+    .db-proj-switch input:checked ~ .db-proj-switch-label {
+      color: var(--color-accent-primary);
+    }
+    .db-proj-switch--labeled { gap: 0; align-items: center; flex-shrink: 0; }
+
+    /* ── Team member card ───────────────────────────────── */
+    .db-proj-team-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 14px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.02);
+      transition: border-color .2s, opacity .2s;
+    }
+    .db-proj-team-card:hover { border-color: rgba(255,255,255,.15); }
+    .db-proj-team-card.db-proj-card--inactive { opacity: .45; }
+
+    .db-proj-card-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .db-proj-card-row .db-proj-input { flex: 1; min-width: 0; }
+    .db-proj-card-row .db-proj-team-fee { flex: 0 0 80px; text-align: right; }
+
+    .db-proj-card-remove {
+      align-self: center;
+      margin-top: 2px;
+      width: 26px;
+      height: 26px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,.22);
+      font-size: 17px;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .15s, background .15s;
+    }
+    .db-proj-card-remove:hover { color: #ff6b6b; background: rgba(255,80,80,.1); }
+
+    /* Hide column header — replaced by card layout */
+    .db-proj-team-cols { display: none !important; }
+
+    /* Extra field row — keep horizontal, add labeled toggle */
+    .db-proj-dyn-row--extra .db-proj-switch--labeled { margin-right: 2px; }
 
     .db-proj-size-toggle {
       align-items: center;
@@ -1966,7 +2017,7 @@
       border-color: var(--color-accent-primary);
       box-shadow: 0 0 0 3px var(--color-accent-shadow);
     }
-    .db-proj-switch input:focus-visible + .db-proj-switch-track {
+    .db-proj-switch input:focus-visible ~ .db-proj-switch-track {
       outline: 2px solid rgba(78, 70, 255, .5);
       outline-offset: 2px;
     }
@@ -3236,7 +3287,6 @@
       .db-audit-when { white-space: normal; }
 
       .db-proj-two-col { grid-template-columns: 1fr; }
-      .db-proj-dyn-row,
       .db-proj-dyn-row--extra { grid-template-columns: 1fr; }
       .db-proj-size-toggle {
         width: 100%;
