@@ -256,6 +256,32 @@
     .hero-tag-dot--cyan   { background: #00E5FF; }
     .hero-tag-dot--magenta { background: #C026D3; }
 
+    /* App Suite CTA */
+    .app-suite-container {
+      text-align: center;
+      margin-top: var(--space-2xl);
+      animation: slide-up 0.7s var(--ease-out) 0.8s both;
+    }
+    .btn-suite {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--color-border-strong);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-suite:hover {
+      border-color: var(--color-accent-primary);
+      color: var(--color-text-primary);
+      transform: translateY(-1px);
+    }
+
     @media (max-width: 640px) {
       .hero-content { padding: 100px var(--space-md) var(--space-xl); }
       .countdown { gap: var(--space-sm); }
@@ -281,7 +307,7 @@
         <span class="nav-logo-text">Moshly</span>
       </a>
       <div class="nav-links">
-        <a href="/#apps" class="nav-link">Apps</a>
+        <a href="/apps" class="nav-link">Apps</a>
         <a href="/#roadmap" class="nav-link">Roadmap</a>
         <a href="/app-tour" class="nav-link">Tour</a>
         <a href="/pricing" class="nav-link">Pricing</a>
@@ -295,7 +321,7 @@
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
       <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
       <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
       <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
@@ -306,7 +332,7 @@
 
   <!-- HERO SECTION -->
   <section class="hero-content">
-    <!-- Animated orb -->
+    <!-- Animated orb (Maintained for theme consistency) -->
     <div class="hero-orb">
       <div class="hero-orb-ring"></div>
       <div class="hero-orb-ring-2"></div>
@@ -317,53 +343,21 @@
       </div>
     </div>
 
-    <!-- Eyebrow label -->
-    <p class="hero-eyebrow">Something cool is coming</p>
-
     <!-- Main headline -->
     <h1 class="hero-title">
-      Built for the<br />
-      <span class="gradient-text">music industry.</span>
+      Tools for the<br />
+      <span class="gradient-text">Music Industry</span>
     </h1>
 
-    <!-- Subtitle -->
+    <!-- Subtitle / Main Text -->
     <p class="hero-subtitle">
-      Moshly is the all-in-one platform for artists, road staff, bookers and the people
-      who make things happen. Tools for learning, riders, merchandise — lot's of mini helpers
-      in one place.
+      If you are a musician, producer, or manager like us, we are pretty sure you have encountered the same problems we set out to solve: simple, focused tools for specific problems no other apps solve directly. 
+      <br><br>
+      No more need to adapt that Excel sheet or make weird templates on AI apps. 
+      <span class="gradient-text" style="font-weight: bold;">Try us, be a Moshly yourself.</span>
     </p>
 
-    <!-- Countdown Timer -->
-    <div class="countdown" id="countdown" aria-label="Countdown to launch">
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-days">--</div>
-        <span class="countdown-label">Days</span>
-      </div>
-      <div class="countdown-separator" aria-hidden="true">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-hours">--</div>
-        <span class="countdown-label">Hours</span>
-      </div>
-      <div class="countdown-separator" aria-hidden="true">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-minutes">--</div>
-        <span class="countdown-label">Minutes</span>
-      </div>
-      <div class="countdown-separator" aria-hidden="true">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-seconds">--</div>
-        <span class="countdown-label">Seconds</span>
-      </div>
-    </div>
-
-    <!-- Login Link Prompt -->
-    <div class="hero-form-wrap">
-      <p class="hero-subtitle" style="margin-bottom: var(--space-md); font-size: var(--font-size-base);">
-        If you have received early access, <a href="/login" class="gradient-text" style="font-weight: bold; text-decoration: underline;">login here</a>.
-      </p>
-    </div>
-
-    <!-- Feature tags -->
+    <!-- Feature tags (Maintained for theme consistency) -->
     <div class="hero-tags">
       <span class="hero-tag">
         <span class="hero-tag-dot hero-tag-dot--green"></span>
@@ -400,7 +394,7 @@
           
           <div class="vr-line vr-line--mid"></div>
 
-          <!-- ── STATION 2: FeeME ── -->
+          <!-- ── STATION 2: Quote ── -->
           <div class="vr-node vr-node--mid" aria-hidden="true">
             <div class="vr-node-glow vr-node-glow--mid"></div>
             <div class="vr-node-ring vr-node-ring--mid"></div>
@@ -412,10 +406,10 @@
             <div class="app-card-top">
               <div class="app-card-identity">
                 <div class="app-icon-wrap">
-                  <img src="assets/feeme-logo-icon.svg" alt="FeeMe" class="app-icon" />
+                  <img src="assets/moshly-Quote-logo-svg.svg" alt="Quote" class="app-icon" />
                 </div>
                 <div class="app-card-meta">
-                  <h3 class="app-name">FeeME</h3>
+                  <h3 class="app-name">Quote</h3>
                   <p class="app-tagline">Budget Generator</p>
                 </div>
               </div>
@@ -448,7 +442,7 @@
             <div class="app-card-top">
               <div class="app-card-identity">
                 <div class="app-icon-wrap">
-                  <img src="assets/merchpad-logo-icon.svg" alt="MerchPad" class="app-icon" />
+                  <img src="assets/moshly-merchpad-logo-svg.svg" alt="MerchPad" class="app-icon" />
                 </div>
                 <div class="app-card-meta">
                   <h3 class="app-name">MerchPad</h3>
@@ -480,6 +474,10 @@
           </div>
 
         </div><!-- /vr-track -->
+
+        <div class="app-suite-container">
+          <a href="apps.html" class="btn-suite">Explore the full suite →</a>
+        </div>
       </div><!-- /apps-route-wrapper -->
     </div>
   </section>
@@ -542,7 +540,7 @@
             opacity="0.45"
           />
 
-          <!-- Solid active portion (FeeME active) -->
+          <!-- Solid active portion (Quote active) -->
           <path
             d="M 80 130 C 180 130, 230 70, 310 70 C 390 70, 420 130, 464 130"
             stroke="url(#pathGradSolid)"
@@ -558,12 +556,12 @@
           <text x="80" y="104" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="800" font-family="Inter, sans-serif" letter-spacing="-0.3" filter="url(#glowRM)">Moshly.io</text>
           <text x="80" y="118" text-anchor="middle" fill="#00E5FF" font-size="10" font-weight="600" font-family="Inter, sans-serif">Active</text>
 
-          <!-- NODE 2: FeeME -->
+          <!-- NODE 2: Quote -->
           <circle cx="464" cy="130" r="26" fill="url(#ng2)" opacity="0.08" filter="url(#glowSoftRM)"/>
           <circle cx="464" cy="130" r="17" fill="none" stroke="url(#ng2)" stroke-width="1.5" opacity="0.3"/>
           <circle cx="464" cy="130" r="11" fill="url(#ng2)" opacity="0.55"/>
           <circle cx="464" cy="130" r="4" fill="#ffffff" opacity="0.65"/>
-          <text x="464" y="104" text-anchor="middle" fill="#A4A7B5" font-size="12" font-weight="700" font-family="Inter, sans-serif" letter-spacing="-0.3">FeeME</text>
+          <text x="464" y="104" text-anchor="middle" fill="#A4A7B5" font-size="12" font-weight="700" font-family="Inter, sans-serif" letter-spacing="-0.3">Quote</text>
           <text x="464" y="118" text-anchor="middle" fill="#7B7F93" font-size="10" font-family="Inter, sans-serif">Coming Soon</text>
 
           <!-- NODE 3: MerchPad -->
@@ -601,7 +599,7 @@
             </div>
             <p class="roadmap-station-desc">The central hub for all our music industry micro-tools. Moshly.io provides the infrastructure, identity and integration that connects every tool in our suite.</p>
           </div>
-          <a href="#apps" class="roadmap-station-cta">Explore Apps →</a>
+          <a href="apps.html" class="roadmap-station-cta">Explore Apps →</a>
         </div>
 
         
@@ -613,13 +611,13 @@
           </div>
           <div class="roadmap-station-body">
             <div class="roadmap-station-identity">
-              <img src="assets/feeme-logo-icon.svg" alt="feeme" class="roadmap-station-icon" />
+              <img src="assets/moshly-Quote-logo-svg.svg" alt="Quote" class="roadmap-station-icon" />
               <div>
-                <strong class="roadmap-station-name">FeeME</strong>
+                <strong class="roadmap-station-name">Quote</strong>
                 <span class="roadmap-station-tagline">Budget Generator</span>
               </div>
             </div>
-            <p class="roadmap-station-desc">We set out to solve a problem: make fast budgets in few steps and on the go, because those offers won't stand for long. We wanted a fast input of expenses, perfect visualization and <i>on the fly</i> PDF genetation. Meet FeeME, cash in and enjoy the rest of the day.</p>
+            <p class="roadmap-station-desc">We set out to solve a problem: make fast budgets in few steps and on the go, because those offers won't stand for long. We wanted a fast input of expenses, perfect visualization and <i>on the fly</i> PDF generation. Meet Quote, cash in and enjoy the rest of the day.</p>
           </div>
           <a href="#notify" class="roadmap-station-cta roadmap-station-cta--muted">Notify Me →</a>
         </div>
@@ -631,7 +629,7 @@
           </div>
           <div class="roadmap-station-body">
             <div class="roadmap-station-identity">
-              <img src="assets/merchpad-logo-icon.svg" alt="MerchPad" class="roadmap-station-icon" />
+              <img src="assets/moshly-merchpad-logo-svg.svg" alt="MerchPad" class="roadmap-station-icon" />
               <div>
                 <strong class="roadmap-station-name">MerchPad</strong>
                 <span class="roadmap-station-tagline">Click Your Merch In</span>
@@ -1133,6 +1131,11 @@
 
         const user = await window.MoshlyAuth.getSession();
         if (!user || user === 'unverified') return;
+
+        // Skip auto-redirect if the user explicitly wants to see the landing page
+        if (new URLSearchParams(window.location.search).get('explicit') === 'true') {
+          return;
+        }
 
         const hubReturn = localStorage.getItem('moshly_hub_return');
         const target = hubReturn === 'dashboard' ? '/dashboard' : '/launcher';

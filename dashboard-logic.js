@@ -123,8 +123,8 @@ window.confirmAppDisconnect = async function() {
 // Global APP_CATALOG with types and categories
 const APP_CATALOG = [
     {
-        slug: 'feeme', name: 'FeeMe', description: 'Financial hub',
-        status: 'live', iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/feeme.html',
+        slug: 'quote', name: 'Quote', description: 'Financial hub',
+        status: 'live', iconAsset: '/assets/Moshly-Main-Logo-nofill.svg', url: '/apps/quote.html',
         type: 'Plan app', categories: ['Business', 'Analytics']
     },
     {
@@ -248,12 +248,12 @@ function updateProjectsUI(projects) {
     // For the small card list
     if (listEl) {
         if (!projects || projects.length === 0) {
-            if (emptyEl) emptyEl.style.display = '';
-            listEl.style.display = 'none';
+            if (emptyEl) emptyEl.classList.remove('db-hidden');
+            listEl.classList.add('db-hidden');
             listEl.innerHTML = '';
         } else {
-            if (emptyEl) emptyEl.style.display = 'none';
-            listEl.style.display = '';
+            if (emptyEl) emptyEl.classList.add('db-hidden');
+            listEl.classList.remove('db-hidden');
             listEl.innerHTML = projects.slice(0, 5).map(p => `
                 <div class="db-proj-item">
                     <div class="db-proj-icon">${getProjectIcon(p.type)}</div>

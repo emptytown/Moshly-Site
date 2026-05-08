@@ -2,7 +2,7 @@
 const CACHE_VERSION = 'v2';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
-// Hub shell only — spoke pages (feeme, fifthsense) are NOT pre-cached here
+// Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
 // so the SW never intercepts their navigation and returns a stale/wrong response.
 const SHELL_ASSETS = [
   '/',

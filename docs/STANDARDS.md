@@ -4,7 +4,7 @@
 - **Architecture**: Static assets hosted on Cloudflare Pages. Functions (`functions/`) for middleware/API.
 - **Client-Side**: Auth and UI state managed through `auth-client.js`, `moshly-ui.js`, `dashboard-logic.js`, and `modal-manager.js`.
 - **Request Flow**: `_redirects` handles Clean URLs → `_middleware.js` (Cloudflare) → Client scripts.
-- **App Modules**: Apps like FifthSense and FeeME are stored in the `/apps/` directory to keep the root clean.
+- **App Modules**: Apps like FifthSense and Quote are stored in the `/apps/` directory to keep the root clean.
 
 ## Clean URL Policy (CRITICAL)
 - **Rule**: Never use `.html` in links. Use path-only: `/login`, not `/login.html`.
