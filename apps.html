@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
+  <link rel="manifest" href="/manifest.json" />
   <style>
     :root {
       --container-padding: 40px;
@@ -318,6 +319,51 @@
       .apps-hero { padding: 100px var(--space-md) var(--space-lg); }
       .apps-section { padding: 70px var(--space-md); }
     }
+
+    /* PWA install banner */
+    #pwa-install-banner {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: var(--color-surface-2, #111827);
+      border: 1px solid rgba(107, 92, 255, 0.35);
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      max-width: calc(100vw - 32px);
+      width: max-content;
+      animation: slide-up 0.4s var(--ease-out, cubic-bezier(0.16,1,0.3,1)) both;
+    }
+    #pwa-install-banner.u-hidden { display: none !important; }
+    .pwa-banner-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden;
+    }
+    .pwa-banner-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .pwa-banner-text { display: flex; flex-direction: column; gap: 2px; }
+    .pwa-banner-title { font-size: 13px; font-weight: 600; color: var(--color-text-primary, #fff); }
+    .pwa-banner-sub { font-size: 12px; color: var(--color-text-muted, rgba(255,255,255,0.5)); }
+    .pwa-banner-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .pwa-btn-install {
+      font-size: 13px; font-weight: 600; padding: 7px 16px;
+      background: var(--color-accent-primary, #6b5cff);
+      color: #fff; border: none; border-radius: 8px; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .pwa-btn-install:hover { opacity: 0.85; }
+    .pwa-btn-dismiss {
+      font-size: 13px; padding: 7px 12px;
+      background: transparent; color: var(--color-text-muted, rgba(255,255,255,0.5));
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .pwa-btn-dismiss:hover { border-color: rgba(255,255,255,0.25); }
   </style>
 </head>
 <body>
@@ -356,6 +402,21 @@
       <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
     </div>
   </nav>
+
+  <!-- PWA install banner -->
+  <div id="pwa-install-banner" class="u-hidden" role="complementary" aria-label="Install Moshly app">
+    <div class="pwa-banner-icon">
+      <img src="/assets/icons/icon-192.png" alt="Moshly icon" />
+    </div>
+    <div class="pwa-banner-text">
+      <span class="pwa-banner-title">Install Moshly</span>
+      <span class="pwa-banner-sub">Add to your home screen</span>
+    </div>
+    <div class="pwa-banner-actions">
+      <button class="pwa-btn-install" id="pwa-btn-install">Install</button>
+      <button class="pwa-btn-dismiss" id="pwa-btn-dismiss" aria-label="Dismiss">Not now</button>
+    </div>
+  </div>
 
   <!-- HERO -->
   <header class="apps-hero">
@@ -543,6 +604,43 @@
   <script src="/moshly-ui.js"></script>
   <script src="/auth-client.js"></script>
   <script>
+    // PWA install
+    (() => {
+      const DISMISS_KEY = 'pwa-install-dismissed';
+      let deferredPrompt = null;
+      const banner = document.getElementById('pwa-install-banner');
+      const btnInstall = document.getElementById('pwa-btn-install');
+      const btnDismiss = document.getElementById('pwa-btn-dismiss');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        if (sessionStorage.getItem(DISMISS_KEY)) return;
+        deferredPrompt = e;
+        banner.classList.remove('u-hidden');
+        banner.style.display = 'flex';
+      });
+
+      btnInstall.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        banner.classList.add('u-hidden');
+        if (outcome === 'dismissed') sessionStorage.setItem(DISMISS_KEY, '1');
+      });
+
+      btnDismiss.addEventListener('click', () => {
+        banner.classList.add('u-hidden');
+        sessionStorage.setItem(DISMISS_KEY, '1');
+        deferredPrompt = null;
+      });
+
+      window.addEventListener('appinstalled', () => {
+        banner.classList.add('u-hidden');
+        deferredPrompt = null;
+      });
+    })();
+
     (async () => {
       const user = await MoshlyAuth.getSession();
       const loginBtn = document.getElementById('nav-login-btn');

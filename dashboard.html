@@ -1053,8 +1053,18 @@
 <script src="/moshly-ui.js"></script>
 <script src="dashboard-logic.js"></script>
 <script>
-  // Mark that the user is operating from the Dashboard so spokes know where to return.
-  try { localStorage.setItem('moshly_hub_return', 'dashboard'); } catch (_) {}
+  // When returning from an external spoke app, honour the hub screen the user launched from.
+  // When navigating here directly (from within the site or a bookmark), claim dashboard.
+  (function() {
+    try {
+      const isFromExternalApp = document.referrer && !document.referrer.startsWith(window.location.origin);
+      if (isFromExternalApp && localStorage.getItem('moshly_hub_return') === 'launcher') {
+        window.location.replace('/launcher');
+        return;
+      }
+      localStorage.setItem('moshly_hub_return', 'dashboard');
+    } catch (_) {}
+  })();
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(function (err) {

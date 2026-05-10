@@ -104,7 +104,7 @@
           const { ok, data } = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
           
           if (!ok) {
-            showError('Failed to generate SSO token. <br />Please return to <a href="/dashboard">the Hub</a> and try again.');
+            showError('Failed to generate SSO token. <br />Please return to <a href="/">the Hub</a> and try again.');
             return;
           }
 
@@ -130,7 +130,7 @@
         console.error('Quote callback error:', err);
         showError(
           'Session handoff failed: ' + err.message +
-          '<br />Please return to <a href="/dashboard">the Hub</a> and try again.'
+          '<br />Please return to <a href="/">the Hub</a> and try again.'
         );
       }
     })();
