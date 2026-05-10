@@ -135,7 +135,10 @@ const MoshlyAuth = {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        if (response.status === 401) return false;
+        if (response.status === 401) {
+          localStorage.removeItem('moshly_user');
+          return false;
+        }
         if (response.status === 403) return "unverified";
 
         if (response.status === 409 && retryCount < 2) {
