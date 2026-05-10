@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/d1';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import * as schema from '../../../db/schema';
 import { getAllowedOrigin, corsOptionsResponse } from '../../_cors';
 
@@ -72,18 +72,26 @@ export async function onRequestPost({ request, env }) {
       }, 402);
     }
 
-    // Atomic conditional increment — only succeeds if the condition still holds
+    // Atomic conditional increment — only succeeds if credits are still available at write time
     const updated = await db
       .update(schema.subscriptions)
       .set({ aiCreditsUsed: sql`${schema.subscriptions.aiCreditsUsed} + ${amount}` })
       .where(
-        eq(schema.subscriptions.workspaceId, workspaceId)
+        and(
+          eq(schema.subscriptions.workspaceId, workspaceId),
+          sql`${schema.subscriptions.aiCreditsUsed} + ${amount} <= ${schema.subscriptions.aiCreditsLimit}`
+        )
       )
       .returning({ aiCreditsUsed: schema.subscriptions.aiCreditsUsed, aiCreditsLimit: schema.subscriptions.aiCreditsLimit })
       .get();
 
     if (!updated) {
-      return jsonResponse(request, { error: 'update_failed' }, 500);
+      return jsonResponse(request, {
+        error: 'insufficient_credits',
+        creditsUsed: subscription.aiCreditsUsed,
+        creditsLimit: subscription.aiCreditsLimit,
+        creditsRemaining,
+      }, 402);
     }
 
     const newCreditsUsed = updated.aiCreditsUsed;
