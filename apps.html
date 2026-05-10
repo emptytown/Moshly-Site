@@ -320,50 +320,36 @@
       .apps-section { padding: 70px var(--space-md); }
     }
 
-    /* PWA install banner */
-    #pwa-install-banner {
-      display: none;
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      background: var(--color-surface-2, #111827);
-      border: 1px solid rgba(107, 92, 255, 0.35);
-      border-radius: 14px;
-      padding: 14px 20px;
+    /* PWA install — hero */
+    .pwa-hero-install {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 14px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      max-width: calc(100vw - 32px);
-      width: max-content;
-      animation: slide-up 0.4s var(--ease-out, cubic-bezier(0.16,1,0.3,1)) both;
+      gap: 10px;
+      margin-top: var(--space-xl, 32px);
+      animation: slide-up 0.6s var(--ease-out, cubic-bezier(0.16,1,0.3,1)) 0.2s both;
     }
-    #pwa-install-banner.u-hidden { display: none !important; }
-    .pwa-banner-icon {
-      width: 36px; height: 36px; flex-shrink: 0;
-      border-radius: 8px; overflow: hidden;
-    }
-    .pwa-banner-icon img { width: 100%; height: 100%; object-fit: cover; }
-    .pwa-banner-text { display: flex; flex-direction: column; gap: 2px; }
-    .pwa-banner-title { font-size: 13px; font-weight: 600; color: var(--color-text-primary, #fff); }
-    .pwa-banner-sub { font-size: 12px; color: var(--color-text-muted, rgba(255,255,255,0.5)); }
-    .pwa-banner-actions { display: flex; gap: 8px; flex-shrink: 0; }
-    .pwa-btn-install {
-      font-size: 13px; font-weight: 600; padding: 7px 16px;
+    .pwa-hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 28px;
       background: var(--color-accent-primary, #6b5cff);
-      color: #fff; border: none; border-radius: 8px; cursor: pointer;
-      transition: opacity 0.15s;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
     }
-    .pwa-btn-install:hover { opacity: 0.85; }
-    .pwa-btn-dismiss {
-      font-size: 13px; padding: 7px 12px;
-      background: transparent; color: var(--color-text-muted, rgba(255,255,255,0.5));
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
-      transition: border-color 0.15s;
+    .pwa-hero-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .pwa-hero-btn:active { transform: translateY(0); }
+    .pwa-hero-hint {
+      font-size: 12px;
+      color: var(--color-text-muted, rgba(255,255,255,0.45));
+      min-height: 18px;
     }
-    .pwa-btn-dismiss:hover { border-color: rgba(255,255,255,0.25); }
   </style>
 </head>
 <body>
@@ -380,7 +366,7 @@
         <span class="nav-logo-text">Moshly</span>
       </a>
       <div class="nav-links">
-        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/#apps" class="nav-link">Apps</a>
         <a href="/#roadmap" class="nav-link">Roadmap</a>
         <a href="/app-tour" class="nav-link">Tour</a>
         <a href="/pricing" class="nav-link">Pricing</a>
@@ -394,7 +380,7 @@
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
       <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
       <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
       <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
@@ -402,21 +388,6 @@
       <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
     </div>
   </nav>
-
-  <!-- PWA install banner -->
-  <div id="pwa-install-banner" class="u-hidden" role="complementary" aria-label="Install Moshly app">
-    <div class="pwa-banner-icon">
-      <img src="/assets/icons/icon-192.png" alt="Moshly icon" />
-    </div>
-    <div class="pwa-banner-text">
-      <span class="pwa-banner-title">Install Moshly</span>
-      <span class="pwa-banner-sub">Add to your home screen</span>
-    </div>
-    <div class="pwa-banner-actions">
-      <button class="pwa-btn-install" id="pwa-btn-install">Install</button>
-      <button class="pwa-btn-dismiss" id="pwa-btn-dismiss" aria-label="Dismiss">Not now</button>
-    </div>
-  </div>
 
   <!-- HERO -->
   <header class="apps-hero">
@@ -432,6 +403,14 @@
     
     <h1 class="apps-hero-title">Moshly Apps</h1>
     <p class="apps-hero-subtitle">Focused micro-tools built for the music industry — from music theory to tour logistics and market intelligence.</p>
+
+    <div class="pwa-hero-install" id="pwa-hero-install">
+      <button class="pwa-hero-btn" id="pwa-btn-install" aria-label="Install Moshly app">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Install App
+      </button>
+      <span class="pwa-hero-hint" id="pwa-hero-hint"></span>
+    </div>
   </header>
 
   <!-- APPS LIST -->
@@ -606,39 +585,45 @@
   <script>
     // PWA install
     (() => {
-      const DISMISS_KEY = 'pwa-install-dismissed';
       let deferredPrompt = null;
-      const banner = document.getElementById('pwa-install-banner');
-      const btnInstall = document.getElementById('pwa-btn-install');
-      const btnDismiss = document.getElementById('pwa-btn-dismiss');
+      const btn = document.getElementById('pwa-btn-install');
+      const hint = document.getElementById('pwa-hero-hint');
+      const wrap = document.getElementById('pwa-hero-install');
+
+      const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+      if (isStandalone) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      if (isIos) {
+        hint.textContent = 'Tap the share icon, then "Add to Home Screen"';
+        btn.style.display = 'none';
+        return;
+      }
 
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        if (sessionStorage.getItem(DISMISS_KEY)) return;
         deferredPrompt = e;
-        banner.classList.remove('u-hidden');
-        banner.style.display = 'flex';
+        hint.textContent = 'Works offline · No App Store needed';
       });
 
-      btnInstall.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
+      btn.addEventListener('click', async () => {
+        if (!deferredPrompt) {
+          hint.textContent = 'Already installed, or not supported in this browser.';
+          return;
+        }
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         deferredPrompt = null;
-        banner.classList.add('u-hidden');
-        if (outcome === 'dismissed') sessionStorage.setItem(DISMISS_KEY, '1');
+        if (outcome === 'accepted') {
+          wrap.style.display = 'none';
+        }
       });
 
-      btnDismiss.addEventListener('click', () => {
-        banner.classList.add('u-hidden');
-        sessionStorage.setItem(DISMISS_KEY, '1');
-        deferredPrompt = null;
-      });
-
-      window.addEventListener('appinstalled', () => {
-        banner.classList.add('u-hidden');
-        deferredPrompt = null;
-      });
+      window.addEventListener('appinstalled', () => { wrap.style.display = 'none'; });
     })();
 
     (async () => {
