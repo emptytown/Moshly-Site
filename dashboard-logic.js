@@ -1440,8 +1440,8 @@ function updateQuotasCardUI(sub) {
 
     if (renewEl && sub.expiresAt) renewEl.textContent = new Date(sub.expiresAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
     if (appsEl) {
-        const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
-        appsEl.textContent = sub.plan === 'major' ? '150' : (slotMap[sub.plan] || '0');
+        const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
+        appsEl.textContent = slotMap[sub.plan] ?? '0';
     }
     if (pdfEl) pdfEl.textContent = sub.pdfExportsLimit || "1";
     if (aiEl) aiEl.textContent = formatNumber(sub.aiCreditsLimit || 100);
