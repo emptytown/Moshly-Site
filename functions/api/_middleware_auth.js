@@ -1,4 +1,4 @@
-import { jwtVerify } from 'jose';
+import { jwtVerify, importSPKI } from 'jose';
 
 export async function verifyJWT(request, env) {
   const authHeader = request.headers.get('Authorization');
@@ -8,12 +8,12 @@ export async function verifyJWT(request, env) {
 
   const token = authHeader.split(' ')[1];
   try {
-    if (!env.JWT_SECRET) {
-      throw new Error('CRITICAL: JWT_SECRET environment variable is not configured');
+    if (!env.JWT_PUBLIC_KEY) {
+      throw new Error('CRITICAL: JWT_PUBLIC_KEY environment variable is not configured');
     }
-    const secret = new TextEncoder().encode(env.JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret, {
-      algorithms: ['HS256'],
+    const publicKey = await importSPKI(env.JWT_PUBLIC_KEY, 'RS256');
+    const { payload } = await jwtVerify(token, publicKey, {
+      algorithms: ['RS256'],
       issuer: 'moshly',
       audience: 'moshly-api',
     });

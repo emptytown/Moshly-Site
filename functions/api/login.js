@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import bcrypt from 'bcryptjs';
-import { SignJWT } from 'jose';
+import { SignJWT, importPKCS8 } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { getAllowedOrigin, corsOptionsResponse } from './_cors';
@@ -113,10 +113,10 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Generate JWT access token (15 min) with iss + aud claims
-    if (!env.JWT_SECRET) {
-      throw new Error('CRITICAL: JWT_SECRET environment variable is not set');
+    if (!env.JWT_PRIVATE_KEY) {
+      throw new Error('CRITICAL: JWT_PRIVATE_KEY environment variable is not set');
     }
-    const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const privateKey = await importPKCS8(env.JWT_PRIVATE_KEY, 'RS256');
     const accessToken = await new SignJWT({
         userId: user.id,
         email: user.email,
@@ -124,12 +124,12 @@ export async function onRequestPost({ request, env }) {
         role: user.role,
         plan: subscription?.plan || 'free'
       })
-      .setProtectedHeader({ alg: 'HS256' })
+      .setProtectedHeader({ alg: 'RS256' })
       .setIssuedAt()
       .setIssuer('moshly')
       .setAudience('moshly-api')
       .setExpirationTime('15m')
-      .sign(secret);
+      .sign(privateKey);
 
     // Issue refresh token (7 days) stored in KV.
     // issuedAt is recorded so the refresh endpoint can compare it against the

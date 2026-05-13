@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
-import { SignJWT } from 'jose';
+import { SignJWT, importPKCS8 } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
@@ -30,8 +30,8 @@ export async function onRequestPost({ request, env }) {
     if (!env.AUTH_KV) {
       throw new Error('CRITICAL: AUTH_KV binding is not configured');
     }
-    if (!env.JWT_SECRET) {
-      throw new Error('CRITICAL: JWT_SECRET environment variable is not configured');
+    if (!env.JWT_PRIVATE_KEY) {
+      throw new Error('CRITICAL: JWT_PRIVATE_KEY environment variable is not configured');
     }
 
     // Acquire a per-token lock before the get/delete sequence to prevent concurrent
@@ -139,7 +139,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Issue new access token (15 min — per OWASP-JWT-001)
-    const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const privateKey = await importPKCS8(env.JWT_PRIVATE_KEY, 'RS256');
     const newAccessToken = await new SignJWT({
       userId: user.id,
       email: user.email,
@@ -147,12 +147,12 @@ export async function onRequestPost({ request, env }) {
       role: user.role,
       plan: subscription?.plan || 'free',
     })
-      .setProtectedHeader({ alg: 'HS256' })
+      .setProtectedHeader({ alg: 'RS256' })
       .setIssuedAt()
       .setIssuer('moshly')
       .setAudience('moshly-api')
       .setExpirationTime('15m')
-      .sign(secret);
+      .sign(privateKey);
 
     // Issue new refresh token (rotation — 7 days).
     // issuedAt is carried forward so future revocation checks remain accurate.
