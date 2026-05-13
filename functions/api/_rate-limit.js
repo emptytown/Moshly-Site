@@ -13,6 +13,7 @@ const MAX_ATTEMPTS_PER_WINDOW = {
   'reset-password': 5,
   'verify-email': 10,
   refresh: 20,
+  'token-exchange': 20,
   'me-patch': 30,
   'me-delete': 3,
 };
