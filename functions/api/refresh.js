@@ -4,7 +4,7 @@ import { SignJWT, importPKCS8 } from 'jose';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
-import { sha256Hex, sendVerificationEmail, resendVerification } from './_email_utils';
+import { resendVerification } from './_email_utils';
 
 export async function onRequestPost({ request, env }) {
   try {

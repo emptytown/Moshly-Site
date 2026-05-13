@@ -6,12 +6,13 @@ export async function verifyJWT(request, env) {
     return null;
   }
 
+  if (!env.JWT_PUBLIC_KEY) {
+    throw new Error('CRITICAL: JWT_PUBLIC_KEY environment variable is not configured');
+  }
+
   const token = authHeader.split(' ')[1];
+  const publicKey = await importSPKI(env.JWT_PUBLIC_KEY, 'RS256');
   try {
-    if (!env.JWT_PUBLIC_KEY) {
-      throw new Error('CRITICAL: JWT_PUBLIC_KEY environment variable is not configured');
-    }
-    const publicKey = await importSPKI(env.JWT_PUBLIC_KEY, 'RS256');
     const { payload } = await jwtVerify(token, publicKey, {
       algorithms: ['RS256'],
       issuer: 'https://moshly.io',
