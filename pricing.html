@@ -13,8 +13,10 @@
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
   <script>
     // ⚠️  PRODUCTION: remove the sandbox line below and replace token with live client token
-    // Paddle.Environment.set('sandbox');
-    Paddle.Initialize({ token: 'test_e896b1cfda4634cc9d1b24bd930' }); // TODO: replace with live token
+    Paddle.Environment.set('sandbox');
+    Paddle.Initialize({
+      token: 'test_e896b1cfda4634cc9d1b24bd930' // TODO: replace with live token
+    });
   </script>
 </head>
 <body>
@@ -690,19 +692,19 @@
     }
 
     function checkoutSolo() {
-      openCheckoutForPlan('pri_01kjwe0jg5ks7kr8njaghykrq6', 'pri_01kjwe4f0s7494j16q0spw9q57');
+      openCheckoutForPlan('pri_01kjv1s70zjrd5bf7bszqbs69s', 'pri_01kjv21jws781dhqa6860mnnxb');
     }
 
     function checkoutCollective() {
-      openCheckoutForPlan('pri_01kjwh1zsmdb636v0p08hpsmq5', 'pri_01kjwh609n7fsza1wkghwhtacz');
+      openCheckoutForPlan('pri_01kjv342tf78nw7w3ezm790mff', 'pri_01kjv3ngypj6yp8092atkxr7yt');
     }
 
     function checkoutBusiness() {
-      openCheckoutForPlan('pri_01kjwhc1h6znh28qey5shw91w0', 'pri_01kjwhg75dt7whbzfpkxhfc3yj');
+      openCheckoutForPlan('pri_01kjv3vc3tcd0qerv5kwj25eq2', 'pri_01kjv3xcv13qht6frt8r5rz1da');
     }
 
     function checkoutMajor() {
-      openCheckoutForPlan('pri_01kjwhn82fzs6apcmtdc70myym', 'pri_01kjwhrwd3grrzj0cvfyz46mjj');
+      openCheckoutForPlan('pri_01kjv44hrw599btnmrmrzg3vc6', 'pri_01kjv4aeqj34b5yexy8sz5khqf');
     }
   </script>
 </body>

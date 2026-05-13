@@ -1,0 +1,37 @@
+<svg width="176" height="176" viewBox="0 0 176 176" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Container" filter="url(#filter0_d_24_129)">
+<g id="MoshlyMainIcon">
+<path d="M40 54.8032C40 43.3139 49.3139 34 60.8032 34H115.197C126.686 34 136 43.3139 136 54.8032V109.197C136 120.686 126.686 130 115.197 130H60.8032C49.3139 130 40 120.686 40 109.197V54.8032Z" fill="url(#paint0_linear_24_129)"/>
+<g id="MoshlyMainLogo">
+<g id="Group">
+<g id="Container_2">
+<g id="Icon" clip-path="url(#clip0_24_129)">
+<g id="Group_2">
+<path id="Vector" d="M71.994 60.2366C70.3757 60.2366 69.0638 61.7478 69.0638 63.612V100.388C69.0638 102.252 70.3757 103.763 71.994 103.763H103.951C105.57 103.763 106.882 102.252 106.882 100.388V76.6492C106.882 74.785 105.57 73.2739 103.951 73.2739H103.279H102.33C99.3989 73.2739 94.8213 73.2739 94.8213 73.2739L103.279 60.2366H71.994Z" fill="white" stroke="white" stroke-width="1.06588" stroke-miterlimit="10" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_24_129" x="0" y="0" width="176" height="176" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="6"/>
+<feGaussianBlur stdDeviation="20"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.752941 0 0 0 0 0.14902 0 0 0 0 0.827451 0 0 0 0.52 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_24_129"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_24_129" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_24_129" x1="40" y1="34" x2="136" y2="130" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8878FF"/>
+<stop offset="0.5" stop-color="#C026D3"/>
+<stop offset="1" stop-color="#A020C0"/>
+</linearGradient>
+<clipPath id="clip0_24_129">
+<rect width="38.8672" height="44.6094" fill="white" transform="translate(68.5391 59.6953)"/>
+</clipPath>
+</defs>
+</svg>

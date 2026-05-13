@@ -5,6 +5,7 @@
 # We only need explicit redirects here for non-standard mappings or 301s.
 
 /index              /                        301
+/pricing            /pricing.html            200
 /fifthsense         /apps/fifthsense.html    200
 /quote              /apps/quote.html         200
 

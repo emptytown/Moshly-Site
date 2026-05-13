@@ -841,7 +841,7 @@ function updateAppsUI(user) {
 
     // Determine slot capacity based on plan
     const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
+    const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
     const totalSlots = slotMap[plan] || 0;
 
     // 1. Permanent Slots (Main Apps)
@@ -1027,7 +1027,7 @@ function updateAppConnectorUI(user) {
 
     // Plan & Capacity Logic
     const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 0, 'solo': 2, 'collective': 4, 'business': 10, 'major': 150 };
+    const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
     const totalSlots = slotMap[plan] || 0;
     const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
     

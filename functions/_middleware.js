@@ -52,7 +52,7 @@ export async function onRequest({ request, next, env }) {
   }
 
   // Clean-URL routes → let Pages serve the HTML asset natively (avoids 308 loop from ASSETS binding)
-  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup') {
+  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup' || pathname === '/pricing') {
     return next();
   }
 
