@@ -11,11 +11,12 @@
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/pricing.css" />
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-  <script>
-    // ⚠️  PRODUCTION: remove the sandbox line below and replace token with live client token
+  <script type="text/javascript">
+    // Initialize Paddle with the client-side token
+    // ⚠️ PRODUCTION: remove the sandbox line below and replace token with live client token
     Paddle.Environment.set('sandbox');
     Paddle.Initialize({
-      token: 'test_e896b1cfda4634cc9d1b24bd930' // TODO: replace with live token
+      token: 'test_e896b1cfda4634cc9d1b24bd930' // Replace with your client-side token
     });
   </script>
 </head>
@@ -114,7 +115,6 @@
             <li><span class="feat-check">✓</span> <strong>1 project</strong></li><p></p>
           </ul>
           <div class="plan-apps">
-            <p class="plan-apps-label">Coming Soon</p>
             <div class="plan-app-list">
               <span class="plan-app-tag">Suite Access</span>
                </div>
@@ -150,7 +150,6 @@
             <li><span class="feat-check">✓</span> <strong>3 projects</strong></li><p></p><p></p><p></p>
           </ul>
           <div class="plan-apps">
-            <p class="plan-apps-label">Coming Soon</p>
             <div class="plan-app-list">
               <span class="plan-app-tag">Suite Access</span>
             </div>
@@ -185,12 +184,11 @@
             <li><span class="feat-check">✓</span> priority support line</li>
           </ul>
           <div class="plan-apps">
-            <p class="plan-apps-label">Coming Soon</p>
             <div class="plan-app-list">
               <span class="plan-app-tag">Suite Access</span>
             </div>
           </div>
-         
+
           <button type="button" class="btn-plan" onclick="checkoutBusiness()">Get Started</button>
         </div>
 
@@ -221,12 +219,11 @@
             <li><span class="feat-check">✓</span> Max priority support line</li><p></p><p></p><p></p>
           </ul>
           <div class="plan-apps">
-            <p class="plan-apps-label">Coming Soon</p>
             <div class="plan-app-list">
               <span class="plan-app-tag">Full Suite</span>
             </div>
           </div>
-          
+
           <button type="button" class="btn-plan btn-plan--major" onclick="checkoutMajor()">Go Major</button>
         </div>
 
