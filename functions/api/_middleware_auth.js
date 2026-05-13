@@ -14,7 +14,7 @@ export async function verifyJWT(request, env) {
     const publicKey = await importSPKI(env.JWT_PUBLIC_KEY, 'RS256');
     const { payload } = await jwtVerify(token, publicKey, {
       algorithms: ['RS256'],
-      issuer: 'moshly',
+      issuer: 'https://moshly.io',
       audience: 'moshly-api',
     });
     return payload;

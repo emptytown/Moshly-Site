@@ -149,7 +149,7 @@ export async function onRequestPost({ request, env }) {
     })
       .setProtectedHeader({ alg: 'RS256' })
       .setIssuedAt()
-      .setIssuer('moshly')
+      .setIssuer('https://moshly.io')
       .setAudience('moshly-api')
       .setExpirationTime('15m')
       .sign(privateKey);
