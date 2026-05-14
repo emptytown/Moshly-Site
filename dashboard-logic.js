@@ -153,6 +153,11 @@ const APP_CATALOG = [
         slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
         status: 'live', iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
         type: 'Plan app', categories: ['Business']
+    },
+    {
+        slug: 'run', name: 'Run', description: 'Interactive Roadbooks for tours and shows',
+        status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', url: 'https://run.moshly.io',
+        type: 'Plan app', categories: ['Business', 'Tour']
     }
 ];
 
