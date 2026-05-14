@@ -2,18 +2,17 @@
  * Moshly Dedicated Auth Client
  *
  * Token storage strategy (OWASP-JWT-001):
- *   - Access token  → in-memory only (_accessToken). Never written to localStorage.
+ *   - Access token  → HttpOnly; Secure; SameSite=Strict cookie (set by server, never readable by JS).
  *   - Refresh token → HttpOnly; Secure; SameSite=Strict cookie (set by server).
  *
- * On page load the access token is null. Call MoshlyAuth.getSession() or
- * MoshlyAuth.requireSession() — both will silently attempt a token refresh via
- * the HttpOnly cookie before deciding the user is unauthenticated.
+ * On page load call MoshlyAuth.getSession() or MoshlyAuth.requireSession() — both
+ * silently attempt a token refresh via the HttpOnly cookie before deciding the user
+ * is unauthenticated.
  */
 
 const AUTH_URL = '/api';
 
-// Private in-memory access token — never persisted to localStorage (F-01)
-let _accessToken = null; let _refreshPromise = null;
+let _refreshPromise = null;
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
@@ -35,25 +34,19 @@ const MoshlyAuth = {
     }
   },
 
-  // Returns the in-memory access token only — never reads localStorage
-  getToken: () => _accessToken,
-
-  // Sets session state after an inline login (e.g. post-registration auto-login).
-  // Prefer silentRefresh() for page-load hydration.
-  setSession: (user, token) => {
-    _accessToken = token;
+  // Sets session state after a login. Token is in the HttpOnly cookie — not stored here.
+  setSession: (user) => {
     if (user) localStorage.setItem('moshly_user', JSON.stringify(user));
   },
 
   isAuthenticated: () => {
-    const user = MoshlyAuth.getUser();
-    return !!(user && _accessToken);
+    return !!MoshlyAuth.getUser();
   },
 
-  // Returns cached user if a valid token is in memory; otherwise attempts a
-  // silent refresh via the HttpOnly cookie to restore the session.
+  // Returns cached user if present; otherwise attempts a silent refresh via
+  // the HttpOnly cookie to restore the session.
   getSession: async (skipSilent = false) => {
-    if (_accessToken && MoshlyAuth.getUser()) return MoshlyAuth.getUser();
+    if (MoshlyAuth.getUser()) return MoshlyAuth.getUser();
     if (skipSilent) return null;
     const refreshed = await MoshlyAuth.silentRefresh();
     if (refreshed === "unverified") return "unverified"; return refreshed ? MoshlyAuth.getUser() : null;
@@ -62,7 +55,7 @@ const MoshlyAuth = {
   // Like getSession but always re-fetches the user from the server to ensure
   // the latest role/plan data is used (e.g. for admin checks).
   getSessionRobust: async () => {
-    if (!_accessToken) {
+    if (!MoshlyAuth.getUser()) {
       const refreshed = await MoshlyAuth.silentRefresh();
       if (!refreshed) return null;
     }
@@ -114,7 +107,6 @@ const MoshlyAuth = {
     } catch (e) {
       console.error('Logout request failed:', e);
     }
-    _accessToken = null;
     localStorage.removeItem('moshly_user');
     localStorage.removeItem('moshly_session_token'); // clean up legacy key
     if (window.syncAuthUI) window.syncAuthUI();
@@ -157,8 +149,7 @@ const MoshlyAuth = {
           data = await response.json();
         }
 
-        if (response.ok && data.token) {
-          _accessToken = data.token;
+        if (response.ok) {
           if (data.user) localStorage.setItem('moshly_user', JSON.stringify(data.user));
           return true;
         }
@@ -178,11 +169,9 @@ const MoshlyAuth = {
 
   // Authenticated API helper. On 401 attempts one silent refresh then retries.
   authFetch: async (endpoint, options = {}) => {
-    const token = MoshlyAuth.getToken();
     const headers = {
       'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      ...(options.headers || {})
+      ...(options.headers || {}),
     };
 
     try {
@@ -249,8 +238,7 @@ const MoshlyAuth = {
         });
 
         if (ok && data.success) {
-          _accessToken = data.token;
-          localStorage.setItem('moshly_user', JSON.stringify(data.user));
+          MoshlyAuth.setSession(data.user);
           if (window.syncAuthUI) window.syncAuthUI();
 
           // Validate redirect before navigating — reject absolute/external URLs (F-02)

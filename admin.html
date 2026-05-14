@@ -859,23 +859,11 @@
     tbody.innerHTML = `<tr><td colspan="5" class="adm-empty" style="color:#a78bfa;">Scanning…</td></tr>`;
     document.getElementById('sprawlStats').style.display = 'none';
 
-    const AUTH_URL =
-      (window.MoshlyAuth && window.MoshlyAuth.baseUrl)
-      || window.AUTH_URL
-      || window.MOSHLY_API_URL
-      || '/api';
-    const token = window.MoshlyAuth.getToken() || '';
     let data;
     try {
-      const res = await fetch(`${AUTH_URL}/admin/sprawl`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'X-Admin-Key':   token,
-          'Origin': 'https://moshly.io',
-        },
-      });
-      data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error');
+      const { ok, data: respData } = await window.MoshlyAuth.authFetch('/admin/sprawl');
+      if (!ok) throw new Error(respData?.error || 'Error');
+      data = respData;
     } catch (e) {
       tbody.innerHTML = `<tr><td colspan="5" class="adm-empty" style="color:#F87171;">Failed: ${esc(e.message)}</td></tr>`;
       return;

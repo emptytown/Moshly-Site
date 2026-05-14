@@ -134,7 +134,7 @@
         });
 
         if (ok && data.success) {
-          MoshlyAuth.setSession(data.user, data.token);
+          MoshlyAuth.setSession(data.user);
 
           const params = new URLSearchParams(window.location.search);
           const redirectParam = params.get('redirect');

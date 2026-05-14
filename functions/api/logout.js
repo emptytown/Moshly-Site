@@ -12,14 +12,14 @@ export async function onRequestPost({ request, env }) {
   }
 
   const isSecure = new URL(request.url).protocol === 'https:';
-  const clearCookie = `moshly_rt=; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=0`;
+  const cookieFlags = `HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=0`;
+  const headers = new Headers({ 'Content-Type': 'application/json' });
+  headers.append('Set-Cookie', `moshly_at=; ${cookieFlags}`);
+  headers.append('Set-Cookie', `moshly_rt=; ${cookieFlags}`);
 
   return new Response(JSON.stringify({ success: true, message: 'Logged out successfully' }), {
     status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': clearCookie,
-    },
+    headers,
   });
 }
 

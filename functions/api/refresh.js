@@ -165,12 +165,13 @@ export async function onRequestPost({ request, env }) {
     );
 
     const isSecure = new URL(request.url).protocol === 'https:';
-    const refreshCookie = `moshly_rt=${newRefreshToken}; HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api; Max-Age=604800`;
+    const cookieFlags = `HttpOnly${isSecure ? '; Secure' : ''}; SameSite=Strict; Path=/api`;
+    const accessCookie  = `moshly_at=${newAccessToken}; ${cookieFlags}; Max-Age=900`;
+    const refreshCookie = `moshly_rt=${newRefreshToken}; ${cookieFlags}; Max-Age=604800`;
 
     return new Response(
       JSON.stringify({
         success: true,
-        token: newAccessToken,
         user: {
           id: user.id,
           email: user.email,
@@ -198,7 +199,7 @@ export async function onRequestPost({ request, env }) {
           } : null,
         },
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json', 'Set-Cookie': refreshCookie } }
+      { status: 200, headers: (() => { const h = new Headers({ 'Content-Type': 'application/json' }); h.append('Set-Cookie', accessCookie); h.append('Set-Cookie', refreshCookie); return h; })() }
     );
 
   } catch (error) {
