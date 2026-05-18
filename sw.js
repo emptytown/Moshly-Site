@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
@@ -104,7 +104,7 @@ self.addEventListener('fetch', (event) => {
                 (fallback) =>
                   fallback ||
                   new Response(
-                    '<html><body style="background:#070a14;color:#fff;font-family:-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center"><div><h1 style="font-size:2rem;margin-bottom:8px">Offline</h1><p style="opacity:.5">Reconnect to use Moshly.</p></div></body></html>',
+                    '<html><head><meta charset="utf-8"><title>Offline \u2013 Moshly</title></head><body style="background:#070a14;color:#fff;font-family:-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center"><div><h1 style="font-size:2rem;margin-bottom:8px">Offline</h1><p style="opacity:.5;margin-bottom:24px">Reconnect to use Moshly.</p><button onclick="window.location.reload()" style="background:#fff;color:#070a14;border:none;padding:10px 24px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600">Try Again</button></div><script>window.addEventListener(\'online\',()=>window.location.reload())<\/script></body></html>',
                     { headers: { 'Content-Type': 'text/html' } }
                   )
               )
