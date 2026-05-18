@@ -1121,29 +1121,6 @@
     }
   </script>
   <script>
-    // If the user already has a valid session, skip the marketing page entirely.
-    // They go directly to wherever they last were (launcher or dashboard).
-    (async function redirectIfAuthenticated() {
-      try {
-        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-        if (isLocal) return; // Don't redirect in dev unless explicitly testing
-
-        const user = await window.MoshlyAuth.getSession();
-        if (!user || user === 'unverified') return;
-
-        // Skip auto-redirect if the user explicitly wants to see the landing page
-        if (new URLSearchParams(window.location.search).get('explicit') === 'true') {
-          return;
-        }
-
-        const hubReturn = localStorage.getItem('moshly_hub_return');
-        const target = hubReturn === 'dashboard' ? '/dashboard' : '/launcher';
-        window.location.replace(target);
-      } catch (_) {
-        // Session check failed — leave user on marketing page.
-      }
-    })();
-
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(function (err) {
         console.warn('[index] SW registration failed:', err);
