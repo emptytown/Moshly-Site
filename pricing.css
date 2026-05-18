@@ -1082,3 +1082,92 @@ html.theme-light .suite-text:first-of-type {
 html.theme-light .suite-text {
   opacity: 1;
 }
+
+/* ── Coming Soon Overlay ── */
+.pricing-card--coming-soon {
+  position: relative;
+  overflow: hidden;
+  animation: comingSoonBorder 3s ease-in-out infinite;
+}
+
+@keyframes comingSoonBorder {
+  0%, 100% { border-color: rgba(107, 92, 255, 0.2); }
+  50%       { border-color: rgba(192, 38, 211, 0.45); }
+}
+
+.pricing-card--coming-soon > *:not(.plan-coming-overlay) {
+  opacity: 0.08;
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.plan-coming-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  background: rgba(14, 15, 20, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-xl);
+}
+
+.plan-coming-overlay__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(107, 92, 255, 0.18), rgba(192, 38, 211, 0.18));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plan-coming-overlay__title {
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6B5CFF, #C026D3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.plan-coming-overlay__sub {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.plan-coming-overlay__badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(107, 92, 255, 0.15), rgba(192, 38, 211, 0.15));
+  border: 1px solid rgba(107, 92, 255, 0.3);
+  color: var(--color-text-secondary);
+}
+
+.plan-coming-overlay__btn {
+  margin-top: 4px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(107, 92, 255, 0.12);
+  border: 1px solid rgba(107, 92, 255, 0.25);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.7;
+}

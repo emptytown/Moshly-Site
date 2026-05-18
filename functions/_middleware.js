@@ -51,9 +51,14 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Clean-URL routes → let Pages serve the HTML asset natively (avoids 308 loop from ASSETS binding)
-  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup' || pathname === '/pricing') {
+  // Clean-URL routes
+  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup') {
     return next();
+  }
+
+  // Handle /pricing explicitly to avoid redirect loops
+  if (pathname === '/pricing') {
+    return env.ASSETS.fetch(new Request(new URL('/pricing.html', url.origin), request));
   }
 
 
