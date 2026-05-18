@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
@@ -87,7 +87,34 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first for shell assets; fetch + update cache in background.
+  // Network-first for HTML navigation — always fetch fresh HTML, fall back to
+  // cache only when offline. This prevents stale pages after deploys.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          storeInCache(request, response);
+          return response;
+        })
+        .catch(() =>
+          caches.match(request).then(
+            (cached) =>
+              cached ||
+              caches.match('/launcher').then(
+                (fallback) =>
+                  fallback ||
+                  new Response(
+                    '<html><body style="background:#070a14;color:#fff;font-family:-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center"><div><h1 style="font-size:2rem;margin-bottom:8px">Offline</h1><p style="opacity:.5">Reconnect to use Moshly.</p></div></body></html>',
+                    { headers: { 'Content-Type': 'text/html' } }
+                  )
+              )
+          )
+        )
+    );
+    return;
+  }
+
+  // Cache-first for shell assets (CSS, JS, images); fetch + update cache in background.
   event.respondWith(
     caches.match(request).then((cached) => {
       const networkFetch = fetch(request)
@@ -95,19 +122,7 @@ self.addEventListener('fetch', (event) => {
           storeInCache(request, response);
           return response;
         })
-        .catch(() => {
-          if (request.mode === 'navigate') {
-            return caches.match('/launcher').then(
-              (fallback) =>
-                fallback ||
-                new Response(
-                  '<html><body style="background:#070a14;color:#fff;font-family:-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center"><div><h1 style="font-size:2rem;margin-bottom:8px">Offline</h1><p style="opacity:.5">Reconnect to use Moshly.</p></div></body></html>',
-                  { headers: { 'Content-Type': 'text/html' } }
-                )
-            );
-          }
-          return new Response('', { status: 408 });
-        });
+        .catch(() => new Response('', { status: 408 }));
 
       return cached || networkFetch;
     })

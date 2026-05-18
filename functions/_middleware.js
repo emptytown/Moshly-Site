@@ -9,12 +9,6 @@
  *   everything else → default Pages asset serving
  */
 
-// BP-CONST-001: route map kept as a named constant, not scattered inline literals
-const CLEAN_ROUTE_MAP = {
-  '/dashboard': '/dashboard.html',
-  '/admin': '/admin.html',
-};
-
 /**
  * Fetches a static asset from the Pages asset binding.
  *
@@ -51,9 +45,18 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Clean-URL routes
-  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup' || pathname === '/pricing') {
-    return next();
+  // Clean-URL routes — serve HTML assets directly to bypass _redirects + Pretty URLs
+  // interaction that causes redirect loops (especially in Safari).
+  const CLEAN_URL_MAP = {
+    '/pricing': '/pricing.html',
+    '/login': '/login.html',
+    '/signup': '/signup.html',
+    '/dashboard': '/dashboard.html',
+    '/admin': '/admin.html',
+  };
+
+  if (CLEAN_URL_MAP[pathname]) {
+    return serveAsset(env, request, CLEAN_URL_MAP[pathname]);
   }
 
   // All other paths: default Pages asset serving

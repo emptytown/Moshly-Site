@@ -4,6 +4,10 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
+# HTML pages must never be cached — always serve the latest deploy.
+/*.html
+  Cache-Control: no-cache, must-revalidate
+
 # SW must never be served from cache — browser needs latest version on every load.
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
