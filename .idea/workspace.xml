@@ -19,12 +19,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84ecc2a0-31f8-4790-bcfe-60c8e6af0f20" name="Changes" comment="fix(auth): Replaced silent batch failure path with explicit sequential awaits">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/_middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/_middleware.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/api/_cors.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/api/_cors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.output.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pricing.css" beforeDir="false" afterPath="$PROJECT_DIR$/pricing.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pricing.html" beforeDir="false" afterPath="$PROJECT_DIR$/pricing.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

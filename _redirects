@@ -4,7 +4,11 @@
 # 3. Cloudflare handles mapping clean URLs to .html files automatically if "Pretty URLs" is enabled.
 # We only need explicit redirects here for non-standard mappings or 301s.
 
+/pricing            /pricing.html            200
+/login              /login.html              200
+/signup             /signup.html             200
+/dashboard          /dashboard.html          200
+/admin              /admin.html              200
 /index              /                        301
 /fifthsense         /apps/fifthsense.html    200
 /quote              /apps/quote.html         200
-

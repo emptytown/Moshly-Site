@@ -10,15 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/pricing.css" />
-  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-  <script type="text/javascript">
-    // Initialize Paddle with the client-side token
-    // ⚠️ PRODUCTION: remove the sandbox line below and replace token with live client token
-    Paddle.Environment.set('sandbox');
-    Paddle.Initialize({
-      token: 'test_e896b1cfda4634cc9d1b24bd930' // Replace with your client-side token
-    });
-  </script>
 </head>
 <body>
 
@@ -119,7 +110,7 @@
               <span class="plan-app-tag">Suite Access</span>
                </div>
           </div>
-          <button type="button" class="btn-plan" onclick="checkoutSolo()">Get Started</button>
+          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan">Get Started</a>
         </div>
 
         <!-- COLLECTIVE -->
@@ -154,7 +145,7 @@
               <span class="plan-app-tag">Suite Access</span>
             </div>
           </div>
-          <button type="button" class="btn-plan btn-plan--featured" onclick="checkoutCollective()">Get Started</button>
+          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan btn-plan--featured">Get Started</a>
         </div>
 
         <!-- BUSINESS -->
@@ -197,7 +188,7 @@
             </div>
           </div>
 
-          <button type="button" class="btn-plan" onclick="checkoutBusiness()">Get Started</button>
+          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan">Get Started</a>
         </div>
 
         <!-- MAJOR -->
@@ -240,7 +231,7 @@
             </div>
           </div>
 
-          <button type="button" class="btn-plan btn-plan--major" onclick="checkoutMajor()">Go Major</button>
+          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan btn-plan--major">Go Major</a>
         </div>
 
       </div><!-- /pricing-grid -->
@@ -253,7 +244,7 @@
             <h3 class="explore-strip-title">Sign up free and explore Moshly's universe.</h3>
             <p class="explore-strip-desc">1 project, 3 free app slots, access to future free tools and topable AI features. 0 PDF exports. No credit card, no activation required.</p>
           </div>
-          <a href="/signup" class="btn-ghost explore-strip-btn">Start Exploring →</a>
+          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-ghost explore-strip-btn">Start Exploring →</a>
         </div>
       </div>
 
@@ -633,7 +624,6 @@
     </div>
   </div>
 
-  <!-- Paddle Checkout Functions -->
   <script>
     const METER_COLORS = ['#ef4444', '#f97316', '#6b5cff', '#22c55e'];
     const METER_LABELS = ['Weak', 'Fair', 'Good', 'Strong'];
@@ -673,51 +663,6 @@
       hLen.style.color = okLen ? '#22c55e' : '#9ca3af';
       hSym.textContent = (okSym ? '✓' : '○') + ' At least one number or symbol';
       hSym.style.color = okSym ? '#22c55e' : '#9ca3af';
-    }
-
-    async function openCheckoutForPlan(monthlyPriceId, yearlyPriceId) {
-      const selectedPriceId = isYearly ? yearlyPriceId : monthlyPriceId;
-
-      // Pre-fill logged-in user email and pass userId for webhook attribution
-      let customerEmail = null;
-      let customData = {};
-      try {
-        const session = localStorage.getItem('moshly_user');
-        if (session) {
-          const u = JSON.parse(session);
-          if (u?.email) customerEmail = u.email;
-          if (u?.id) customData.moshly_user_id = u.id;
-        }
-      } catch {}
-
-      try {
-        const opts = {
-          items: [{ priceId: selectedPriceId, quantity: 1 }],
-          settings: { displayMode: 'overlay', theme: 'dark' },
-        };
-        if (customerEmail) opts.customer = { email: customerEmail };
-        if (Object.keys(customData).length) opts.customData = customData;
-        Paddle.Checkout.open(opts);
-      } catch (err) {
-        console.error('Paddle checkout failed:', err);
-        alert('Checkout could not start. Please try again.');
-      }
-    }
-
-    function checkoutSolo() {
-      openCheckoutForPlan('pri_01kjv1s70zjrd5bf7bszqbs69s', 'pri_01kjv21jws781dhqa6860mnnxb');
-    }
-
-    function checkoutCollective() {
-      openCheckoutForPlan('pri_01kjv342tf78nw7w3ezm790mff', 'pri_01kjv3ngypj6yp8092atkxr7yt');
-    }
-
-    function checkoutBusiness() {
-      openCheckoutForPlan('pri_01kjv3vc3tcd0qerv5kwj25eq2', 'pri_01kjv3xcv13qht6frt8r5rz1da');
-    }
-
-    function checkoutMajor() {
-      openCheckoutForPlan('pri_01kjv44hrw599btnmrmrzg3vc6', 'pri_01kjv4aeqj34b5yexy8sz5khqf');
     }
   </script>
 </body>

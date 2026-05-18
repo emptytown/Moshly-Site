@@ -52,15 +52,9 @@ export async function onRequest({ request, next, env }) {
   }
 
   // Clean-URL routes
-  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup') {
+  if (pathname === '/dashboard' || pathname === '/admin' || pathname === '/login' || pathname === '/signup' || pathname === '/pricing') {
     return next();
   }
-
-  // Handle /pricing explicitly to avoid redirect loops
-  if (pathname === '/pricing') {
-    return env.ASSETS.fetch(new Request(new URL('/pricing.html', url.origin), request));
-  }
-
 
   // All other paths: default Pages asset serving
   return next();

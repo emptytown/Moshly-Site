@@ -309,7 +309,7 @@
 
     const params  = new URLSearchParams(location.search);
     const noPlan  = params.get('no_plan') === '1';
-    const dest    = noPlan ? '/pricing.html?from=register' : '/dashboard';
+    const dest    = noPlan ? '/pricing?from=register' : '/dashboard';
 
     // Populate from cached user
     const cached = window.MoshlyAuth.getUser();
