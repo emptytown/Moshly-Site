@@ -153,6 +153,7 @@ const MoshlyAuth = {
           if (data.user) localStorage.setItem('moshly_user', JSON.stringify(data.user));
           return true;
         }
+        localStorage.removeItem('moshly_user');
       } catch (e) {
         console.error('Silent refresh failed:', e);
       }
