@@ -91,7 +91,7 @@ self.addEventListener('fetch', (event) => {
   // cache only when offline. This prevents stale pages after deploys.
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request.url, { cache: 'no-store', credentials: 'include' })
+      fetch(request, { cache: 'no-store' })
         .then((response) => {
           if (response.ok && !response.redirected) {
             storeInCache(request, response);
