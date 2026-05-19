@@ -19,7 +19,10 @@
  */
 function serveAsset(env, originalRequest, assetPath) {
   const origin = new URL(originalRequest.url).origin;
-  const targetUrl = new URL(assetPath, origin).toString();
+  // Fetch the clean URL (no .html) so Cloudflare Pretty URLs serves the file
+  // transparently (200) instead of redirecting .html → clean URL (308 loop).
+  const cleanPath = assetPath.replace(/\.html$/, '');
+  const targetUrl = new URL(cleanPath, origin).toString();
   return env.ASSETS.fetch(new Request(targetUrl, originalRequest));
 }
 
