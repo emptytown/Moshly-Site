@@ -1,14 +1,9 @@
-# 1. Force Clean URLs (Strip .html from the browser bar)
-# 2. i'm commenting out this command - /*.html  /:1  301
+# Root-level .html files (login, pricing, signup, dashboard, admin, etc.) are
+# served at clean URLs automatically by Cloudflare Pages "Pretty URLs" feature.
+# Do NOT add 200 rewrites for those here — _redirects 200 + Pretty URLs conflict,
+# causing a self-referencing 308 redirect loop (/login -> /login -> ...).
 
-# 3. Cloudflare handles mapping clean URLs to .html files automatically if "Pretty URLs" is enabled.
-# We only need explicit redirects here for non-standard mappings or 301s.
-
-/pricing            /pricing.html            200
-/login              /login.html              200
-/signup             /signup.html             200
-/dashboard          /dashboard.html          200
-/admin              /admin.html              200
+# Non-standard paths: files in subdirectories that Pretty URLs won't surface.
 /index              /                        301
 /fifthsense         /apps/fifthsense.html    200
 /quote              /apps/quote.html         200
