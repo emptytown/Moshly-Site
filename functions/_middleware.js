@@ -2,29 +2,9 @@
  * Global Pages Functions middleware.
  *
  * Routing logic:
- *   /              → index.html
- *   /dashboard    → dashboard.html
- *   /admin        → admin.html
  *   /api/*        → delegated to api/ function handlers
- *   everything else → default Pages asset serving
+ *   everything else → default Pages asset serving (applies _redirects, Pretty URLs)
  */
-
-/**
- * Fetches a static asset from the Pages asset binding.
- *
- * @param {object} env - Worker environment (must have ASSETS binding)
- * @param {Request} originalRequest
- * @param {string} assetPath - Absolute path of the asset (e.g. "/dashboard.html")
- * @returns {Promise<Response>}
- */
-function serveAsset(env, originalRequest, assetPath) {
-  const origin = new URL(originalRequest.url).origin;
-  // Fetch the clean URL (no .html) so Cloudflare Pretty URLs serves the file
-  // transparently (200) instead of redirecting .html → clean URL (308 loop).
-  const cleanPath = assetPath.replace(/\.html$/, '');
-  const targetUrl = new URL(cleanPath, origin).toString();
-  return env.ASSETS.fetch(new Request(targetUrl, originalRequest));
-}
 
 /**
  * Normalises the pathname: strips trailing slash unless it is the root "/".
@@ -39,7 +19,7 @@ function normalisePath(pathname) {
   return pathname;
 }
 
-export async function onRequest({ request, next, env }) {
+export async function onRequest({ request, next }) {
   const url = new URL(request.url);
   const pathname = normalisePath(url.pathname);
 
@@ -48,20 +28,9 @@ export async function onRequest({ request, next, env }) {
     return next();
   }
 
-  // Clean-URL routes — serve HTML assets directly to bypass _redirects + Pretty URLs
-  // interaction that causes redirect loops (especially in Safari).
-  const CLEAN_URL_MAP = {
-    '/pricing': '/pricing.html',
-    '/login': '/login.html',
-    '/signup': '/signup.html',
-    '/dashboard': '/dashboard.html',
-    '/admin': '/admin.html',
-  };
-
-  if (CLEAN_URL_MAP[pathname]) {
-    return serveAsset(env, request, CLEAN_URL_MAP[pathname]);
-  }
-
-  // All other paths: default Pages asset serving
+  // All other paths: default Pages asset serving.
+  // _redirects (200 rewrites) and Pretty URLs are applied by the Pages routing
+  // layer here — NOT via env.ASSETS.fetch(), which triggers a _redirects +
+  // Pretty URLs conflict that produces 308 self-redirects on /login, /pricing, etc.
   return next();
 }
