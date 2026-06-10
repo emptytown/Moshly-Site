@@ -93,3 +93,26 @@ export const projects = sqliteTable('projects', {
   workspaceIdIdx: index('projects_workspace_id_idx').on(table.workspaceId),
   ownerIdIdx: index('projects_owner_id_idx').on(table.ownerId),
 }));
+
+// --- TASKS (for moshly-days) ---
+export const tasks = sqliteTable('tasks', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description').default(''),
+  priority: text('priority').default('P1'),
+  dueDate: text('due_date').notNull(),
+  alertDate: text('alert_date'),
+  isCompleted: integer('is_completed', { mode: 'boolean' }).default(false),
+  completedAt: text('completed_at'),
+  parentId: text('parent_id'),
+  eventType: text('event_type'),
+  dayType: text('day_type'),
+  project: text('project'),
+  metadata: text('metadata'),
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+}, (table) => ({
+  userIdIdx: index('idx_tasks_user_id').on(table.userId),
+  dueDateIdx: index('idx_tasks_due_date').on(table.dueDate),
+}));
