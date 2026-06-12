@@ -158,6 +158,11 @@ const APP_CATALOG = [
         slug: 'run', name: 'Run', description: 'Interactive Roadbooks for tours and shows',
         status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', url: 'https://run.moshly.io',
         type: 'Plan app', categories: ['Business', 'Tour']
+    },
+    {
+        slug: 'days', name: 'Days', description: 'Task management and scheduling',
+        status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', url: 'https://days.moshly.io',
+        type: 'Plan app', categories: ['Business', 'Productivity']
     }
 ];
 
