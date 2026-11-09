@@ -69,3 +69,7 @@ Browser → Cloudflare Pages (static site)
 | `AUTH_KV` | KV namespace binding — SSO tokens, refresh tokens, rate limits |
 | `MOSHLY_DB` | D1 database binding |
 | `SMTP_*` | Email sending (verification, password reset) |
+
+## Homepage News
+
+The `#roadmap` section of `index.html` holds 3 auto-numbered news cards (newest first). Add new items at the top and never hard-code numbers — see "Homepage News" in `docs/STANDARDS.md`.
