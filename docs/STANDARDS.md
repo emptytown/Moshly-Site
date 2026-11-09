@@ -42,3 +42,4 @@
 - **Only the first 3 cards are shown** (`.roadmap-station:nth-child(n+4) { display: none; }`). The new item becomes 01, the old 01 becomes 02, and so on; the old 03 is hidden automatically.
 - Keep each text to the classic length (~2–3 sentences, ~200–260 chars), in English, with: badge (`New`/`Live`/`Update`), title, short tagline, description, CTA link to the app.
 - Hidden older cards may be deleted from the HTML to keep it clean.
+- Numbering lives in `style.css`. Whenever you change `style.css` (or any file in `SHELL_ASSETS` of `sw.js`), **bump `CACHE_VERSION` in `sw.js`**, otherwise returning visitors keep the old cached CSS and lose the numbers.
