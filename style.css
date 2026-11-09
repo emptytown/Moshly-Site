@@ -1871,8 +1871,9 @@ body::before {
    ============================================ */
 .roadmap-stations {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
+  counter-reset: news;
   background: var(--color-border-subtle);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-xl);
@@ -1888,6 +1889,16 @@ body::before {
   gap: var(--space-md);
   transition: background 0.2s;
   position: relative;
+}
+
+/* News: newest first, auto-numbered, only the 3 newest shown */
+.roadmap-station:nth-child(n+4) {
+  display: none;
+}
+
+.roadmap-station-num::before {
+  counter-increment: news;
+  content: counter(news, decimal-leading-zero);
 }
 
 .roadmap-station:hover {
@@ -2006,7 +2017,7 @@ body::before {
 
 @media (max-width: 900px) {
   .roadmap-stations {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
