@@ -14,7 +14,17 @@
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <script>
+    // Same skin + theme as the dashboard (Settings and Visibility → Dashboard Skin), applied before paint.
+    (function () {
+      try {
+        var root = document.documentElement;
+        root.classList.add('skin-' + (localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal'));
+        if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+      } catch (_) { document.documentElement.classList.add('skin-brutal'); }
+    })();
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -309,13 +319,15 @@
       flex-shrink: 0;
     }
   </style>
+  <link href="/launcher-brutal.css" rel="stylesheet" />
 </head>
 <body>
   <div class="wrap">
 
     <header class="topbar">
       <a class="brand" href="/?explicit=true">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
+        <img class="nb-icon--legacy" src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" />
+        <img class="nb-icon--brutal" src="assets/neo-brut-icons/moshly.png" alt="Moshly" loading="lazy" />
         Moshly
       </a>
       <a class="dashboard-link" href="/dashboard" id="launcherBackToDashboardTop">Dashboard →</a>
@@ -368,34 +380,11 @@
 
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
+  <script src="/moshly-apps.js"></script>
+  <script src="/moshly-prefs.js"></script>
   <script>
-    const APP_CATALOG = [
-      {
-        slug: 'quote', name: 'Quote', status: 'live',
-        iconAsset: '/assets/moshly-Quote-logo-svg.svg', url: '/apps/quote.html',
-        type: 'Plan app', categories: ['Business', 'Analytics']
-      },
-      {
-        slug: 'fifthsense', name: 'Fifth Sense', status: 'live',
-        iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', url: '/apps/fifthsense.html',
-        type: 'Free', categories: ['Learning', 'Interactive']
-      },
-      {
-        slug: 'merchpad', name: 'MerchPad', status: 'live',
-        iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Booking']
-      },
-      {
-        slug: 'rank', name: 'Rank', status: 'live',
-        iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
-        type: 'Plan app', categories: ['Business']
-      },
-      {
-        slug: 'run', name: 'Run', status: 'live',
-        iconAsset: '/assets/moshly-run-logo-svg.svg', url: 'https://run.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Tour']
-      }
-    ];
+    // App catalog + slot rules are shared with the dashboard (moshly-apps.js).
+    const APP_CATALOG = window.MoshlyApps.CATALOG;
 
     // Per-app icon gradients — orange family, slightly different tones
     const APP_ICON_COLORS = {
@@ -497,13 +486,14 @@
 
         const iconInner = `
           <div class="app-icon-shape" style="background:none">
-            <img src="${app.iconAsset}" alt="${app.name}" loading="lazy">
+            <img class="nb-icon--legacy" src="${app.iconAsset}" alt="${app.name}" loading="lazy">
+            ${app.iconBrutal ? `<img class="nb-icon--brutal" src="${app.iconBrutal}" alt="${app.name}" loading="lazy">` : ''}
             ${badgeHTML}
           </div>
           <span class="app-icon-label">${app.name}</span>`;
 
-        if (isSoon) {
-          return `<div class="app-icon-item app-icon-item--soon">${iconInner}</div>`;
+        if (isSoon || badge === 'Locked') {
+          return `<div class="app-icon-item app-icon-item--soon" title="${badge === 'Locked' ? 'Locked until next cycle' : 'Coming soon'}">${iconInner}</div>`;
         }
         if (isExternal) {
           return `<a class="app-icon-item" href="javascript:void(0)" onclick="window.launchApp('${app.url}')">${iconInner}</a>`;
@@ -531,58 +521,30 @@
 
         if (!appsGrid) return;
 
-        if (!user.apps && user.profile?.connectedApps) {
-          user.apps = user.profile.connectedApps;
-        }
+        // Same lists and counts as the dashboard — see MoshlyApps.layout().
+        const layout = window.MoshlyApps.layout(user);
 
-        const activeAppSlugs = Array.isArray(user.apps)
-          ? [...new Set(user.apps.map((s) => {
-              const n = s.toLowerCase().trim();
-              return n === 'fifth sense' ? 'fifthsense' : n;
-            }))]
-          : [];
-
-        const activeApps = APP_CATALOG.filter((a) =>
-          activeAppSlugs.includes(a.slug.toLowerCase())
-        );
-
-        const plan = (user.subscription?.plan || user.plan || 'free').toLowerCase();
-        const SLOT_MAP = {
-          free: 0, solo: 2, collective: 4, business: 10,
-          major: 150, starter: 3, pro: 9, elite: 15, god: 150, semi_god: 150,
-        };
-        const totalSlots = SLOT_MAP[plan] ?? (plan === 'free' ? 0 : 3);
-
-        // 1. Plan apps
-        const activeMainApps = activeApps.filter((a) => a.type !== 'Free');
-        let appsHtml = activeMainApps.map((a) => buildIconHTML(a, null)).join('');
-
-        const usedCount    = activeMainApps.length;
-        const baseSlots    = Math.max(3, parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10));
-        const displaySlots = Math.max(baseSlots, usedCount < 3 ? 3 : Math.ceil(usedCount / 3) * 3);
-        const effectiveTotal = Math.max(usedCount, Math.min(totalSlots, displaySlots));
-        const emptyCount   = Math.max(0, effectiveTotal - usedCount);
-
-        for (let i = 0; i < emptyCount; i++) appsHtml += buildEmptySlotHTML('Add App');
+        // 1. Plan apps (+ empty plan slots)
+        let appsHtml = layout.mainApps
+          .map((a) => buildIconHTML(a, layout.blacklisted.includes(a.slug) ? 'Locked' : null))
+          .join('');
+        for (let i = 0; i < layout.emptyMain; i++) appsHtml += buildEmptySlotHTML('Connect App');
         appsGrid.innerHTML = appsHtml;
 
-        // 2. Free apps
-        const activeFreeApps = activeApps.filter((a) => a.type === 'Free');
-        if (activeFreeApps.length > 0 && freeGrid && freeSection) {
-          let freeHtml = activeFreeApps.map((a) => buildIconHTML(a, null)).join('');
-          const emptyFreeCount = Math.max(0, 3 - activeFreeApps.length);
-          for (let i = 0; i < emptyFreeCount; i++) freeHtml += buildEmptySlotHTML('Explore');
+        // 2. Free apps — always visible, like the dashboard
+        if (freeGrid && freeSection) {
+          let freeHtml = layout.freeApps.map((a) => buildIconHTML(a, null)).join('');
+          for (let i = 0; i < layout.emptyFree; i++) freeHtml += buildEmptySlotHTML('Connect App');
           freeGrid.innerHTML = freeHtml;
           freeSection.hidden = false;
         }
 
-        // 3. Peek slot
+        // 3. Peek slot — always visible, like the dashboard
         if (peekGrid && peekSection) {
-          const peekApp = APP_CATALOG.find((a) => a.slug === (user.peek_app || '').toLowerCase());
-          if (peekApp) {
-            peekGrid.innerHTML = buildIconHTML(peekApp, 'Peek');
-            peekSection.hidden = false;
-          }
+          peekGrid.innerHTML = layout.peekApp
+            ? buildIconHTML(layout.peekApp, 'Peek')
+            : buildEmptySlotHTML('Try an App');
+          peekSection.hidden = false;
         }
       }
 
@@ -592,9 +554,8 @@
           const { ok, data } = await window.MoshlyAuth.authFetch('/me');
           if (ok && data.user) {
             const user = data.user;
-            if (user.profile?.uxSettings?.emptySlots) {
-              localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
-            }
+            // Same skin / theme / empty-slot count as chosen in the full dashboard.
+            window.MoshlyPrefs.syncFromServer(user);
             const firstName = (user.name || '').split(' ')[0] || (user.profile?.firstName) || '';
             if (firstName) {
               document.querySelectorAll('[data-first-name]').forEach((el) => { el.textContent = firstName; });

@@ -14,10 +14,22 @@
     <meta name="apple-mobile-web-app-title" content="Moshly"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Caveat+Brush&display=swap"
           rel="stylesheet"/>
+    <script>
+      // Apply skin + theme before first paint to avoid a flash of the wrong skin.
+      (function () {
+        try {
+          var skin = localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal';
+          var root = document.documentElement;
+          root.classList.add('skin-' + skin);
+          if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+        } catch (_) { document.documentElement.classList.add('skin-brutal'); }
+      })();
+    </script>
     <link href="/style.css" rel="stylesheet"/>
     <link href="/dashboard.css" rel="stylesheet"/>
+    <link href="/dashboard-brutal.css" rel="stylesheet"/>
 </head>
 <body>
 
@@ -30,7 +42,7 @@
     <!-- ─── MOBILE DRAWER ────────────────────────── -->
     <div aria-hidden="true" class="db-mob-drawer" id="dbMobDrawer">
         <div class="db-mob-drawer-logo">
-            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <img alt="Moshly" class="db-icon--legacy" src="assets/Moshly-Main-Logo-1.svg"/><img alt="Moshly" class="db-icon--brutal" loading="lazy" src="assets/neo-brut-icons/moshly.png"/>
             <span>Moshly</span>
         </div>
         <div class="db-mob-drawer-user">
@@ -129,7 +141,7 @@
     <!-- ─── SIDEBAR ─────────────────────────────────── -->
     <nav class="db-sidebar" id="dbSidebar">
         <div class="db-sidebar-logo">
-            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <img alt="Moshly" class="db-icon--legacy" src="assets/Moshly-Main-Logo-1.svg"/><img alt="Moshly" class="db-icon--brutal" loading="lazy" src="assets/neo-brut-icons/moshly.png"/>
             <span>Moshly</span>
         </div>
 
@@ -324,11 +336,11 @@
                     <div class="db-profile-metrics">
                         <div class="db-profile-metric">
                             <div class="db-profile-metric-label">Renewal</div>
-                            <strong id="db-billing-renewal-val"></strong>
+                            <strong id="db-billing-renewal-val">—</strong>
                         </div>
                         <div class="db-profile-metric">
                             <div class="db-profile-metric-label">Apps Included</div>
-                            <strong id="db-billing-apps-val"></strong>
+                            <strong id="db-billing-apps-val">—</strong>
                         </div>
 
                     </div>
@@ -464,19 +476,29 @@
                         </div>
                         <div class="db-visibility-toggle">
                             <div class="db-toggle-label">
+                                <strong>Dashboard Skin</strong>
+                                Neo Brut or the classic Legacy Purple look
+                            </div>
+                            <div aria-label="Dashboard skin" class="db-skin-switch" role="radiogroup">
+                                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" type="button">Neo Brut</button>
+                                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" type="button">Legacy Purple</button>
+                            </div>
+                        </div>
+                        <div class="db-visibility-toggle">
+                            <div class="db-toggle-label">
                                 <strong>Searchable Profile</strong>
                                 Visible to other crew members
                             </div>
-                            <button class="db-toggle on" onclick="this.classList.toggle('on')"
-                                    title="Toggle searchable profile"></button>
+                            <button aria-checked="true" aria-label="Searchable profile" class="db-toggle on" data-pref="searchable"
+                                    role="switch" title="Toggle searchable profile" type="button"></button>
                         </div>
                         <div class="db-visibility-toggle">
                             <div class="db-toggle-label">
                                 <strong>Join Moshly Metaverse</strong>
                                 Visible in the future Moshly Metaverse
                             </div>
-                            <button class="db-toggle" onclick="this.classList.toggle('on')"
-                                    title="Toggle Metaverse visibility"></button>
+                            <button aria-checked="false" aria-label="Join Moshly Metaverse" class="db-toggle" data-pref="metaverse"
+                                    role="switch" title="Toggle Metaverse visibility" type="button"></button>
                         </div>
 
                         <!-- 1/4 (integrated): Fifth Sense -->
@@ -1051,6 +1073,8 @@
 <script src="/auth-client.js"></script>
 <script src="/modal-manager.js"></script>
 <script src="/moshly-ui.js"></script>
+<script src="/moshly-apps.js"></script>
+<script src="/moshly-prefs.js"></script>
 <script src="dashboard-logic.js"></script>
 <script>
   // When returning from an external spoke app, honour the hub screen the user launched from.
