@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Moshly Days app icon (vector, 1024x1024 canvas like the other Moshly app icons) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="62" y1="62" x2="962" y2="962" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0AB8F0"/>
+      <stop offset="0.45" stop-color="#3F5BFA"/>
+      <stop offset="1" stop-color="#5B10EE"/>
+    </linearGradient>
+  </defs>
+  <rect x="62" y="62" width="900" height="900" rx="190" fill="url(#bg)"/>
+  <!-- calendar body -->
+  <rect x="203.1" y="264.5" width="615.7" height="529.8" rx="59.3" fill="#FFFFFF" fill-opacity="0.14" stroke="#FFFFFF" stroke-opacity="0.62" stroke-width="6.1"/>
+  <line x1="203.1" y1="432.2" x2="818.8" y2="432.2" stroke="#FFFFFF" stroke-opacity="0.62" stroke-width="6.1"/>
+  <!-- dots -->
+  <g fill="#FFFFFF" fill-opacity="0.72">
+    <circle cx="344.3" cy="352.5" r="26.6"/>
+    <circle cx="511.0" cy="352.5" r="26.6"/>
+    <circle cx="680.8" cy="352.5" r="26.6"/>
+    <circle cx="318.7" cy="505.9" r="29.7"/>
+    <circle cx="511.0" cy="505.9" r="29.7"/>
+    <circle cx="704.3" cy="505.9" r="29.7"/>
+    <circle cx="318.7" cy="611.2" r="29.7"/>
+    <circle cx="704.3" cy="611.2" r="29.7"/>
+    <circle cx="318.7" cy="713.5" r="29.7"/>
+    <circle cx="511.0" cy="713.5" r="29.7"/>
+    <circle cx="704.3" cy="713.5" r="29.7"/>
+  </g>
+  <!-- rings -->
+  <g fill="#FFFFFF">
+    <rect x="365.8" y="193.9" width="54.2" height="138.1" rx="27.1"/>
+    <rect x="608.1" y="193.9" width="54.2" height="138.1" rx="27.1"/>
+  </g>
+  <!-- today, checked -->
+  <circle cx="511.0" cy="613.2" r="52.2" fill="#FFFFFF"/>
+  <path d="M484.4 615.3 L504.8 636.8 L542.7 598.9" fill="none" stroke="#6A2CF0" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
