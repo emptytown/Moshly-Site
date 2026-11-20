@@ -180,13 +180,11 @@ async function initDashboard() {
 
     const { user } = data;
     
-    // Sync user preferences from server to localStorage for immediate availability
+    // Skin, theme and empty-slot count come from the account (moshly-prefs.js) so the
+    // simple dash shows the same choices on every device. Seed the account the first time.
+    window.MoshlyPrefs.syncFromServer(user, { seed: true });
+
     if (user.profile) {
-        if (user.profile.uxSettings) {
-            if (user.profile.uxSettings.emptySlots) {
-                localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
-            }
-        }
         // Prefer server-side apps; fall back to localStorage if server returned empty
         const serverApps = Array.isArray(user.profile.connectedApps) ? user.profile.connectedApps : [];
         if (serverApps.length > 0) {
@@ -564,8 +562,16 @@ function initDashboardTheme() {
     const themeBtn = document.getElementById('dbThemeBtn');
     const mobThemeBtn = document.getElementById('dbMobThemeBtn');
 
-    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-    if (mobThemeBtn) mobThemeBtn.addEventListener('click', toggleTheme);
+    // toggleTheme (moshly-ui.js) flips the class; then persist the result to the account.
+    const persistTheme = () => {
+        const theme = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
+        if (window._currentUser && window.MoshlyPrefs) window.MoshlyPrefs.save(window._currentUser, { theme });
+    };
+    [themeBtn, mobThemeBtn].forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener('click', toggleTheme);
+        btn.addEventListener('click', persistTheme);
+    });
 
     // Initial UI sync
     const isLight = document.documentElement.classList.contains('theme-light');
@@ -586,6 +592,8 @@ function setDashboardSkin(skin) {
     DASHBOARD_SKINS.forEach(s => root.classList.toggle('skin-' + s, s === skin));
     try { localStorage.setItem('moshly-skin', skin); } catch (_) {}
     updateDashboardSkinUI(skin);
+    // Persist to the account so the simple dash (launcher) reflects it everywhere.
+    if (window._currentUser && window.MoshlyPrefs) window.MoshlyPrefs.save(window._currentUser, { skin });
 }
 
 function updateDashboardSkinUI(skin) {

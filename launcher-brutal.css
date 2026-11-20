@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
-   LAUNCHER — skins
+   LAUNCHER — skins + themes
    The launcher follows the same skin + theme the user picks in the
    dashboard (localStorage `moshly-skin` / `moshly-theme`):
      html.skin-legacy             → original launcher (inline <style>)
@@ -131,3 +131,36 @@ html.skin-brutal .dock-btn svg { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   html.skin-brutal .app-icon-item:hover .app-icon-shape { transform: none; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LEGACY PURPLE — light theme (the original launcher was dark-only).
+   Colours match dashboard.css `html.theme-light` so both views agree.
+   ════════════════════════════════════════════════════════════════ */
+html.skin-legacy.theme-light { color-scheme: light; }
+html.skin-legacy.theme-light body {
+  background: #F0F1F8;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 15% 8%, rgba(107,92,255,0.12), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(0,209,255,0.06), transparent 55%);
+  color: #14151A;
+}
+html.skin-legacy.theme-light .brand { color: #14151A; }
+html.skin-legacy.theme-light .dashboard-link { color: #4A4D5E; }
+html.skin-legacy.theme-light .dashboard-link:hover { color: #14151A; }
+html.skin-legacy.theme-light .welcome-name span {
+  background: linear-gradient(135deg, #14151A 30%, #4A4D5E);
+  -webkit-background-clip: text; background-clip: text;
+}
+html.skin-legacy.theme-light #launcher-live-datetime { color: #7B7F93; }
+html.skin-legacy.theme-light .launcher-time { color: #4A4D5E; }
+html.skin-legacy.theme-light .section-label { color: #7B7F93; }
+html.skin-legacy.theme-light .app-icon-shape { box-shadow: 0 4px 14px rgba(41,53,99,.18), 0 1px 3px rgba(41,53,99,.12); }
+html.skin-legacy.theme-light .app-icon-shape--empty {
+  background: #FFFFFF !important; border: 1.5px dashed #CDD0DF !important;
+}
+html.skin-legacy.theme-light .app-empty-plus { color: #7B7F93; }
+html.skin-legacy.theme-light .app-icon-label { color: #14151A; text-shadow: none; }
+html.skin-legacy.theme-light .pending-alert { background: rgba(107,92,255,.08); color: #4A3DEE; }
+html.skin-legacy.theme-light .dock { background: rgba(255,255,255,.88); border-top-color: #E2E4EF; }
+html.skin-legacy.theme-light .dock-btn { background: #6B5CFF; border-color: #6B5CFF; color: #fff; }
+html.skin-legacy.theme-light .dock-btn:hover { background: #5B4DFF; }

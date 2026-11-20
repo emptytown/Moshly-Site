@@ -381,6 +381,7 @@
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
   <script src="/moshly-apps.js"></script>
+  <script src="/moshly-prefs.js"></script>
   <script>
     // App catalog + slot rules are shared with the dashboard (moshly-apps.js).
     const APP_CATALOG = window.MoshlyApps.CATALOG;
@@ -553,9 +554,8 @@
           const { ok, data } = await window.MoshlyAuth.authFetch('/me');
           if (ok && data.user) {
             const user = data.user;
-            if (user.profile?.uxSettings?.emptySlots) {
-              localStorage.setItem('moshly_setting_empty_slots', user.profile.uxSettings.emptySlots);
-            }
+            // Same skin / theme / empty-slot count as chosen in the full dashboard.
+            window.MoshlyPrefs.syncFromServer(user);
             const firstName = (user.name || '').split(' ')[0] || (user.profile?.firstName) || '';
             if (firstName) {
               document.querySelectorAll('[data-first-name]').forEach((el) => { el.textContent = firstName; });
