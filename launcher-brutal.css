@@ -1,0 +1,133 @@
+/* ════════════════════════════════════════════════════════════════
+   LAUNCHER — skins
+   The launcher follows the same skin + theme the user picks in the
+   dashboard (localStorage `moshly-skin` / `moshly-theme`):
+     html.skin-legacy             → original launcher (inline <style>)
+     html.skin-brutal             → Neo Brut dark  (brand board)
+     html.skin-brutal.theme-light → Neo Brut light (cream + ink)
+   Mirrors the rules in dashboard-brutal.css: neutrals carry the page,
+   lime marks actions, purple marks identity.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Icon sets: only the active skin's icon is shown (hidden lazy images are not fetched) */
+.nb-icon--brutal { display: none !important; }
+html.skin-brutal .nb-icon--brutal { display: block !important; }
+html.skin-brutal :is(.brand, .app-icon-shape):has(.nb-icon--brutal) .nb-icon--legacy { display: none !important; }
+
+/* ── Tokens ── */
+html.skin-brutal {
+  --nb-ink: #FFFFFF;
+  --nb-muted: #A6A6A6;
+  --nb-line: #2E2E2E;
+  --nb-paper: #181818;
+  --nb-card: #232323;
+  --nb-lime: #D8FF54;
+  --nb-violet: #C575F8;
+  --nb-on: #111111;
+  --nb-font: "Inter Tight", "Inter", system-ui, sans-serif;
+  --nb-script: "Caveat Brush", cursive;
+}
+html.skin-brutal.theme-light {
+  --nb-ink: #111111;
+  --nb-muted: #4B4B4B;
+  --nb-line: #111111;
+  --nb-paper: #FFF3DD;
+  --nb-card: #FFFFFF;
+  color-scheme: light;
+}
+
+/* ── Page ── */
+html.skin-brutal body {
+  font-family: var(--nb-font);
+  background: var(--nb-paper);
+  background-image: none;
+  color: var(--nb-ink);
+}
+html.skin-brutal.theme-light body {
+  background-image:
+    linear-gradient(rgba(17,17,17,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17,17,17,.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ── Topbar ── */
+html.skin-brutal .brand { color: var(--nb-ink); font-weight: 900; font-size: 17px; letter-spacing: -.03em; }
+html.skin-brutal .brand img { width: 30px; height: 30px; border-radius: 0; }
+html.skin-brutal .dashboard-link { color: var(--nb-muted); font-weight: 600; }
+html.skin-brutal .dashboard-link:hover { color: var(--nb-ink); text-decoration: underline; text-decoration-color: var(--nb-lime); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* ── Welcome: heavy headline, name as the purple hand-written accent ── */
+html.skin-brutal .welcome-name { font-weight: 900; letter-spacing: -.045em; }
+html.skin-brutal .welcome-name span {
+  font-family: var(--nb-script); font-weight: 400; letter-spacing: 0; font-size: 1.15em;
+  background: none; color: var(--nb-violet); -webkit-text-fill-color: var(--nb-violet);
+  display: inline-block; transform: rotate(-3deg);
+}
+html.skin-brutal.theme-light .welcome-name span { color: #8A2BD1; -webkit-text-fill-color: #8A2BD1; } /* AA on cream */
+html.skin-brutal #launcher-live-datetime { color: var(--nb-muted); }
+html.skin-brutal .launcher-time { color: var(--nb-ink); }
+
+/* ── Section labels: type, not chips ── */
+html.skin-brutal .section-label { color: var(--nb-ink); font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+
+/* ── Icons: the neo-brut icon carries its own tile + shadow, so drop the legacy frame ── */
+html.skin-brutal .app-icon-shape:has(.nb-icon--brutal) { box-shadow: none; overflow: visible; border-radius: 0; }
+html.skin-brutal .app-icon-shape .nb-icon--brutal { transform: none; border-radius: 0; object-fit: contain; }
+html.skin-brutal .app-icon-item:hover .app-icon-shape:has(.nb-icon--brutal) { transform: translateY(-3px); }
+html.skin-brutal .app-icon-item:focus-visible { outline: 3px solid var(--nb-lime); outline-offset: 2px; border-radius: 14px; }
+html.skin-brutal.theme-light .app-icon-item:focus-visible { outline-color: var(--nb-violet); }
+html.skin-brutal .app-icon-label {
+  color: var(--nb-ink); text-shadow: none; font-size: 12px; font-weight: 600; max-width: 84px;
+}
+
+/* Empty slots: neutral at rest, lime only on hover (the action) */
+html.skin-brutal .app-icon-shape--empty {
+  background: transparent !important;
+  border: 1.5px dashed #3A3A3A !important;
+  border-radius: 18px;
+  transition: background .15s, border-color .15s;
+}
+html.skin-brutal.theme-light .app-icon-shape--empty { border: 2.5px dashed var(--nb-line) !important; border-radius: 10px; background: var(--nb-card) !important; }
+html.skin-brutal .app-empty-plus { color: var(--nb-muted); font-weight: 400; }
+html.skin-brutal .app-icon-item:is(:hover, :focus-visible) .app-icon-shape--empty {
+  background: var(--nb-lime) !important; border-style: solid !important; border-color: var(--nb-lime) !important;
+}
+html.skin-brutal.theme-light .app-icon-item:is(:hover, :focus-visible) .app-icon-shape--empty { border-color: var(--nb-line) !important; }
+html.skin-brutal .app-icon-item:is(:hover, :focus-visible) .app-empty-plus { color: var(--nb-on); }
+
+/* Badges */
+html.skin-brutal .app-badge {
+  top: -6px; right: -6px; z-index: 1;
+  background: var(--nb-card); color: var(--nb-ink);
+  border: 1.5px solid var(--nb-line); border-radius: 999px; padding: 2px 6px;
+  backdrop-filter: none;
+}
+html.skin-brutal .app-badge--peek { background: var(--nb-violet); color: var(--nb-on); border-color: var(--nb-violet); }
+html.skin-brutal.theme-light .app-badge--peek { border-color: var(--nb-line); }
+
+/* Pending alert */
+html.skin-brutal .pending-alert {
+  background: var(--nb-lime); color: var(--nb-on); border: 0; border-radius: 16px;
+}
+html.skin-brutal.theme-light .pending-alert { border: 2.5px solid var(--nb-line); border-radius: 8px; box-shadow: 3px 3px 0 0 var(--nb-line); }
+html.skin-brutal .pending-alert:hover { background: #E6FF8A; }
+
+/* Dock */
+html.skin-brutal .dock {
+  background: rgba(17,17,17,.92); border-top: 1px solid var(--nb-line);
+}
+html.skin-brutal.theme-light .dock {
+  background: var(--nb-card); border-top: 2.5px solid var(--nb-line);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+html.skin-brutal .dock-btn {
+  background: var(--nb-lime); color: var(--nb-on); border: 0; font-weight: 800; min-height: 44px;
+}
+html.skin-brutal .dock-btn:hover { background: #E6FF8A; }
+html.skin-brutal.theme-light .dock-btn { border: 2.5px solid var(--nb-line); border-radius: 8px; box-shadow: 3px 3px 0 0 var(--nb-line); }
+html.skin-brutal.theme-light .dock-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 0 var(--nb-line); }
+html.skin-brutal .dock-btn svg { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.skin-brutal .app-icon-item:hover .app-icon-shape { transform: none; }
+}

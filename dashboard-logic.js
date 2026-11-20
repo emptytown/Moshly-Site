@@ -3,20 +3,9 @@
  * Fetches real data from the Hub API and populates the UI.
  */
 
-// Blacklist storage format: { appSlug: expiresAt_timestamp }
-function getBlacklistedApps(subscriptionExpiresAt) {
-    const blacklist = JSON.parse(localStorage.getItem('moshly_app_blacklist') || '{}');
-    const now = Date.now();
-    const cleanBlacklist = {};
-
-    for (const [slug, expiresAt] of Object.entries(blacklist)) {
-        if (expiresAt > now) {
-            cleanBlacklist[slug] = expiresAt;
-        }
-    }
-
-    localStorage.setItem('moshly_app_blacklist', JSON.stringify(cleanBlacklist));
-    return Object.keys(cleanBlacklist);
+// Blacklist storage format: { appSlug: expiresAt_timestamp } — read via the shared module.
+function getBlacklistedApps() {
+    return window.MoshlyApps.blacklistedSlugs();
 }
 
 function addToBlacklist(appSlug, subscriptionExpiresAt) {
@@ -141,39 +130,8 @@ function appIconImgs(app) {
            `<img class="db-icon--brutal" src="${app.iconBrutal}" alt="${alt}" loading="lazy">`;
 }
 
-// Global APP_CATALOG with types and categories
-const APP_CATALOG = [
-    {
-        slug: 'quote', name: 'Quote', description: 'Financial hub',
-        status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/quote.png', url: '/apps/quote.html',
-        type: 'Plan app', categories: ['Business', 'Analytics']
-    },
-    {
-        slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths',
-        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/fifthsense.png', url: '/apps/fifthsense.html',
-        type: 'Free', categories: ['Learning', 'Interactive']
-    },
-    {
-        slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
-        status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/merchpad.png', url: 'https://merchpad.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Booking']
-    },
-    {
-        slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
-        status: 'live', iconAsset: '/assets/moshly-rank-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/rank.png', url: 'https://rank.moshly.io',
-        type: 'Plan app', categories: ['Business']
-    },
-    {
-        slug: 'run', name: 'Run', description: 'Interactive Roadbooks for tours and shows',
-        status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/run.png', url: 'https://run.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Tour']
-    },
-    {
-        slug: 'days', name: 'Days', description: 'Task management and scheduling',
-        status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/days.png', url: 'https://days.moshly.io',
-        type: 'Plan app', categories: ['Business', 'Productivity']
-    }
-];
+// App catalog + slot rules live in moshly-apps.js (shared with the launcher).
+const APP_CATALOG = window.MoshlyApps.CATALOG;
 
 function _showLaunchError(msg) {
     const existing = document.getElementById('_sso-error-toast');
@@ -892,23 +850,11 @@ function updateAppsUI(user) {
     const peekGrid = document.getElementById('dbPeekGrid');
     if (!appsGrid) return;
 
-    const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
-    // Ensure we only have one entry per app (handle aliases)
-    const uniqueActiveAppSlugs = [...new Set(activeAppSlugs.map(s => (s === 'fifth sense' ? 'fifthsense' : s)))];
-
-    const activeApps = APP_CATALOG.filter(a => uniqueActiveAppSlugs.includes(a.slug.toLowerCase().trim()));
-
-    // Determine slot capacity based on plan
-    const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
-    const totalSlots = slotMap[plan] || 0;
-
-    // 1. Permanent Slots (Main Apps)
-    const activeMainApps = activeApps.filter(a => a.type !== 'Free');
-    const activeFreeApps = activeApps.filter(a => a.type === 'Free');
-
-    // Get blacklisted apps for this cycle
-    const blacklistedApps = getBlacklistedApps(user.subscription?.expiresAt);
+    // Lists + counts come from the shared module so the launcher shows exactly the same apps/slots.
+    const appLayout = window.MoshlyApps.layout(user);
+    const activeMainApps = appLayout.mainApps;
+    const activeFreeApps = appLayout.freeApps;
+    const blacklistedApps = appLayout.blacklisted;
 
     let appsHtml = activeMainApps.map(app => {
         const isNew = window._newApps && window._newApps.includes(app.slug);
@@ -958,23 +904,8 @@ function updateAppsUI(user) {
         window._newApps = [];
     }
 
-    // Add empty slots
-    // 1. A quantidade de slots vazios em display deve ser identico ao permitido pelo plano em uso
-    // Updated Logic: Max shown empty slots is now user configurable (default 12).
-    // If used >= base, show 3 more empty slots (capped by plan limit).
-    const usedCount = activeMainApps.length;
-    const baseSlots = parseInt(localStorage.getItem('moshly_setting_empty_slots') || '12', 10);
-    
-    let displayedSlots;
-    if (usedCount < baseSlots) {
-        displayedSlots = baseSlots;
-    } else {
-        displayedSlots = Math.floor(usedCount / 3) * 3 + 3;
-    }
-    
-    // Cap by the actual plan total
-    const effectiveTotal = Math.min(totalSlots, displayedSlots);
-    const emptySlotsCount = Math.max(0, effectiveTotal - usedCount);
+    // Empty plan slots (rules in moshly-apps.js)
+    const emptySlotsCount = appLayout.emptyMain;
 
     for (let i = 0; i < emptySlotsCount; i++) {
         appsHtml += `
@@ -995,9 +926,7 @@ function updateAppsUI(user) {
         const peekSection = document.getElementById('dbPeekSection');
         if (peekSection) peekSection.classList.remove('db-hidden');
 
-        const peekAppSlug = user.peek_app?.toLowerCase();
-        // Look in catalog for peek app info
-        const peekApp = APP_CATALOG.find(a => a.slug === peekAppSlug);
+        const peekApp = appLayout.peekApp;
 
         if (peekApp) {
             const peekLinkAttr = peekApp.url.includes('.moshly.io')
@@ -1053,16 +982,7 @@ function updateAppsUI(user) {
             </a>
         `).join('');
 
-        // Incremental logic for free slots
-        const usedFreeCount = activeFreeApps.length;
-        let displayedFreeSlots;
-        if (usedFreeCount < 3) {
-            displayedFreeSlots = 3;
-        } else {
-            displayedFreeSlots = Math.floor(usedFreeCount / 3) * 3 + 3;
-        }
-
-        const emptyFreeSlotsCount = Math.max(0, displayedFreeSlots - usedFreeCount);
+        const emptyFreeSlotsCount = appLayout.emptyFree;
         for (let i = 0; i < emptyFreeSlotsCount; i++) {
             freeAppsHtml += `
                 <a href="javascript:void(0)" class="db-app-slot db-app-slot--empty" onclick="window.openAppConnectorModal ? window.openAppConnectorModal() : null">
@@ -1086,8 +1006,7 @@ function updateAppConnectorUI(user) {
 
     // Plan & Capacity Logic
     const plan = (user.subscription?.plan || 'free').toLowerCase();
-    const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
-    const totalSlots = slotMap[plan] || 0;
+    const totalSlots = window.MoshlyApps.appSlotsFor(plan);
     const activeAppSlugs = Array.isArray(user.apps) ? user.apps.map(s => s.toLowerCase().trim()) : [];
     
     // Normalize aliases for usage calculation
@@ -1499,8 +1418,7 @@ function updateQuotasCardUI(sub) {
 
     if (renewEl && sub.expiresAt) renewEl.textContent = new Date(sub.expiresAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
     if (appsEl) {
-        const slotMap = { 'free': 0, 'solo': 3, 'collective': 6, 'business': 12, 'major': 24 };
-        appsEl.textContent = slotMap[sub.plan] ?? '0';
+        appsEl.textContent = window.MoshlyApps.appSlotsFor(sub.plan);
     }
     if (pdfEl) pdfEl.textContent = sub.pdfExportsLimit || "1";
     if (aiEl) aiEl.textContent = formatNumber(sub.aiCreditsLimit || 100);
