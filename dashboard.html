@@ -14,10 +14,22 @@
     <meta name="apple-mobile-web-app-title" content="Moshly"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Archivo+Black&display=swap"
           rel="stylesheet"/>
+    <script>
+      // Apply skin + theme before first paint to avoid a flash of the wrong skin.
+      (function () {
+        try {
+          var skin = localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal';
+          var root = document.documentElement;
+          root.classList.add('skin-' + skin);
+          if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+        } catch (_) { document.documentElement.classList.add('skin-brutal'); }
+      })();
+    </script>
     <link href="/style.css" rel="stylesheet"/>
     <link href="/dashboard.css" rel="stylesheet"/>
+    <link href="/dashboard-brutal.css" rel="stylesheet"/>
 </head>
 <body>
 
@@ -30,7 +42,7 @@
     <!-- ─── MOBILE DRAWER ────────────────────────── -->
     <div aria-hidden="true" class="db-mob-drawer" id="dbMobDrawer">
         <div class="db-mob-drawer-logo">
-            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <img alt="Moshly" class="db-icon--legacy" src="assets/Moshly-Main-Logo-1.svg"/><img alt="Moshly" class="db-icon--brutal" loading="lazy" src="assets/neo-brut-icons/moshly.png"/>
             <span>Moshly</span>
         </div>
         <div class="db-mob-drawer-user">
@@ -93,6 +105,15 @@
             </a>
         </nav>
         <div class="db-mob-drawer-footer">
+            <div aria-label="Dashboard skin" class="db-skin-switch db-skin-switch--mobile" role="radiogroup">
+                <span class="db-skin-switch-label">Skin</span>
+                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" title="Neo Brut" type="button">
+                    <span class="db-skin-opt-full">Neo Brut</span><span class="db-skin-opt-short">NB</span>
+                </button>
+                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" title="Legacy Purple" type="button">
+                    <span class="db-skin-opt-full">Legacy Purple</span><span class="db-skin-opt-short">LP</span>
+                </button>
+            </div>
             <button class="db-mob-drawer-footer-btn" id="dbMobThemeBtn">
                 <span class="db-theme-sun" id="dbMobThemeIconSun"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round"
                                                   stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
@@ -129,7 +150,7 @@
     <!-- ─── SIDEBAR ─────────────────────────────────── -->
     <nav class="db-sidebar" id="dbSidebar">
         <div class="db-sidebar-logo">
-            <img alt="Moshly" src="assets/Moshly-Main-Logo-1.svg"/>
+            <img alt="Moshly" class="db-icon--legacy" src="assets/Moshly-Main-Logo-1.svg"/><img alt="Moshly" class="db-icon--brutal" loading="lazy" src="assets/neo-brut-icons/moshly.png"/>
             <span>Moshly</span>
         </div>
 
@@ -190,6 +211,16 @@
                 </svg>
                 <span class="db-collapse-label">Collapse</span>
             </button>
+            <!-- Skin switcher -->
+            <div aria-label="Dashboard skin" class="db-skin-switch" role="radiogroup">
+                <span class="db-skin-switch-label">Skin</span>
+                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" title="Neo Brut" type="button">
+                    <span class="db-skin-opt-full">Neo Brut</span><span class="db-skin-opt-short">NB</span>
+                </button>
+                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" title="Legacy Purple" type="button">
+                    <span class="db-skin-opt-full">Legacy Purple</span><span class="db-skin-opt-short">LP</span>
+                </button>
+            </div>
             <!-- Theme toggle -->
             <button class="db-theme-btn" id="dbThemeBtn">
                 <span class="db-theme-icon db-theme-sun" id="dbThemeIconSun"><svg fill="none" height="16" stroke="currentColor"

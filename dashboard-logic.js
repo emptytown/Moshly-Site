@@ -132,36 +132,45 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+// Renders both icon variants; CSS shows the one matching the active skin
+// (.db-icon--brutal under html.skin-brutal, .db-icon--legacy otherwise).
+function appIconImgs(app) {
+    const alt = escapeHtml(app.name);
+    if (!app.iconBrutal) return `<img src="${app.iconAsset}" alt="${alt}">`;
+    return `<img class="db-icon--legacy" src="${app.iconAsset}" alt="${alt}" loading="lazy">` +
+           `<img class="db-icon--brutal" src="${app.iconBrutal}" alt="${alt}" loading="lazy">`;
+}
+
 // Global APP_CATALOG with types and categories
 const APP_CATALOG = [
     {
         slug: 'quote', name: 'Quote', description: 'Financial hub',
-        status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', url: '/apps/quote.html',
+        status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/quote.png', url: '/apps/quote.html',
         type: 'Plan app', categories: ['Business', 'Analytics']
     },
     {
         slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths',
-        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', url: '/apps/fifthsense.html',
+        status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/fifthsense.png', url: '/apps/fifthsense.html',
         type: 'Free', categories: ['Learning', 'Interactive']
     },
     {
         slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
-        status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', url: 'https://merchpad.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/merchpad.png', url: 'https://merchpad.moshly.io',
         type: 'Plan app', categories: ['Business', 'Booking']
     },
     {
         slug: 'rank', name: 'Rank', description: 'SEO visibility tool for independent artists',
-        status: 'live', iconAsset: '/assets/moshly-rank-logo-svg.svg', url: 'https://rank.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-rank-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/rank.png', url: 'https://rank.moshly.io',
         type: 'Plan app', categories: ['Business']
     },
     {
         slug: 'run', name: 'Run', description: 'Interactive Roadbooks for tours and shows',
-        status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', url: 'https://run.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/run.png', url: 'https://run.moshly.io',
         type: 'Plan app', categories: ['Business', 'Tour']
     },
     {
         slug: 'days', name: 'Days', description: 'Task management and scheduling',
-        status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', url: 'https://days.moshly.io',
+        status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/days.png', url: 'https://days.moshly.io',
         type: 'Plan app', categories: ['Business', 'Productivity']
     }
 ];
@@ -605,6 +614,46 @@ function initDashboardTheme() {
     updateDashboardThemeUI(isLight);
 }
 
+// --- Dashboard skins: "brutal" (Neo Brut, default) and "legacy" (Legacy Purple) ---
+const DASHBOARD_SKINS = ['brutal', 'legacy'];
+
+function getDashboardSkin() {
+    const root = document.documentElement;
+    return DASHBOARD_SKINS.find(s => root.classList.contains('skin-' + s)) || 'brutal';
+}
+
+function setDashboardSkin(skin) {
+    if (!DASHBOARD_SKINS.includes(skin)) skin = 'brutal';
+    const root = document.documentElement;
+    DASHBOARD_SKINS.forEach(s => root.classList.toggle('skin-' + s, s === skin));
+    try { localStorage.setItem('moshly-skin', skin); } catch (_) {}
+    updateDashboardSkinUI(skin);
+}
+
+function updateDashboardSkinUI(skin) {
+    document.querySelectorAll('.db-skin-opt').forEach(btn => {
+        const active = btn.dataset.skin === skin;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-checked', active ? 'true' : 'false');
+    });
+}
+
+function initDashboardSkin() {
+    document.querySelectorAll('.db-skin-opt').forEach(btn => {
+        btn.addEventListener('click', () => setDashboardSkin(btn.dataset.skin));
+    });
+    updateDashboardSkinUI(getDashboardSkin());
+}
+
+window.setDashboardSkin = setDashboardSkin;
+
+// Skin switching is purely client-side, so wire it up independently of the /me fetch.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboardSkin);
+} else {
+    initDashboardSkin();
+}
+
 function initUXSettings() {
     const emptySlotsSetting = localStorage.getItem('moshly_setting_empty_slots') || '12';
     const select = document.getElementById('dbSettingEmptySlots');
@@ -887,7 +936,7 @@ function updateAppsUI(user) {
                 ${disconnectBtn}
                 <div class="db-app-slot-top">
                     <div class="db-app-slot-icon">
-                        <img src="${app.iconAsset}" alt="${app.name}">
+                        ${appIconImgs(app)}
                     </div>
                     <div class="db-app-slot-meta">
                         <div class="db-app-slot-name">${app.name}</div>
@@ -958,7 +1007,7 @@ function updateAppsUI(user) {
                 <a ${peekLinkAttr} class="db-app-slot db-app-slot--peek">
                     <div class="db-app-slot-top">
                         <div class="db-app-slot-icon">
-                            <img src="${peekApp.iconAsset}" alt="${peekApp.name}">
+                            ${appIconImgs(peekApp)}
                         </div>
                         <div class="db-app-slot-meta">
                             <div class="db-app-slot-name">${peekApp.name}</div>
@@ -991,7 +1040,7 @@ function updateAppsUI(user) {
         let freeAppsHtml = activeFreeApps.map(app => `
             <a href="${app.url}" class="db-app-slot">
                 <div class="db-app-slot-icon">
-                    <img src="${app.iconAsset}" alt="${app.name}">
+                    ${appIconImgs(app)}
                 </div>
                 <div class="db-app-slot-info">
                     <div class="db-app-slot-name">${app.name}</div>
