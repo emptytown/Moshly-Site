@@ -16,6 +16,7 @@ const MAX_ATTEMPTS_PER_WINDOW = {
   'token-exchange': 20,
   'me-patch': 30,
   'me-delete': 3,
+  'days-sync': 240,
 };
 
 /**
