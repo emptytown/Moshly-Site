@@ -3,7 +3,10 @@
 //
 // Auth: `Authorization: Bearer <syncToken>` — an RS256 JWT minted by
 // /api/auth/sso/verify for days.moshly.io (aud "moshly-days-sync", 30 days).
-// Storage: AUTH_KV key `days:data:<userId>`.
+// Storage: D1 table days_sync (strongly consistent; created on first use).
+// KV (AUTH_KV `days:data:<userId>`) was the first store: it is eventually
+// consistent, so a second device could read an older copy and overwrite
+// newer data. Any copy left there is folded in on first access.
 import { jwtVerify, importSPKI } from 'jose';
 import { applyRateLimit } from '../_rate-limit';
 import { emptyDaysData, mergeDaysData } from './_merge';
@@ -47,13 +50,52 @@ async function userIdFrom(request, env) {
   }
 }
 
+// ─── Storage (D1) ────────────────────────────────────────────────────────────
+
+const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS days_sync (
+  user_id TEXT PRIMARY KEY,
+  data TEXT NOT NULL,
+  version INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+)`;
+let tableReady = false;
+
+async function ensureTable(db) {
+  if (tableReady) return;
+  await db.prepare(CREATE_TABLE).run();
+  tableReady = true;
+}
+
+/** Current copy + its version (0 = no row yet). */
+async function load(env, userId) {
+  const db = env.MOSHLY_DB;
+  await ensureTable(db);
+  const row = await db.prepare('SELECT data, version FROM days_sync WHERE user_id = ?').bind(userId).first();
+  if (row) {
+    try { return { data: JSON.parse(row.data), version: row.version }; } catch { return { data: emptyDaysData(), version: row.version }; }
+  }
+  const legacy = env.AUTH_KV ? await env.AUTH_KV.get(`days:data:${userId}`, 'json') : null;
+  return { data: legacy ?? emptyDaysData(), version: 0 };
+}
+
+/** Write only if nobody else wrote since `version` was read (optimistic lock). */
+async function save(env, userId, data, version) {
+  const db = env.MOSHLY_DB;
+  const json = JSON.stringify(data);
+  const now = Date.now();
+  const res = version === 0
+    ? await db.prepare('INSERT INTO days_sync (user_id, data, version, updated_at) VALUES (?, ?, 1, ?) ON CONFLICT(user_id) DO NOTHING').bind(userId, json, now).run()
+    : await db.prepare('UPDATE days_sync SET data = ?, version = version + 1, updated_at = ? WHERE user_id = ? AND version = ?').bind(json, now, userId, version).run();
+  return (res?.meta?.changes ?? 0) === 1;
+}
+
 async function guard(request, env) {
-  if (!env.AUTH_KV) return { error: json(request, 500, { error: 'server_error', message: 'Storage not available' }) };
+  if (!env.AUTH_KV || !env.MOSHLY_DB) return { error: json(request, 500, { error: 'server_error', message: 'Storage not available' }) };
   const userId = await userIdFrom(request, env);
   if (!userId) return { error: json(request, 401, { error: 'unauthorized', message: 'Open Days from Moshly to reconnect sync' }) };
   const retryAfter = await applyRateLimit(env.AUTH_KV, 'days-sync', `user:${userId}`);
   if (retryAfter) return { error: json(request, 429, { error: 'too_many_requests' }, { 'Retry-After': String(retryAfter) }) };
-  return { userId, key: `days:data:${userId}` };
+  return { userId };
 }
 
 export async function onRequestOptions({ request }) {
@@ -63,8 +105,8 @@ export async function onRequestOptions({ request }) {
 export async function onRequestGet({ request, env }) {
   const g = await guard(request, env);
   if (g.error) return g.error;
-  const stored = (await env.AUTH_KV.get(g.key, 'json')) ?? emptyDaysData();
-  return json(request, 200, stored);
+  const { data } = await load(env, g.userId);
+  return json(request, 200, data);
 }
 
 export async function onRequestPut({ request, env }) {
@@ -86,9 +128,14 @@ export async function onRequestPut({ request, env }) {
     return json(request, 400, { error: 'invalid_payload' });
   }
 
-  const stored = (await env.AUTH_KV.get(g.key, 'json')) ?? emptyDaysData();
-  // Stored copy is primary on exact ties so two devices converge on the same data
-  const merged = mergeDaysData(stored, incoming);
-  await env.AUTH_KV.put(g.key, JSON.stringify(merged));
-  return json(request, 200, merged);
+  // Read → merge → write, retried if another device wrote in between.
+  // The stored copy is primary on exact ties so devices converge.
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const { data, version } = await load(env, g.userId);
+    const merged = mergeDaysData(data, incoming);
+    if (await save(env, g.userId, merged, version)) return json(request, 200, merged);
+    // someone wrote in between: back off a little (with jitter) and merge again
+    await new Promise((r) => setTimeout(r, 15 + Math.random() * 60 * (attempt + 1)));
+  }
+  return json(request, 409, { error: 'conflict', message: 'Busy — try again' });
 }
