@@ -183,6 +183,7 @@ async function initDashboard() {
     // Skin, theme and empty-slot count come from the account (moshly-prefs.js) so the
     // simple dash shows the same choices on every device. Seed the account the first time.
     window.MoshlyPrefs.syncFromServer(user, { seed: true });
+    initPrefToggles(user);
 
     if (user.profile) {
         // Prefer server-side apps; fall back to localStorage if server returned empty
@@ -576,6 +577,31 @@ function initDashboardTheme() {
     // Initial UI sync
     const isLight = document.documentElement.classList.contains('theme-light');
     updateDashboardThemeUI(isLight);
+}
+
+// --- Visibility switches (Searchable Profile, Join Moshly Metaverse) ---
+// Saved in profile.uxSettings so they survive reloads and devices.
+const PREF_TOGGLE_DEFAULTS = { searchable: true, metaverse: false };
+
+function setPrefToggleUI(btn, on) {
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-checked', on ? 'true' : 'false');
+}
+
+function initPrefToggles(user) {
+    const ux = user?.profile?.uxSettings || {};
+    document.querySelectorAll('.db-toggle[data-pref]').forEach(btn => {
+        const key = btn.dataset.pref;
+        const value = typeof ux[key] === 'boolean' ? ux[key] : PREF_TOGGLE_DEFAULTS[key];
+        setPrefToggleUI(btn, !!value);
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', () => {
+            const on = !btn.classList.contains('on');
+            setPrefToggleUI(btn, on);
+            if (window._currentUser) window.MoshlyPrefs.save(window._currentUser, { [key]: on });
+        });
+    });
 }
 
 // --- Dashboard skins: "brutal" (Neo Brut, default) and "legacy" (Legacy Purple) ---

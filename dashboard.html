@@ -336,11 +336,11 @@
                     <div class="db-profile-metrics">
                         <div class="db-profile-metric">
                             <div class="db-profile-metric-label">Renewal</div>
-                            <strong id="db-billing-renewal-val"></strong>
+                            <strong id="db-billing-renewal-val">—</strong>
                         </div>
                         <div class="db-profile-metric">
                             <div class="db-profile-metric-label">Apps Included</div>
-                            <strong id="db-billing-apps-val"></strong>
+                            <strong id="db-billing-apps-val">—</strong>
                         </div>
 
                     </div>
@@ -489,16 +489,16 @@
                                 <strong>Searchable Profile</strong>
                                 Visible to other crew members
                             </div>
-                            <button class="db-toggle on" onclick="this.classList.toggle('on')"
-                                    title="Toggle searchable profile"></button>
+                            <button aria-checked="true" aria-label="Searchable profile" class="db-toggle on" data-pref="searchable"
+                                    role="switch" title="Toggle searchable profile" type="button"></button>
                         </div>
                         <div class="db-visibility-toggle">
                             <div class="db-toggle-label">
                                 <strong>Join Moshly Metaverse</strong>
                                 Visible in the future Moshly Metaverse
                             </div>
-                            <button class="db-toggle" onclick="this.classList.toggle('on')"
-                                    title="Toggle Metaverse visibility"></button>
+                            <button aria-checked="false" aria-label="Join Moshly Metaverse" class="db-toggle" data-pref="metaverse"
+                                    role="switch" title="Toggle Metaverse visibility" type="button"></button>
                         </div>
 
                         <!-- 1/4 (integrated): Fifth Sense -->
