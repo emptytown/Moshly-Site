@@ -105,15 +105,6 @@
             </a>
         </nav>
         <div class="db-mob-drawer-footer">
-            <div aria-label="Dashboard skin" class="db-skin-switch db-skin-switch--mobile" role="radiogroup">
-                <span class="db-skin-switch-label">Skin</span>
-                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" title="Neo Brut" type="button">
-                    <span class="db-skin-opt-full">Neo Brut</span><span class="db-skin-opt-short">NB</span>
-                </button>
-                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" title="Legacy Purple" type="button">
-                    <span class="db-skin-opt-full">Legacy Purple</span><span class="db-skin-opt-short">LP</span>
-                </button>
-            </div>
             <button class="db-mob-drawer-footer-btn" id="dbMobThemeBtn">
                 <span class="db-theme-sun" id="dbMobThemeIconSun"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round"
                                                   stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
@@ -211,16 +202,6 @@
                 </svg>
                 <span class="db-collapse-label">Collapse</span>
             </button>
-            <!-- Skin switcher -->
-            <div aria-label="Dashboard skin" class="db-skin-switch" role="radiogroup">
-                <span class="db-skin-switch-label">Skin</span>
-                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" title="Neo Brut" type="button">
-                    <span class="db-skin-opt-full">Neo Brut</span><span class="db-skin-opt-short">NB</span>
-                </button>
-                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" title="Legacy Purple" type="button">
-                    <span class="db-skin-opt-full">Legacy Purple</span><span class="db-skin-opt-short">LP</span>
-                </button>
-            </div>
             <!-- Theme toggle -->
             <button class="db-theme-btn" id="dbThemeBtn">
                 <span class="db-theme-icon db-theme-sun" id="dbThemeIconSun"><svg fill="none" height="16" stroke="currentColor"
@@ -492,6 +473,16 @@
                             <button class="db-btn-secondary db-btn-secondary-sm" onclick="openProjectContextModal()">
                                 Open Settings
                             </button>
+                        </div>
+                        <div class="db-visibility-toggle">
+                            <div class="db-toggle-label">
+                                <strong>Dashboard Skin</strong>
+                                Neo Brut or the classic Legacy Purple look
+                            </div>
+                            <div aria-label="Dashboard skin" class="db-skin-switch" role="radiogroup">
+                                <button aria-checked="false" class="db-skin-opt" data-skin="brutal" role="radio" type="button">Neo Brut</button>
+                                <button aria-checked="false" class="db-skin-opt" data-skin="legacy" role="radio" type="button">Legacy Purple</button>
+                            </div>
                         </div>
                         <div class="db-visibility-toggle">
                             <div class="db-toggle-label">

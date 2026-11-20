@@ -13,39 +13,27 @@
    such as `html.theme-light .db-card` are overridden by source order).
    ════════════════════════════════════════════════════════════════ */
 
-/* ══ SKIN SWITCH (shown in both skins) ═══════════════════════════ */
+/* ══ SKIN SWITCH (Settings and Visibility card, both skins) ═════
+   Segmented control: one row in the settings card, same pattern as
+   the other settings there. */
 .db-skin-switch {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px; margin-bottom: 6px;
+  display: inline-flex; flex-shrink: 0; gap: 2px; padding: 3px;
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   background: var(--color-bg-primary);
 }
-.db-skin-switch-label {
-  font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--color-text-tertiary); padding: 0 4px 0 6px;
-}
 .db-skin-opt {
-  flex: 1; min-width: 0;
-  padding: 6px 6px;
-  border: 1px solid transparent; border-radius: var(--radius-sm);
+  min-height: 32px; padding: 0 12px;
+  border: 0; border-radius: 999px;
   background: transparent; cursor: pointer;
-  font-family: var(--font-family-base); font-size: 11.5px; font-weight: 600;
+  font-family: var(--font-family-base); font-size: 12px; font-weight: 600;
   color: var(--color-text-secondary); white-space: nowrap;
   transition: background .15s, color .15s;
 }
-.db-skin-opt:hover { color: var(--color-text-primary); background: rgba(107,92,255,.08); }
+.db-skin-opt:hover { color: var(--color-text-primary); background: rgba(107,92,255,.10); }
 .db-skin-opt.active { background: var(--color-accent-primary); color: #fff; }
 .db-skin-opt:focus-visible { outline: 2px solid var(--color-accent-primary); outline-offset: 2px; }
-.db-skin-opt-short { display: none; }
-.db-skin-switch--mobile { margin: 0 0 6px; }
-
-.db-sidebar.collapsed .db-skin-switch { flex-direction: column; padding: 3px; }
-.db-sidebar.collapsed .db-skin-switch-label,
-.db-sidebar.collapsed .db-skin-opt-full { display: none; }
-.db-sidebar.collapsed .db-skin-opt-short { display: inline; }
-.db-sidebar.collapsed .db-skin-opt { width: 100%; padding: 6px 0; }
-
+.db-visibility-toggle:has(.db-skin-switch) { flex-wrap: wrap; gap: 10px; }
 
 /* ════════════════════════════════════════════════════════════════
    NEO BRUT
@@ -219,19 +207,15 @@ html.skin-brutal :is(.db-nav a, .db-nav-btn) svg { opacity: 1; }
 html.skin-brutal .db-signout-btn:hover { background: var(--nb-red); color: var(--nb-on); }
 html.skin-brutal .db-nav::-webkit-scrollbar-thumb { background: var(--nb-on); }
 
-/* Skin switch inside Neo Brut */
+/* Skin switch — Neo Brut light */
 html.skin-brutal .db-skin-switch {
-  background: #fff; border: var(--nb-bw) solid var(--nb-on); border-radius: var(--nb-radius);
-  box-shadow: 2px 2px 0 0 var(--nb-on);
+  background: var(--nb-card); border: var(--nb-bw) solid var(--nb-line); border-radius: var(--nb-radius);
+  box-shadow: var(--nb-shadow-sm);
 }
-html.skin-brutal .db-skin-switch-label { color: var(--nb-on); }
-html.skin-brutal .db-skin-opt { color: var(--nb-on); border-radius: 4px; font-weight: 700; }
-html.skin-brutal .db-skin-opt:hover { background: var(--nb-paper-2); }
-html.skin-brutal .db-skin-opt.active { background: var(--nb-on); color: var(--nb-yellow); }
-html.skin-brutal .db-skin-opt:focus-visible { outline-color: var(--nb-on); }
-html.skin-brutal .db-skin-switch--mobile { background: var(--nb-card); border-color: var(--nb-line); box-shadow: var(--nb-shadow-sm); }
-html.skin-brutal .db-skin-switch--mobile :is(.db-skin-switch-label, .db-skin-opt) { color: var(--nb-ink); }
-html.skin-brutal .db-skin-switch--mobile .db-skin-opt.active { background: var(--nb-yellow); color: var(--nb-on); }
+html.skin-brutal .db-skin-opt { color: var(--nb-ink); border-radius: 4px; font-weight: 700; }
+html.skin-brutal .db-skin-opt:hover { background: var(--nb-paper-2); color: var(--nb-ink); }
+html.skin-brutal .db-skin-opt.active { background: var(--nb-on); color: var(--nb-lime); }
+html.skin-brutal .db-skin-opt:focus-visible { outline-color: var(--nb-violet); }
 
 /* ══ MOBILE DRAWER / TOP BUTTONS ═════════════════════════════════ */
 html.skin-brutal .db-mob-drawer {
@@ -655,7 +639,6 @@ html.skin-brutal .db-mob-drawer-logo img.db-icon--brutal { width: 36px; height: 
 
 /* Keep sticker-style titles hugging their text inside flex/grid columns */
 html.skin-brutal :is(.db-card-title, .db-section-title) { width: fit-content; align-self: flex-start; }
-html.skin-brutal .db-skin-opt { font-size: 10.5px; padding: 6px 4px; }
 html.skin-brutal .db-connector-info-plan-tag { background: var(--nb-yellow); color: var(--nb-on); }
 
 /* ════════════════════════════════════════════════════════════════
@@ -705,7 +688,7 @@ html.skin-brutal:not(.theme-light) .db-user-plan { background: var(--nb-lime); c
 html.skin-brutal:not(.theme-light) .db-skin-switch {
   background: #1E1E1E; border: 1px solid var(--nb-line); border-radius: var(--nb-pill); box-shadow: none;
 }
-html.skin-brutal:not(.theme-light) :is(.db-skin-switch-label, .db-skin-opt) { color: var(--nb-ink); }
+html.skin-brutal:not(.theme-light) .db-skin-opt { color: var(--nb-ink); }
 html.skin-brutal:not(.theme-light) .db-skin-opt { border-radius: var(--nb-pill); }
 html.skin-brutal:not(.theme-light) .db-skin-opt:hover { background: #2A2A2A; }
 html.skin-brutal:not(.theme-light) .db-skin-opt.active { background: var(--nb-violet); color: var(--nb-on); }
@@ -966,4 +949,3 @@ html.skin-brutal.theme-light .db-sidebar-footer { border-top-color: var(--nb-lin
 html.skin-brutal.theme-light .db-sidebar :is(.db-nav a, .db-nav-btn, .db-collapse-btn, .db-theme-btn):hover { background: var(--nb-paper); }
 html.skin-brutal.theme-light .db-sidebar :is(.db-nav a.active, .db-nav-btn.active) { background: var(--nb-lime); color: var(--nb-on); }
 html.skin-brutal.theme-light .db-user-plan { background: var(--nb-violet); color: var(--nb-on); }
-html.skin-brutal.theme-light .db-skin-switch .db-skin-opt.active { background: var(--nb-on); color: var(--nb-lime); }
