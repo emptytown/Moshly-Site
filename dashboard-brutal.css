@@ -58,29 +58,38 @@ html.skin-brutal.theme-light {
   --nb-paper-2: #FFE9C2;
   --nb-card: #FFFFFF;
   --nb-muted: #4B4B4B;
+  --nb-line: #111111;
   --nb-shadow-c: #111111;
-}
-/* ── Tokens: dark (charcoal + bone ink) ── */
-html.skin-brutal {
-  --nb-ink: #F4EDE0;
-  --nb-paper: #121212;
-  --nb-paper-2: #1A1A1A;
-  --nb-card: #1F1F1F;
-  --nb-muted: #BDB6A8;
-  --nb-shadow-c: #F4EDE0;
-
-  /* Accents (shared) */
+  --nb-grid: rgba(17,17,17,.08);
   --nb-yellow: #FFD23F;
   --nb-pink:   #FF6B9D;
   --nb-blue:   #4D7CFE;
   --nb-lime:   #B8F35A;
   --nb-violet: #A388EE;
+}
+/* ── Tokens: dark (deep indigo + black lines, softened pastel accents) ── */
+html.skin-brutal {
+  --nb-ink: #F6F1E7;          /* text */
+  --nb-line: #0A0911;         /* borders + hard shadows stay black, like the icons */
+  --nb-paper: #2A2640;        /* page */
+  --nb-paper-2: #221F35;      /* sidebar / recessed areas */
+  --nb-card: #36314F;         /* raised cards */
+  --nb-muted: #BEB7D6;
+  --nb-shadow-c: #0A0911;
+  --nb-grid: rgba(255,255,255,.045);
+
+  /* Accents (light skin overrides with punchier values) */
+  --nb-yellow: #FFD45C;
+  --nb-pink:   #FF85AE;
+  --nb-blue:   #8AA6FF;
+  --nb-lime:   #C7EE7A;
+  --nb-violet: #B8A2FF;
   --nb-orange: #FF8A3D;
   --nb-red:    #FF4D4D;
   --nb-on:     #111111; /* text on accent fills — always black */
 
   --nb-bw: 2.5px;                        /* border width */
-  --nb-border: var(--nb-bw) solid var(--nb-ink);
+  --nb-border: var(--nb-bw) solid var(--nb-line);
   --nb-shadow: 4px 4px 0 0 var(--nb-shadow-c);
   --nb-shadow-lg: 6px 6px 0 0 var(--nb-shadow-c);
   --nb-shadow-sm: 2px 2px 0 0 var(--nb-shadow-c);
@@ -95,18 +104,18 @@ html.skin-brutal {
   --color-text-primary:  var(--nb-ink);
   --color-text-secondary:var(--nb-ink);
   --color-text-tertiary: var(--nb-muted);
-  --color-border-subtle: var(--nb-ink);
-  --color-border-strong: var(--nb-ink);
-  --color-border:        var(--nb-ink);
+  --color-border-subtle: var(--nb-line);
+  --color-border-strong: var(--nb-line);
+  --color-border:        var(--nb-line);
   --color-accent-primary: var(--nb-violet);
   --color-accent-hover:   var(--nb-violet);
   --color-accent:         var(--nb-violet);
   --color-accent-opacity-06: transparent;
   --color-accent-opacity-08: transparent;
   --color-accent-opacity-12: var(--nb-paper-2);
-  --color-accent-opacity-22: var(--nb-ink);
-  --color-accent-opacity-30: var(--nb-ink);
-  --color-accent-opacity-50: var(--nb-ink);
+  --color-accent-opacity-22: var(--nb-line);
+  --color-accent-opacity-30: var(--nb-line);
+  --color-accent-opacity-50: var(--nb-line);
   --gradient-primary: linear-gradient(var(--nb-pink), var(--nb-pink));
   --gradient-subtle:  linear-gradient(var(--nb-yellow), var(--nb-yellow));
   --gradient-glow: none;
@@ -144,7 +153,7 @@ html.skin-brutal :is(
 html.skin-brutal :is(.db-card, .db-stat, .db-app-tile, .db-app-slot, .db-proj-row, .db-proj-mgr-card):hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--nb-shadow-lg);
-  border-color: var(--nb-ink);
+  border-color: var(--nb-line);
 }
 
 /* ══ SHELL / BACKGROUND ══════════════════════════════════════════ */
@@ -154,8 +163,8 @@ html.skin-brutal.theme-light .db-content { background: var(--nb-paper); }
 html.skin-brutal .db-content::before,
 html.skin-brutal.theme-light .db-content::before {
   background-image:
-    linear-gradient(color-mix(in srgb, var(--nb-ink) 9%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--nb-ink) 9%, transparent) 1px, transparent 1px);
+    linear-gradient(var(--nb-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nb-grid) 1px, transparent 1px);
   background-size: 32px 32px;
   opacity: 1;
 }
@@ -173,7 +182,7 @@ html.skin-brutal.theme-light .db-sidebar {
   --nb-ink-local: var(--nb-on);
   color: var(--nb-on);
 }
-html.skin-brutal .db-sidebar { border-right-color: var(--nb-ink); }
+html.skin-brutal .db-sidebar { border-right-color: var(--nb-line); }
 html.skin-brutal .db-sidebar-logo,
 html.skin-brutal .db-sidebar-user { border-bottom: var(--nb-bw) solid var(--nb-on); }
 html.skin-brutal .db-sidebar-footer { border-top: var(--nb-bw) solid var(--nb-on); }
@@ -217,7 +226,7 @@ html.skin-brutal .db-skin-opt { color: var(--nb-on); border-radius: 4px; font-we
 html.skin-brutal .db-skin-opt:hover { background: var(--nb-paper-2); }
 html.skin-brutal .db-skin-opt.active { background: var(--nb-on); color: var(--nb-yellow); }
 html.skin-brutal .db-skin-opt:focus-visible { outline-color: var(--nb-on); }
-html.skin-brutal .db-skin-switch--mobile { background: var(--nb-card); border-color: var(--nb-ink); box-shadow: var(--nb-shadow-sm); }
+html.skin-brutal .db-skin-switch--mobile { background: var(--nb-card); border-color: var(--nb-line); box-shadow: var(--nb-shadow-sm); }
 html.skin-brutal .db-skin-switch--mobile :is(.db-skin-switch-label, .db-skin-opt) { color: var(--nb-ink); }
 html.skin-brutal .db-skin-switch--mobile .db-skin-opt.active { background: var(--nb-yellow); color: var(--nb-on); }
 
@@ -236,14 +245,14 @@ html.skin-brutal :is(.db-mob-drawer-link, .db-mob-drawer-footer-btn) {
   color: var(--nb-ink); font-weight: 600;
 }
 html.skin-brutal :is(.db-mob-drawer-link:hover, .db-mob-drawer-link.active, .db-mob-drawer-footer-btn:hover) {
-  background: var(--nb-yellow); color: var(--nb-on); border-color: var(--nb-ink);
+  background: var(--nb-yellow); color: var(--nb-on); border-color: var(--nb-line);
 }
 html.skin-brutal .db-mob-drawer-link.active svg { color: var(--nb-on); }
 html.skin-brutal .db-mob-drawer-footer-btn.signout:hover { background: var(--nb-red); color: var(--nb-on); }
 html.skin-brutal :is(.db-mob-menu-btn, .db-mob-top-btn),
 html.skin-brutal.theme-light :is(.db-mob-menu-btn, .db-mob-top-btn) {
   background: var(--nb-yellow); color: var(--nb-on);
-  border: var(--nb-bw) solid var(--nb-ink); border-radius: var(--nb-radius);
+  border: var(--nb-bw) solid var(--nb-line); border-radius: var(--nb-radius);
   box-shadow: var(--nb-shadow-sm);
 }
 html.skin-brutal .db-mob-menu-line { background: var(--nb-on); }
@@ -263,7 +272,7 @@ html.skin-brutal .db-greeting-title {
 html.skin-brutal .db-greeting-title span {
   background: var(--nb-pink); color: var(--nb-on);
   -webkit-text-fill-color: var(--nb-on);
-  padding: 0 8px; border: var(--nb-bw) solid var(--nb-ink); border-radius: 4px;
+  padding: 0 8px; border: var(--nb-bw) solid var(--nb-line); border-radius: 4px;
   box-shadow: var(--nb-shadow-sm);
   display: inline-block; transform: rotate(-2deg);
 }
@@ -280,32 +289,32 @@ html.skin-brutal.theme-light .db-topbar-apps-link { background: var(--nb-lime); 
 html.skin-brutal .db-topbar-apps-link svg { color: var(--nb-on); }
 html.skin-brutal :is(.btn-ghost, .db-topbar-apps-link, .db-topbar-back-link):hover {
   transform: translate(-1px, -1px); box-shadow: var(--nb-shadow);
-  border-color: var(--nb-ink); color: var(--nb-ink);
+  border-color: var(--nb-line); color: var(--nb-ink);
 }
 html.skin-brutal .db-topbar-apps-link:hover { color: var(--nb-on); background: var(--nb-lime); }
 html.skin-brutal .db-topbar-apps-link.is-sticky,
 html.skin-brutal.theme-light .db-topbar-apps-link.is-sticky {
-  background: var(--nb-lime); border-color: var(--nb-ink); box-shadow: var(--nb-shadow);
+  background: var(--nb-lime); border-color: var(--nb-line); box-shadow: var(--nb-shadow);
   animation: none;
 }
 
 /* ══ FLOW RAIL ═══════════════════════════════════════════════════ */
 html.skin-brutal .db-flow-rail,
 html.skin-brutal.theme-light .db-flow-rail {
-  width: 4px; background: var(--nb-ink); opacity: 1; border-radius: 0;
+  width: 4px; background: var(--nb-line); opacity: 1; border-radius: 0;
 }
 html.skin-brutal .db-flow-node,
 html.skin-brutal.theme-light .db-flow-node {
   width: 26px; height: 26px; border-radius: 4px;
   background: var(--nb-yellow);
-  box-shadow: 0 0 0 var(--nb-bw) var(--nb-ink), var(--nb-shadow-sm);
+  box-shadow: 0 0 0 var(--nb-bw) var(--nb-line), var(--nb-shadow-sm);
   transform: rotate(45deg);
 }
 html.skin-brutal :is(.db-flow-node, .db-flow-node--end)::before,
 html.skin-brutal :is(.db-flow-node, .db-flow-node--end)::after { display: none; }
 html.skin-brutal .db-flow-node--end { background: var(--nb-pink); }
 html.skin-brutal .db-flow-stage--split::before,
-html.skin-brutal.theme-light .db-flow-stage--split::before { background: var(--nb-ink); height: 4px; opacity: 1; }
+html.skin-brutal.theme-light .db-flow-stage--split::before { background: var(--nb-line); height: 4px; opacity: 1; }
 
 /* ══ CARDS ═══════════════════════════════════════════════════════ */
 html.skin-brutal .db-card,
@@ -315,10 +324,10 @@ html.skin-brutal .db-section-title {
   display: inline-block;
   font-family: var(--nb-font); font-weight: 700; font-size: 12px; letter-spacing: .1em;
   color: var(--nb-on); background: var(--nb-yellow);
-  padding: 3px 8px; border: 2px solid var(--nb-ink); border-radius: 4px;
+  padding: 3px 8px; border: 2px solid var(--nb-line); border-radius: 4px;
 }
 html.skin-brutal .db-section-subtitle { color: var(--nb-muted); opacity: 1; font-weight: 500; margin-top: 6px; }
-html.skin-brutal .db-card-divider { background: var(--nb-ink); height: 2px; opacity: 1; }
+html.skin-brutal .db-card-divider { background: var(--nb-line); height: 2px; opacity: 1; }
 html.skin-brutal .db-card-action,
 html.skin-brutal .db-card-action-btn {
   color: var(--nb-ink); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
@@ -349,7 +358,7 @@ html.skin-brutal .db-stat-glow { display: none; }
 html.skin-brutal .db-stat-value { font-family: var(--nb-font-display); font-weight: 400; letter-spacing: -.01em; }
 html.skin-brutal :is(.db-stat-badge, .db-app-status, .db-app-status-pill, .db-status-tag, .db-category-tag,
                     .db-projects-type-tag, .db-collab-app-badge, .db-connector-info-plan-tag, .db-msg-pin-chip, .db-proj-ai-chip, .db-ctx-chip) {
-  border: 2px solid var(--nb-ink); border-radius: 4px;
+  border: 2px solid var(--nb-line); border-radius: 4px;
   color: var(--nb-ink); background: var(--nb-card);
   font-weight: 700; box-shadow: none;
 }
@@ -365,7 +374,7 @@ html.skin-brutal .db-profile-avatar {
   border: var(--nb-border); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow-sm);
 }
 html.skin-brutal .db-profile-pname { font-family: var(--nb-font-display); font-weight: 400; text-transform: uppercase; }
-html.skin-brutal .db-profile-field { border-color: var(--nb-ink); border-bottom-width: 2px; }
+html.skin-brutal .db-profile-field { border-color: var(--nb-line); border-bottom-width: 2px; }
 html.skin-brutal .db-profile-field-label { color: var(--nb-muted); font-weight: 600; }
 html.skin-brutal .db-profile-field-val { font-weight: 700; }
 html.skin-brutal .db-profile-metric {
@@ -406,7 +415,7 @@ html.skin-brutal :is(.db-btn-primary, .db-btn-compact, .db-btn-compact-lg, .db-p
                     .db-app-disconnect-btn, .db-collab-revoke-btn, .db-btn-ghost-danger, .db-msg-pin-btn,
                     .db-danger-btn, .db-btn-danger, .db-profile-panel-change-photo):hover {
   transform: translate(-1px, -1px); box-shadow: var(--nb-shadow);
-  border-color: var(--nb-ink);
+  border-color: var(--nb-line);
 }
 html.skin-brutal :is(.db-btn-primary, .db-btn-compact, .db-btn-compact-lg, .db-proj-confirm, .db-profile-panel-btn-save,
                     .db-pdf-buy, .db-app-slot-btn, .db-projects-add-btn, .db-proj-bar-btn):hover { background: var(--nb-yellow); color: var(--nb-on); }
@@ -426,9 +435,9 @@ html.skin-brutal.theme-light .db-danger-btn {
   box-shadow: 2px 2px 0 0 var(--nb-red); font-weight: 700;
 }
 html.skin-brutal :is(.db-danger-btn, .db-btn-danger):hover,
-html.skin-brutal.theme-light .db-danger-btn:hover { background: var(--nb-red); color: var(--nb-on); border-color: var(--nb-ink); box-shadow: var(--nb-shadow); }
+html.skin-brutal.theme-light .db-danger-btn:hover { background: var(--nb-red); color: var(--nb-on); border-color: var(--nb-line); box-shadow: var(--nb-shadow); }
 html.skin-brutal .db-danger-btn--strong,
-html.skin-brutal.theme-light .db-danger-btn--strong { background: var(--nb-red); color: var(--nb-on); border-color: var(--nb-ink); box-shadow: var(--nb-shadow-sm); }
+html.skin-brutal.theme-light .db-danger-btn--strong { background: var(--nb-red); color: var(--nb-on); border-color: var(--nb-line); box-shadow: var(--nb-shadow-sm); }
 html.skin-brutal .db-danger-btn--strong:hover,
 html.skin-brutal.theme-light .db-danger-btn--strong:hover { background: var(--nb-red); color: var(--nb-on); }
 
@@ -440,19 +449,19 @@ html.skin-brutal :is(.db-proj-input, .db-proj-textarea, .db-profile-panel-input,
 html.skin-brutal.theme-light :is(.db-backup-select, .db-feedback-textarea) {
   background-color: var(--nb-card); color: var(--nb-ink);
   border: var(--nb-border); border-radius: var(--nb-radius);
-  box-shadow: inset 2px 2px 0 0 color-mix(in srgb, var(--nb-ink) 12%, transparent);
+  box-shadow: inset 2px 2px 0 0 color-mix(in srgb, var(--nb-line) 12%, transparent);
   font-family: var(--nb-font); font-weight: 500;
 }
 html.skin-brutal :is(input, select, textarea):focus,
 html.skin-brutal :is(.db-proj-input, .db-proj-textarea, .db-profile-panel-input, .db-messenger-input):focus {
-  outline: none; border-color: var(--nb-ink);
+  outline: none; border-color: var(--nb-line);
   box-shadow: var(--nb-shadow-sm); background-color: color-mix(in srgb, var(--nb-yellow) 22%, var(--nb-card));
 }
 html.skin-brutal :is(input, select, textarea)::placeholder { color: var(--nb-muted); opacity: 1; }
 
 /* Toggles */
 html.skin-brutal :is(.db-toggle-pill, .db-proj-switch-track) {
-  background: var(--nb-card); border: 2px solid var(--nb-ink); border-radius: 4px;
+  background: var(--nb-card); border: 2px solid var(--nb-line); border-radius: 4px;
 }
 html.skin-brutal :is(.db-toggle-pill, .db-proj-switch-track)::after {
   background: var(--nb-ink); border-radius: 2px; top: 2px; left: 2px;
@@ -468,11 +477,11 @@ html.skin-brutal.theme-light .db-visibility-toggle {
 }
 html.skin-brutal .db-toggle-label { font-weight: 700; }
 html.skin-brutal .db-toggle {
-  border: 2px solid var(--nb-ink); border-radius: 4px; background: var(--nb-card);
+  border: 2px solid var(--nb-line); border-radius: 4px; background: var(--nb-card);
 }
 html.skin-brutal .db-toggle::after, html.skin-brutal .db-toggle::before { border-radius: 2px; background: var(--nb-ink); box-shadow: none; }
 html.skin-brutal .db-toggle.active, html.skin-brutal .db-toggle.on,
-html.skin-brutal .db-toggle[aria-checked="true"], html.skin-brutal input:checked + .db-toggle { background: var(--nb-lime); border-color: var(--nb-ink); }
+html.skin-brutal .db-toggle[aria-checked="true"], html.skin-brutal input:checked + .db-toggle { background: var(--nb-lime); border-color: var(--nb-line); }
 
 /* ══ APPS / SLOTS ════════════════════════════════════════════════ */
 html.skin-brutal .db-app-slot { background: var(--nb-card); }
@@ -484,27 +493,27 @@ html.skin-brutal .db-app-slot--empty:hover,
 html.skin-brutal .db-app-slot--new:hover { background: var(--nb-yellow); color: var(--nb-on); border-style: solid; box-shadow: var(--nb-shadow); --color-text-secondary: var(--nb-on); --color-text-tertiary: var(--nb-on); }
 html.skin-brutal .db-app-slot-plus-circle {
   background: var(--nb-pink); color: var(--nb-on);
-  border: var(--nb-bw) solid var(--nb-ink); border-radius: 4px; box-shadow: var(--nb-shadow-sm);
+  border: var(--nb-bw) solid var(--nb-line); border-radius: 4px; box-shadow: var(--nb-shadow-sm);
 }
 html.skin-brutal .db-app-slot-plus-circle svg { color: var(--nb-on); stroke: var(--nb-on); }
 html.skin-brutal :is(.db-app-slot-label, .db-app-slot-empty-content) { color: var(--nb-ink); font-weight: 700; }
 html.skin-brutal :is(.db-app-slot-name, .db-app-name) { font-family: var(--nb-font); font-weight: 700; font-size: 15px; }
 html.skin-brutal :is(.db-app-slot-icon, .db-app-icon) {
-  border: var(--nb-bw) solid var(--nb-ink); border-radius: var(--nb-radius); background: var(--nb-paper-2);
+  border: var(--nb-bw) solid var(--nb-line); border-radius: var(--nb-radius); background: var(--nb-paper-2);
 }
-html.skin-brutal .db-app-tile--active::before { height: 6px; background: var(--nb-yellow); border-bottom: 2px solid var(--nb-ink); }
+html.skin-brutal .db-app-tile--active::before { height: 6px; background: var(--nb-yellow); border-bottom: 2px solid var(--nb-line); }
 html.skin-brutal .db-app-slot--blacklisted { opacity: .6; }
 html.skin-brutal .db-free-apps-section,
-html.skin-brutal .db-peek-section { border-top: 2px dashed var(--nb-ink); }
+html.skin-brutal .db-peek-section { border-top: 2px dashed var(--nb-line); }
 
 /* ══ PDF / AI QUOTA RINGS ════════════════════════════════════════ */
-html.skin-brutal .db-pdf-ring-track { stroke: color-mix(in srgb, var(--nb-ink) 18%, transparent); }
+html.skin-brutal .db-pdf-ring-track { stroke: color-mix(in srgb, var(--nb-line) 18%, transparent); }
 html.skin-brutal .db-pdf-ring-fill { stroke: var(--nb-pink); stroke-linecap: butt; filter: none; }
 html.skin-brutal .db-pdf-row + .db-pdf-row .db-pdf-ring-fill { stroke: var(--nb-blue); }
 html.skin-brutal .db-pdf-ring-num { font-family: var(--nb-font-display); font-weight: 400; }
 html.skin-brutal .db-pdf-title { font-weight: 700; }
-html.skin-brutal .db-pdf-row { border-color: var(--nb-ink); }
-html.skin-brutal .db-connector-info-bar { background: var(--nb-paper-2); border: 2px solid var(--nb-ink); border-radius: 3px; }
+html.skin-brutal .db-pdf-row { border-color: var(--nb-line); }
+html.skin-brutal .db-connector-info-bar { background: var(--nb-paper-2); border: 2px solid var(--nb-line); border-radius: 3px; }
 html.skin-brutal .db-connector-info-fill { background: var(--nb-pink); border-radius: 0; }
 
 /* ══ BILLING / BACKUP / TIPS / ALERTS ════════════════════════════ */
@@ -524,7 +533,7 @@ html.skin-brutal :is(.db-audit-what, .db-backup-title) { font-weight: 700; }
 
 /* ══ PROJECTS ════════════════════════════════════════════════════ */
 html.skin-brutal :is(.db-proj-row-icon, .db-proj-icon, .db-proj-mgr-icon, .db-projects-empty-icon) {
-  border: var(--nb-bw) solid var(--nb-ink); border-radius: var(--nb-radius);
+  border: var(--nb-bw) solid var(--nb-line); border-radius: var(--nb-radius);
   background: var(--nb-yellow); color: var(--nb-on);
 }
 html.skin-brutal .db-proj-row-icon--band     { background: var(--nb-pink); }
@@ -536,7 +545,7 @@ html.skin-brutal .db-proj-row-icon--agency   { background: var(--nb-yellow); }
 html.skin-brutal :is(.db-proj-row-icon, .db-proj-icon, .db-proj-mgr-icon) svg { color: var(--nb-on); stroke: var(--nb-on); }
 html.skin-brutal :is(.db-proj-row-name, .db-proj-name, .db-proj-mgr-name, .db-projects-empty-title) { font-weight: 700; }
 html.skin-brutal .db-proj-bar--empty { border-style: dashed; box-shadow: none; background: transparent; }
-html.skin-brutal .db-proj-bar-plus { background: var(--nb-pink); color: var(--nb-on); border: 2px solid var(--nb-ink); border-radius: 4px; }
+html.skin-brutal .db-proj-bar-plus { background: var(--nb-pink); color: var(--nb-on); border: 2px solid var(--nb-line); border-radius: 4px; }
 html.skin-brutal :is(.db-projects-type-tag--band) { background: var(--nb-pink); color: var(--nb-on); }
 html.skin-brutal :is(.db-projects-type-tag--artist) { background: var(--nb-violet); color: var(--nb-on); }
 html.skin-brutal :is(.db-projects-type-tag--company) { background: var(--nb-blue); color: var(--nb-on); }
@@ -544,13 +553,13 @@ html.skin-brutal :is(.db-projects-type-tag--company) { background: var(--nb-blue
 /* ══ SIDE PANELS & MODALS ════════════════════════════════════════ */
 html.skin-brutal :is(.db-proj-modal, .db-manager-modal, .db-profile-panel, .db-ctx-modal) {
   background: var(--nb-paper);
-  border-left: var(--nb-bw) solid var(--nb-ink);
-  box-shadow: -8px 0 0 0 var(--nb-ink);
+  border-left: var(--nb-bw) solid var(--nb-line);
+  box-shadow: -8px 0 0 0 var(--nb-line);
 }
 html.skin-brutal .db-modal-content {
   background: var(--nb-paper);
   border: var(--nb-border); border-radius: var(--nb-radius);
-  box-shadow: 8px 8px 0 0 var(--nb-ink);
+  box-shadow: 8px 8px 0 0 var(--nb-line);
 }
 html.skin-brutal :is(.db-proj-modal-backdrop, .db-manager-modal-backdrop, .db-profile-overlay-backdrop, .db-ctx-backdrop, .db-modal-backdrop) {
   background: rgba(0,0,0,.55); -webkit-backdrop-filter: none; backdrop-filter: none;
@@ -567,7 +576,7 @@ html.skin-brutal :is(.db-proj-modal-title, .db-manager-modal-title, .db-profile-
 html.skin-brutal :is(.db-proj-modal-footer, .db-manager-modal-footer, .db-modal-footer, .db-ctx-footer) { border-top: var(--nb-border); }
 html.skin-brutal :is(.db-proj-modal-close, .db-profile-panel-close, .db-ctx-close) {
   background: var(--nb-card); color: var(--nb-ink);
-  border: var(--nb-bw) solid var(--nb-ink); border-radius: var(--nb-radius);
+  border: var(--nb-bw) solid var(--nb-line); border-radius: var(--nb-radius);
   box-shadow: var(--nb-shadow-sm); opacity: 1;
 }
 html.skin-brutal :is(.db-proj-modal-close, .db-profile-panel-close, .db-ctx-close):hover { background: var(--nb-pink); color: var(--nb-on); }
@@ -583,7 +592,7 @@ html.skin-brutal .db-profile-panel-avatar-lg {
   background: var(--nb-pink); color: var(--nb-on); border: var(--nb-border); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow-sm);
 }
 html.skin-brutal .db-profile-panel-name { font-family: var(--nb-font-display); font-weight: 400; text-transform: uppercase; }
-html.skin-brutal .db-profile-panel-field { border-color: var(--nb-ink); }
+html.skin-brutal .db-profile-panel-field { border-color: var(--nb-line); }
 html.skin-brutal .db-profile-panel-field-label { color: var(--nb-muted); font-weight: 700; }
 
 /* ══ MESSENGER ═══════════════════════════════════════════════════ */
@@ -595,7 +604,7 @@ html.skin-brutal .db-messenger-compose,
 html.skin-brutal.theme-light .db-messenger-compose { background: var(--nb-paper-2); border-top: var(--nb-border); }
 html.skin-brutal :is(.db-msg--them, .db-msg--me),
 html.skin-brutal.theme-light :is(.db-msg--them, .db-msg--me) {
-  border: 2px solid var(--nb-ink); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow-sm);
+  border: 2px solid var(--nb-line); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow-sm);
   color: var(--nb-on);
 }
 html.skin-brutal .db-msg--them, html.skin-brutal.theme-light .db-msg--them { background: var(--nb-card); color: var(--nb-ink); }
@@ -608,10 +617,10 @@ html.skin-brutal .db-messenger-open {
 
 /* ══ MISC ════════════════════════════════════════════════════════ */
 html.skin-brutal :is(.db-backup-row, .db-billing-row, .db-pdf-row, .db-ctx-section, .db-feedback-section, .db-collab-invite-section) {
-  border-color: var(--nb-ink);
+  border-color: var(--nb-line);
 }
 html.skin-brutal .db-collab-invite-code {
-  background: var(--nb-paper-2); border: var(--nb-bw) dashed var(--nb-ink); border-radius: var(--nb-radius);
+  background: var(--nb-paper-2); border: var(--nb-bw) dashed var(--nb-line); border-radius: var(--nb-radius);
   font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 700;
 }
 html.skin-brutal .db-greeting-title span { white-space: nowrap; }
@@ -645,3 +654,34 @@ html.skin-brutal .db-mob-drawer-logo img.db-icon--brutal { width: 36px; height: 
 html.skin-brutal :is(.db-card-title, .db-section-title) { width: fit-content; align-self: flex-start; }
 html.skin-brutal .db-skin-opt { font-size: 10.5px; padding: 6px 4px; }
 html.skin-brutal .db-connector-info-plan-tag { background: var(--nb-yellow); color: var(--nb-on); }
+
+/* ══ NEO BRUT — DARK-ONLY REFINEMENTS ════════════════════════════
+   Light keeps the loud yellow sidebar; dark uses a calm recessed
+   sidebar with the yellow reserved for the active item. */
+html.skin-brutal:not(.theme-light) .db-sidebar {
+  background: var(--nb-paper-2);
+  color: var(--nb-ink);
+  --color-text-primary: var(--nb-ink);
+  --color-text-secondary: var(--nb-ink);
+  --color-text-tertiary: var(--nb-muted);
+}
+html.skin-brutal:not(.theme-light) :is(.db-sidebar-logo, .db-sidebar-user) { border-bottom-color: var(--nb-line); }
+html.skin-brutal:not(.theme-light) .db-sidebar-footer { border-top-color: var(--nb-line); }
+html.skin-brutal:not(.theme-light) .db-sidebar :is(.db-nav-section) { color: var(--nb-muted); }
+html.skin-brutal:not(.theme-light) .db-sidebar :is(.db-nav a, .db-nav-btn, .db-collapse-btn, .db-theme-btn, .db-signout-btn) { color: var(--nb-ink); }
+html.skin-brutal:not(.theme-light) .db-sidebar :is(.db-nav a, .db-nav-btn, .db-collapse-btn, .db-theme-btn):hover {
+  background: var(--nb-card); color: var(--nb-ink); border-color: var(--nb-line);
+}
+html.skin-brutal:not(.theme-light) .db-sidebar :is(.db-nav a.active, .db-nav-btn.active) {
+  background: var(--nb-yellow); color: var(--nb-on); border-color: var(--nb-line); box-shadow: 3px 3px 0 0 var(--nb-line);
+}
+html.skin-brutal:not(.theme-light) .db-user-plan { background: var(--nb-yellow); color: var(--nb-on); }
+html.skin-brutal:not(.theme-light) .db-sidebar .db-skin-switch { background: var(--nb-card); border-color: var(--nb-line); box-shadow: 2px 2px 0 0 var(--nb-line); }
+html.skin-brutal:not(.theme-light) .db-sidebar :is(.db-skin-switch-label, .db-skin-opt) { color: var(--nb-ink); }
+html.skin-brutal:not(.theme-light) .db-sidebar .db-skin-opt:hover { background: var(--nb-paper-2); }
+html.skin-brutal:not(.theme-light) .db-sidebar .db-skin-opt.active { background: var(--nb-yellow); color: var(--nb-on); }
+html.skin-brutal:not(.theme-light) .db-sidebar { border-right-color: var(--nb-line); }
+/* Date label: inverted chip reads better as a soft pill on indigo */
+html.skin-brutal:not(.theme-light) .db-greeting-sub { background: var(--nb-card); color: var(--nb-ink); border: 2px solid var(--nb-line); }
+/* Ghost buttons on indigo get a black hard shadow, same as cards */
+html.skin-brutal:not(.theme-light) .btn-ghost:not(.db-topbar-apps-link) { background: var(--nb-card); color: var(--nb-ink); }
