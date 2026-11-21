@@ -284,3 +284,58 @@ a { color: inherit; }
 .theme-switch:hover { background: var(--nb-card); }
 .theme-switch .when-light, .theme-light .theme-switch .when-dark { display: none; }
 .theme-light .theme-switch .when-light { display: inline; }
+
+/* ── Page head (inner pages) ──────────────────────────────── */
+.page-head { padding: 64px 0 8px; }
+.page-head h1 { font-size: clamp(36px, 6vw, 64px); margin-top: 12px; }
+.page-head p:not(.label) { color: var(--nb-muted); font-size: 18px; max-width: 560px; margin-top: 18px; }
+
+/* ── Pricing ──────────────────────────────────────────────── */
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; list-style: none; align-items: stretch; }
+.plan { display: flex; flex-direction: column; gap: 18px; }
+.plan-name { font-size: 26px; }
+.plan-for { color: var(--nb-muted); font-weight: 600; margin-top: 4px; }
+.plan-price { display: flex; align-items: baseline; gap: 6px; }
+.plan-price strong { font-size: 44px; font-weight: var(--nb-font-weight-display); letter-spacing: -.03em; line-height: 1; }
+.plan-price span { color: var(--nb-muted); font-weight: 600; }
+.plan-year { color: var(--nb-muted); font-size: 14px; margin-top: -10px; }
+.plan-features { list-style: none; display: grid; gap: 8px; flex: 1; }
+.plan-features li { display: flex; gap: 10px; align-items: baseline; }
+.plan-features li::before { content: '✓'; font-weight: 900; flex-shrink: 0; }
+.plan-features strong { font-weight: var(--nb-font-weight-label); }
+.plan .btn { align-self: flex-start; }
+.later { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+.later p { color: var(--nb-muted); max-width: 62ch; }
+.later strong { color: var(--nb-ink); }
+@media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+
+/* ── Forms ────────────────────────────────────────────────── */
+.form { display: grid; gap: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field { display: grid; gap: 8px; }
+.field label { font-size: 14px; font-weight: var(--nb-font-weight-label); }
+.input {
+  width: 100%; min-height: var(--nb-size-target-touch); padding: 10px 14px;
+  font: inherit; font-size: 16px; color: var(--nb-ink);
+  background: var(--nb-paper-2); border: var(--nb-border-width) solid var(--nb-line-strong);
+  border-radius: var(--nb-radius-control);
+}
+.input::placeholder { color: var(--nb-muted); opacity: 1; }
+.input:focus { outline: none; border-color: var(--nb-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--nb-focus) 30%, transparent); }
+textarea.input { min-height: 140px; resize: vertical; }
+select.input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 40px; }
+.form-note { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.form-note::before { content: '✓'; display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--nb-lime); color: var(--nb-on); font-size: 13px; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: start; }
+.contact-aside { display: grid; gap: 14px; color: var(--nb-muted); }
+.contact-aside a { color: var(--nb-ink); font-weight: 700; }
+@media (max-width: 760px) { .form-row, .contact-grid { grid-template-columns: 1fr; } }
+
+/* ── Prose (legal) ────────────────────────────────────────── */
+.prose { max-width: 70ch; }
+.prose p { color: var(--nb-muted); margin-bottom: 14px; }
+.prose p strong { color: var(--nb-ink); }
+.prose h2 { font-size: 26px; margin: 32px 0 14px; }
+.prose a { color: var(--nb-ink); font-weight: 700; text-decoration-color: var(--nb-lime); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.theme-light .prose a { text-decoration-color: var(--nb-ink); }
+.prose .effective { font-weight: 700; color: var(--nb-ink); }

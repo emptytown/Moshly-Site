@@ -7,3 +7,9 @@
 /index              /                        301
 /fifthsense         /apps/fifthsense.html    200
 /quote              /apps/quote.html         200
+
+# Removed in the 2026 site rebuild — keep old links and search results working.
+/faq            /apps    301
+/faq.html       /apps    301
+/app-tour       /apps    301
+/app-tour.html  /apps    301
