@@ -1,374 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pricing — Moshly</title>
+  <meta name="description" content="Moshly pricing: a free plan, Solo at €4.99 a month and Collective at €9.99 a month. Pay only for the apps you use." />
+  <link rel="canonical" href="https://moshly.io/pricing" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://moshly.io/pricing" />
+  <meta property="og:title" content="Pricing — Moshly" />
+  <meta property="og:description" content="Moshly pricing: a free plan, Solo at €4.99 a month and Collective at €9.99 a month. Pay only for the apps you use." />
+  <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <script>
+    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/pricing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/site.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
-        <span class="nav-logo-text">Moshly</span>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Moshly home">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="34" height="34" />
+        Moshly
       </a>
-      <div class="nav-links">
+      <nav class="nav-links" aria-label="Main">
         <a href="/apps" class="nav-link">Apps</a>
-        <a href="/#roadmap" class="nav-link">Roadmap</a>
-        <a href="/app-tour" class="nav-link">Tour</a>
-        <a href="/pricing" class="nav-link nav-link--active">Pricing</a>
-        <a href="/login" class="nav-login-btn" id="nav-login-btn">Log In</a>
-        <a id="nav-dash-btn" href="/dashboard" class="nav-login-btn u-hidden">Dashboard →</a>
-      </div>
-      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
+        <a href="/#news" class="nav-link">News</a>
+        <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
+        <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
+      </nav>
+      <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span><span class="nav-menu-line"></span><span class="nav-menu-line"></span>
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
-      <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
-      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
-      <a href="/login" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
-      <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
+      <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
-  </nav>
+  </header>
 
-  <!-- PRICING HERO -->
-  <section class="pricing-hero">
-    <div class="hero-glow hero-glow-1"></div>
-    <div class="hero-glow hero-glow-2"></div>
-    <div class="pricing-hero-inner">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Simple, transparent pricing
+  <main id="main">
+
+    <section class="page-head">
+      <div class="container">
+        <p class="label">Pricing</p>
+        <h1 class="display">Pay for what you <span class="script">use</span></h1>
+        <p>Start free. If one app earns its place, add a plan. Monthly or yearly, cancel whenever.</p>
       </div>
-      <h1 class="pricing-hero-title">
-        Pick your <span class="gradient-text">plan.</span><br />
-        Own your workflow.
-      </h1>
-      <p class="pricing-hero-subtitle">
-        Start with one app, scale to the full Moshly universe. No hidden fees, no lock-ins — just the tools you need, when you need them.
-      </p>
+    </section>
 
-      <!-- Billing toggle -->
-      <div class="billing-toggle">
-        <span class="billing-label" id="label-monthly">Monthly</span>
-        <button class="toggle-btn" id="billingToggle" aria-pressed="false" title="Toggle billing period" onclick="toggleBilling()">
-          <span class="toggle-thumb"></span>
-        </button>
-        <span class="billing-label" id="label-yearly">
-          Yearly
-          <span class="save-badge">Save ~17%</span>
-        </span>
-      </div>
-    </div>
-  </section>
+    <section class="section" aria-label="Plans">
+      <div class="container">
+        <ul class="plans">
 
-  <!-- PRICING CARDS -->
-  <section class="pricing-section">
-    <div class="pricing-inner">
-      <div class="pricing-grid">
+          <li class="plan card">
+            <div><h2 class="plan-name display">Free</h2><p class="plan-for">To look around</p></div>
+            <div class="plan-price"><strong>€0</strong></div>
+            <ul class="plan-features">
+              <li><span><strong>3 free app</strong> slots</span></li>
+              <li><span><strong>100 AI credits</strong></span></li>
+              <li><span><strong>1 project</strong></span></li>
+              <li><span>No PDF exports</span></li>
+              <li><span>No credit card</span></li>
+            </ul>
+            <a href="/signup" class="btn">Create a free account</a>
+          </li>
 
-        <!-- SOLO -->
-        <div class="pricing-card reveal">
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon--solo">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" fill="currentColor"/><path d="M3 19c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-            </div>
-            <div>
-              <h3 class="plan-name">Solo</h3>
-              <p class="plan-tagline">One tool. Zero noise.</p>
-            </div>
-          </div>
-          <div class="plan-price">
-            <span class="price-amount" data-monthly="4.99" data-yearly="4.17">€4.99</span>
-            <span class="price-period">/month</span>
-          </div>
-          <p class="price-yearly-note u-hidden" id="yearly-note-solo">Billed as <strong>€49.99/year</strong></p>
-          <p class="plan-pitch">The sharpest tool in the room — yours. Pick the one tool that solves your biggest daily problem and run with it. Fully featured, no compromises, no distractions.</p>
-          <ul class="plan-features"><p></p>
-            <li><span class="feat-check">✓</span> <strong>3 paid app slots</strong></li>
-            <li><span class="feat-check">✓</span> <strong>3 free app slots</strong></li>
-            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
-            <li><span class="feat-check">✓</span> <strong>12 PDF exports</strong> per month</li>
-            <li><span class="feat-check">✓</span> <strong>500 AI credits</strong> / month</li>
-            <li><span class="feat-check">✓</span> <strong>1 project</strong></li><p></p>
-          </ul>
-          <div class="plan-apps">
-            <div class="plan-app-list">
-              <span class="plan-app-tag">Suite Access</span>
-               </div>
-          </div>
-          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan">Get Started</a>
-        </div>
+          <li class="plan card">
+            <div><h2 class="plan-name display">Solo</h2><p class="plan-for">One artist, one project</p></div>
+            <div class="plan-price"><strong>€4.99</strong><span>/ month</span></div>
+            <p class="plan-year">or €49.99 a year (about 2 months free)</p>
+            <ul class="plan-features">
+              <li><span><strong>3 paid app</strong> slots + 3 free</span></li>
+              <li><span><strong>12 PDF exports</strong> a month</span></li>
+              <li><span><strong>500 AI credits</strong> a month</span></li>
+              <li><span><strong>1 project</strong></span></li>
+              <li><span>Every feature, no limits</span></li>
+            </ul>
+            <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn">Get Solo</a>
+          </li>
 
-        <!-- COLLECTIVE -->
-        <div class="pricing-card pricing-card--featured reveal">
-          <div class="pricing-card-glow"></div>
-          <div class="plan-badge-popular">Most Popular</div>
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon--collective">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="7" cy="8" r="3" fill="currentColor" opacity="0.7"/><circle cx="15" cy="8" r="3" fill="currentColor"/><path d="M1 19c0-3.3 2.7-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/><path d="M9 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-            </div>
-            <div>
-              <h3 class="plan-name">Collective</h3>
-              <p class="plan-tagline">Your crew, your toolkit.</p>
-            </div>
-          </div>
-          <div class="plan-price">
-            <span class="price-amount" data-monthly="9.99" data-yearly="8.33">€9.99</span>
-            <span class="price-period">/month</span>
-          </div>
-          <p class="price-yearly-note u-hidden" id="yearly-note-collective">Billed as <strong>€99.99/year</strong></p>
-          <p class="plan-pitch">Built for the band, the team, the agency. Four powerful tools, a shared workspace, and room for your collabs — so everyone moves in sync, all the time.</p><p></p>
-          <ul class="plan-features">
-            <li><span class="feat-check">✓</span> <strong>6 paid app slots</strong></li>
-            <li><span class="feat-check">✓</span> <strong>3 free app slots</strong></li>
-            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
-            <li><span class="feat-check">✓</span> <strong>50 PDF exports</strong> per month</li>
-            <li><span class="feat-check">✓</span> <strong>1,250 AI credits</strong> / month</li>
-            <li><span class="feat-check">✓</span> <strong>3 projects</strong></li><p></p><p></p><p></p>
-          </ul>
-          <div class="plan-apps">
-            <div class="plan-app-list">
-              <span class="plan-app-tag">Suite Access</span>
-            </div>
-          </div>
-          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan btn-plan--featured">Get Started</a>
-        </div>
+          <li class="plan card">
+            <div><h2 class="plan-name display">Collective</h2><p class="plan-for">A band, a small label or a booker</p></div>
+            <div class="plan-price"><strong>€9.99</strong><span>/ month</span></div>
+            <p class="plan-year">or €99.99 a year (about 2 months free)</p>
+            <ul class="plan-features">
+              <li><span><strong>6 paid app</strong> slots + 3 free</span></li>
+              <li><span><strong>50 PDF exports</strong> a month</span></li>
+              <li><span><strong>1,250 AI credits</strong> a month</span></li>
+              <li><span><strong>3 projects</strong></span></li>
+              <li><span>Every feature, no limits</span></li>
+            </ul>
+            <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn">Get Collective</a>
+          </li>
 
-        <!-- BUSINESS -->
-        <div class="pricing-card pricing-card--coming-soon reveal">
-          <div class="plan-coming-overlay">
-            <div class="plan-coming-overlay__icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B5CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14M5 21h14M7 3v3a5 5 0 0 0 10 0V3M7 21v-3a5 5 0 0 1 10 0v3"/></svg>
-            </div>
-            <h3 class="plan-coming-overlay__title">Coming Soon</h3>
-            <p class="plan-coming-overlay__sub">More solutions for your touring pains are on the way. <br></br>We'll let you know<br>when this is ready.</p>
-            <button type="button" class="plan-coming-overlay__btn" disabled>Notify Me When Ready</button>
-          </div>
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon--business">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="10" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M7 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><circle cx="11" cy="15" r="1.5" fill="currentColor"/></svg>
-            </div>
-            <div>
-              <h3 class="plan-name">Business</h3>
-              <p class="plan-tagline">Scale your operation.</p>
-            </div>
-          </div>
-          <div class="plan-price">
-            <span class="price-amount" data-monthly="24.99" data-yearly="20.83">€24.99</span>
-            <span class="price-period">/month</span>
-          </div>
-          <p class="price-yearly-note u-hidden" id="yearly-note-business">Billed as <strong>€249.99/year</strong></p>
-          <p class="plan-pitch">For the professionals running the show. Ten tools, and 100 exports a month — everything you need to manage bigger operations without the enterprise price tag.</p><p></p>
-          <ul class="plan-features">
-            <li><span class="feat-check">✓</span> <strong>12 paid app slots</strong></li>
-            <li><span class="feat-check">✓</span> <strong>3 free app slots</strong></li>
-            <li><span class="feat-check">✓</span> Fully functional — no feature limits</li>
-            <li><span class="feat-check">✓</span> <strong>100 PDF exports</strong> per month</li>
-            <li><span class="feat-check">✓</span> <strong>2,500 AI credits</strong> / month</li>
-            <li><span class="feat-check">✓</span> <strong>6 projects</strong></li>
-            <li><span class="feat-check">✓</span> priority support line</li>
-          </ul>
-          <div class="plan-apps">
-            <div class="plan-app-list">
-              <span class="plan-app-tag">Suite Access</span>
-            </div>
-          </div>
+        </ul>
 
-          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan">Get Started</a>
-        </div>
-
-        <!-- MAJOR -->
-        <div class="pricing-card pricing-card--major pricing-card--coming-soon reveal">
-          <div class="plan-coming-overlay">
-            <div class="plan-coming-overlay__icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C026D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14M5 21h14M7 3v3a5 5 0 0 0 10 0V3M7 21v-3a5 5 0 0 1 10 0v3"/></svg>
-            </div>
-            <h3 class="plan-coming-overlay__title">Coming Soon</h3>
-            <p class="plan-coming-overlay__sub">We see you — the one who wants it all.<br>Walk with us. Your work won't wait,<br>and neither will we.</p>
-            <button type="button" class="plan-coming-overlay__btn" disabled>Notify Me When Ready</button>
-          </div>
-          <div class="pricing-card-glow pricing-card-glow--major"></div>And yes! we see you.<br>The one that wants it all.<br>walk with us and get your work done.
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon--major">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.5 8.5H20L14.5 12.5L16.5 19L11 15L5.5 19L7.5 12.5L2 8.5H8.5L11 2Z" fill="currentColor"/></svg>
-            </div>
-            <div>
-              <h3 class="plan-name">Major</h3>
-              <p class="plan-tagline">Maximum Moshly power.</p>
-            </div>
-          </div>
-          <div class="plan-price">
-            <span class="price-amount" data-monthly="79.99" data-yearly="66.66">€79.99</span>
-            <span class="price-period">/month</span>
-          </div>
-          <p class="price-yearly-note u-hidden" id="yearly-note-major">Billed as <strong>€799.99/year</strong></p>
-          <p class="plan-pitch">This is the whole Moshly Universe in your hands. Every tool, every feature the moment it drops — maximum power, zero waiting. For those who make the industry.</p><p></p>
-          <ul class="plan-features">
-            <li><span class="feat-check">✓</span> <strong>24 paid app slots</strong></li>
-            <li><span class="feat-check">✓</span> <strong>3 free app slots</strong></li>
-            <li><span class="feat-check">✓</span> <strong>250 PDF exports</strong> per month</li>
-            <li><span class="feat-check">✓</span> <strong>6,000 AI credits</strong> / month</li>
-            <li><span class="feat-check">✓</span> <strong>15 projects</strong></li>
-            <li><span class="feat-check">✓</span> Max priority support line</li><p></p><p></p><p></p>
-          </ul>
-          <div class="plan-apps">
-            <div class="plan-app-list">
-              <span class="plan-app-tag">Full Suite</span>
-            </div>
-          </div>
-
-          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-plan btn-plan--major">Go Major</a>
-        </div>
-
-      </div><!-- /pricing-grid -->
-
-      <!-- EXPLORE FREE STRIP -->
-      <div class="explore-strip">
-        <div class="explore-strip-inner">
-          <div class="explore-strip-text">
-            <p class="explore-strip-eyebrow">Not ready to commit?</p>
-            <h3 class="explore-strip-title">Sign up free and explore Moshly's universe.</h3>
-            <p class="explore-strip-desc">1 project, 3 free app slots, access to future free tools and topable AI features. 0 PDF exports. No credit card, no activation required.</p>
-          </div>
-          <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn-ghost explore-strip-btn">Start Exploring →</a>
+        <div class="later card">
+          <p><strong>Bigger crews later.</strong> Business (12 apps, 6 projects, €24.99/month) and Major (24 apps, 15 projects, €79.99/month) open when there's demand for them.</p>
+          <a href="/contact" class="link-arrow">Ask us about it →</a>
         </div>
       </div>
+    </section>
 
-      <!-- CREDITS FOOTNOTE -->
-      <p class="credits-footnote">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        Daily credits reset at midnight (Lisbon time). Monthly credits do not expire daily.
-      </p>
+  </main>
 
-    </div>
-  </section>
-
-  <!-- THE SUITE SECTION -->
-  <section class="apps-desc-section">
-    <div class="section-inner">
-      <div class="section-label">Coming Soon</div>
-      <h2 class="section-title">What's inside <span class="gradient-text">the suite</span></h2>
-      
-      <div class="suite-announcement-box reveal">
-        <div class="suite-announcement-content">
-          <p class="suite-text">We’re just a small crew of builders making simple, effective tools that actually help your day-to-day. No big corporate machine, just us refining a collection of instruments for people who appreciate the details as much as we do.</p>
-          <p class="suite-text">We’re currently polishing the last bits of the suite, making sure everything is exactly where it needs to be before we let it out into the world. It’s taking a little time, but we want it to be right.</p>
-          <p class="suite-text-highlight">join now and get some early bird perks.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOTTOM CTA -->
-  <section class="cta-section" id="notify">
-    <div class="cta-glow"></div>
-    <div class="section-inner cta-inner">
-      <h2 class="cta-title">Not sure which plan?<br /><span class="gradient-text">Start now.</span></h2>
-      <p class="cta-subtitle">Sign up for a free account and explore the ecosystem. No credit card required.</p>
-      <div class="hero-actions">
-        <a href="/signup" class="btn-primary">Create Free Account</a>
-        <a href="#contact" class="btn-ghost">Talk to Us</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT FORM -->
-  <section class="contact-section" id="contact">
-    <div class="section-inner">
-      <div class="contact-wrapper reveal">
-        <div class="contact-left">
-          <div class="section-label">Get in Touch</div>
-          <h2 class="contact-title">Questions?<br /><span class="gradient-text">We're here.</span></h2>
-          <p class="contact-desc">Not sure which plan fits your workflow? Need a custom deal for your label or agency? Drop us a line — we reply fast.</p>
-          <div class="contact-info-list">
-            <div class="contact-info-item">
-              <div class="contact-info-icon">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 4h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 5l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </div>
-              <a href="mailto:emptytown@proton.me">emptytown@proton.me</a>
-            </div>
-            <div class="contact-info-item">
-              <div class="contact-info-icon">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 5v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </div>
-              <span>We reply within 24 hours</span>
-            </div>
-          </div>
-        </div>
-
-        <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
-          <div class="contact-form-row">
-            <div class="contact-field">
-              <label class="contact-label" for="cf-name">Name</label>
-              <input class="contact-input" type="text" id="cf-name" placeholder="Your name" required />
-            </div>
-            <div class="contact-field">
-              <label class="contact-label" for="cf-email">Email</label>
-              <input class="contact-input" type="email" id="cf-email" placeholder="your@email.com" required />
-            </div>
-          </div>
-          <div class="contact-field">
-            <label class="contact-label" for="cf-subject">Subject</label>
-            <select class="contact-input contact-select" id="cf-subject" required>
-              <option value="" disabled selected>Select a topic…</option>
-              <option value="Plan question">Plan question</option>
-              <option value="Custom deal">Custom deal</option>
-              <option value="Technical support">Technical support</option>
-              <option value="Partnership">Partnership</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="contact-field">
-            <label class="contact-label" for="cf-message">Message</label>
-            <textarea class="contact-input contact-textarea" id="cf-message" placeholder="Tell us what you need…" rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn-primary contact-submit">Send Message</button>
-          <div class="contact-success u-hidden" id="contactSuccess">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Message sent! We'll be in touch shortly.
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
-        <span>Moshly.io</span>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
+        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
       </div>
-      <p class="footer-tagline">Micro-tools for the music industry.</p>
-      <div class="footer-links">
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/faq">FAQ</a>
-        <a href="/contact">Contact</a>
-      </div>
-      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
-      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
-        <span class="theme-toggle-icon theme-toggle-icon--sun">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </span>
-        <span class="theme-toggle-icon theme-toggle-icon--moon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
-        </span>
+      <ul class="footer-links">
+        <li><a href="/apps">Apps</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <div class="footer-meta">
+        <span>© 2026 Moshly</span>
+        <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
+          <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
+        </button>
       </div>
     </div>
   </footer>
@@ -376,293 +143,8 @@
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
   <script>
-    let isYearly = false;
-
-    function toggleBilling() {
-      isYearly = !isYearly;
-      const btn = document.getElementById('billingToggle');
-      if (!btn) return;
-      btn.setAttribute('aria-pressed', isYearly);
-      btn.classList.toggle('active', isYearly);
-
-      const amounts = document.querySelectorAll('.price-amount');
-      amounts.forEach(el => {
-        const monthly = parseFloat(el.dataset.monthly);
-        const yearly = parseFloat(el.dataset.yearly);
-        el.textContent = '€' + (isYearly ? yearly.toFixed(2) : monthly.toFixed(2));
-      });
-
-      const notes = document.querySelectorAll('.price-yearly-note');
-      notes.forEach(el => {
-        el.style.display = isYearly ? 'block' : 'none';
-      });
-
-      const labelMonthly = document.getElementById('label-monthly');
-      const labelYearly = document.getElementById('label-yearly');
-      if (labelMonthly) labelMonthly.classList.toggle('billing-label--active', !isYearly);
-      if (labelYearly) labelYearly.classList.toggle('billing-label--active', isYearly);
-    }
-
-    // Init billing labels
-    document.addEventListener('DOMContentLoaded', () => {
-      const labelMonthly = document.getElementById('label-monthly');
-      if (labelMonthly) labelMonthly.classList.add('billing-label--active');
-    });
-
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
-    }
-
-    async function handleContactSubmit(e) {
-      e.preventDefault();
-      const btn    = e.target.querySelector('.contact-submit');
-      const name    = document.getElementById('cf-name').value.trim();
-      const email   = document.getElementById('cf-email').value.trim();
-      const subject = document.getElementById('cf-subject').value;
-      const message = document.getElementById('cf-message').value.trim();
-
-      if (!isValidEmail(email)) {
-        alert('Please enter a valid email address.');
-        document.getElementById('cf-email').focus();
-        return;
-      }
-
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
-
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, subject, message }),
-        });
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          document.getElementById('contactForm').style.opacity = '0.4';
-          document.getElementById('contactForm').style.pointerEvents = 'none';
-          document.getElementById('contactSuccess').style.display = 'flex';
-          btn.textContent = 'Sent!';
-        } else {
-          btn.textContent = 'Send Message';
-          btn.disabled = false;
-          alert(data.error || 'Something went wrong. Please try again.');
-        }
-      } catch {
-        btn.textContent = 'Send Message';
-        btn.disabled = false;
-        alert('Network error — please check your connection and try again.');
-      }
-    }
-  </script>
-
-  <!-- AUTH MODAL REMOVED — see /login.html /signup.html -->
-  <div style="display:none" aria-hidden="true">
-    <div>
-      <button class="auth-close" onclick="closeModal()" aria-label="Close">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
-      <div class="auth-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="auth-logo-img" />
-        <span>Moshly</span>
-      </div>
-      <div class="auth-tabs">
-        <button class="auth-tab auth-tab--active" id="tabLogin" onclick="switchTab('login')">Log In</button>
-        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register</button>
-      </div>
-      <div class="auth-panel" id="panelLogin">
-        <form class="auth-form" autocomplete="on" onsubmit="handleAuth(event,'login')">
-          <div class="auth-field">
-            <label class="auth-label" for="login-email">Email</label>
-            <input class="auth-input" type="email" id="login-email" placeholder="your@email.com" required autocomplete="username" />
-          </div>
-          <div class="auth-field">
-            <div class="auth-label-row">
-              <label class="auth-label" for="login-password">Password</label>
-              <a href="#" class="auth-forgot" onclick="switchTab('forgot');return false;">Forgot password?</a>
-            </div>
-            <input class="auth-input" type="password" id="login-password" data-pw="1" placeholder="••••••••" required autocomplete="current-password" />
-          </div>
-          <button type="submit" class="btn-primary auth-submit">Log In</button>
-          <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('register');return false;">Register</a></p>
-        </form>
-      </div>
-      <div class="auth-panel auth-panel--hidden" id="panelRegister">
-        <form class="auth-form" onsubmit="handleAuth(event,'register')">
-          <div class="auth-form-row">
-            <div class="auth-field">
-              <label class="auth-label" for="reg-fname">First Name</label>
-              <input class="auth-input" type="text" id="reg-fname" placeholder="First" required autocomplete="given-name" />
-            </div>
-            <div class="auth-field">
-              <label class="auth-label" for="reg-lname">Last Name</label>
-              <input class="auth-input" type="text" id="reg-lname" placeholder="Last" required autocomplete="family-name" />
-            </div>
-          </div>
-          <div class="auth-field">
-            <label class="auth-label" for="reg-email">Email</label>
-            <input class="auth-input" type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email" />
-          </div>
-          <div class="auth-field">
-            <label class="auth-label" for="reg-phone">Phone</label>
-            <div class="auth-phone-wrap">
-              <select class="auth-dial" id="reg-dial" required>
-                <option value="" disabled selected>Country</option>
-                <option value="+355">🇦🇱 +355 Albania</option>
-                <option value="+376">🇦🇩 +376 Andorra</option>
-                <option value="+54">🇦🇷 +54 Argentina</option>
-                <option value="+61">🇦🇺 +61 Australia</option>
-                <option value="+43">🇦🇹 +43 Austria</option>
-                <option value="+32">🇧🇪 +32 Belgium</option>
-                <option value="+55">🇧🇷 +55 Brazil</option>
-                <option value="+1-CA">🇨🇦 +1 Canada</option>
-                <option value="+56">🇨🇱 +56 Chile</option>
-                <option value="+57">🇨🇴 +57 Colombia</option>
-                <option value="+385">🇭🇷 +385 Croatia</option>
-                <option value="+357">🇨🇾 +357 Cyprus</option>
-                <option value="+420">🇨🇿 +420 Czech Republic</option>
-                <option value="+45">🇩🇰 +45 Denmark</option>
-                <option value="+372">🇪🇪 +372 Estonia</option>
-                <option value="+358">🇫🇮 +358 Finland</option>
-                <option value="+33">🇫🇷 +33 France</option>
-                <option value="+49">🇩🇪 +49 Germany</option>
-                <option value="+30">🇬🇷 +30 Greece</option>
-                <option value="+36">🇭🇺 +36 Hungary</option>
-                <option value="+354">🇮🇸 +354 Iceland</option>
-                <option value="+353">🇮🇪 +353 Ireland</option>
-                <option value="+39">🇮🇹 +39 Italy</option>
-                <option value="+81">🇯🇵 +81 Japan</option>
-                <option value="+371">🇱🇻 +371 Latvia</option>
-                <option value="+423">🇱🇮 +423 Liechtenstein</option>
-                <option value="+370">🇱🇹 +370 Lithuania</option>
-                <option value="+352">🇱🇺 +352 Luxembourg</option>
-                <option value="+356">🇲🇹 +356 Malta</option>
-                <option value="+52">🇲🇽 +52 Mexico</option>
-                <option value="+377">🇲🇨 +377 Monaco</option>
-                <option value="+31">🇳🇱 +31 Netherlands</option>
-                <option value="+64">🇳🇿 +64 New Zealand</option>
-                <option value="+47">🇳🇴 +47 Norway</option>
-                <option value="+48">🇵🇱 +48 Poland</option>
-                <option value="+351">🇵🇹 +351 Portugal</option>
-                <option value="+40">🇷🇴 +40 Romania</option>
-                <option value="+378">🇸🇲 +378 San Marino</option>
-                <option value="+381">🇷🇸 +381 Serbia</option>
-                <option value="+421">🇸🇰 +421 Slovakia</option>
-                <option value="+386">🇸🇮 +386 Slovenia</option>
-                <option value="+27">🇿🇦 +27 South Africa</option>
-                <option value="+82">🇰🇷 +82 South Korea</option>
-                <option value="+34">🇪🇸 +34 Spain</option>
-                <option value="+46">🇸🇪 +46 Sweden</option>
-                <option value="+41">🇨🇭 +41 Switzerland</option>
-                <option value="+886">🇹🇼 +886 Taiwan</option>
-                <option value="+44">🇬🇧 +44 United Kingdom</option>
-              </select>
-              <input class="auth-input" type="tel" id="reg-phone" placeholder="Mobile number" required pattern="[0-9\s\-]{6,15}" autocomplete="tel" />
-            </div>
-          </div>
-          <div class="auth-field">
-            <label class="auth-label" for="reg-password">Password</label>
-            <input class="auth-input" type="password" id="reg-password" data-pw="1" placeholder="Min. 12 characters" required minlength="12" autocomplete="new-password" oninput="updateMeter('reg-password','pwMeter')" />
-            <!-- Password strength meter -->
-            <div id="pwMeter" style="display:none;margin-top:8px;">
-              <div style="display:flex;gap:4px;margin-bottom:6px;">
-                <div id="pwMeter-s0" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
-                <div id="pwMeter-s1" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
-                <div id="pwMeter-s2" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
-                <div id="pwMeter-s3" style="flex:1;height:4px;border-radius:2px;background:#e5e7eb;transition:background .2s;"></div>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                <div style="display:flex;flex-direction:column;gap:3px;">
-                  <span id="pwMeter-hLen" style="font-size:11px;color:#9ca3af;">○ At least 12 characters</span>
-                  <span id="pwMeter-hSym" style="font-size:11px;color:#9ca3af;">○ At least one number or symbol</span>
-                </div>
-                <span id="pwMeter-lbl" style="font-size:11px;font-weight:600;color:#9ca3af;"></span>
-              </div>
-            </div>
-          </div>
-          <div id="invite-code-field" class="u-hidden">
-            <div class="auth-field">
-              <label class="auth-label" for="reg-invite-code">Invite Code</label>
-              <input class="auth-input auth-input--invite" type="text" id="reg-invite-code" placeholder="MOSH-XXXX" autocomplete="off" oninput="this.value=this.value.toUpperCase()" />
-            </div>
-          </div>
-          <button type="button" class="auth-invite-toggle" onclick="const f=document.getElementById('invite-code-field');const h=f.classList.toggle('u-hidden');this.textContent=h?'Have an invite code?':'Hide invite code'">Have an invite code?</button>
-          <div class="auth-field auth-field--sm-top">
-            <label class="auth-consent-label">
-              <input type="checkbox" id="reg-terms" class="auth-consent-check" required />
-              <span>I agree to the <a href="/terms" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Terms of Service</a> and <a href="/privacy" target="_blank" style="color:var(--color-accent-primary);text-decoration:underline;">Privacy Policy</a>.</span>
-            </label>
-          </div>
-          <div class="auth-field auth-field--sm-top">
-            <label class="auth-consent-label">
-              <input type="checkbox" id="reg-marketing" class="auth-consent-check" />
-              <span>I'd like to receive Moshly updates, early access news, and feature announcements by email.</span>
-            </label>
-          </div>
-          <button type="submit" class="btn-primary auth-submit">Create Account</button>
-        </form>
-        <div class="auth-forgot-header">
-          <button class="auth-back" type="button" onclick="switchTab('login')">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Back to Log In
-          </button>
-          <h3 class="auth-panel-title">Reset your password</h3>
-          <p class="auth-panel-desc">Enter your email and we'll send you a reset link.</p>
-        </div>
-        <form class="auth-form" onsubmit="handleAuth(event,'forgot')">
-          <div class="auth-field">
-            <label class="auth-label" for="forgot-email">Email</label>
-            <input class="auth-input" type="email" id="forgot-email" placeholder="your@email.com" required autocomplete="email" />
-          </div>
-          <button type="submit" class="btn-primary auth-submit">Send Reset Link</button>
-        </form>
-        <div class="auth-success u-hidden" id="forgotSuccess">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Check your inbox — reset link sent!
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const METER_COLORS = ['#ef4444', '#f97316', '#6b5cff', '#22c55e'];
-    const METER_LABELS = ['Weak', 'Fair', 'Good', 'Strong'];
-
-    function scorePassword(pw) {
-      const hasMinLength = pw.length >= 12;
-      const hasNonLetter = /[^a-zA-Z]/.test(pw);
-      if (!hasMinLength || !hasNonLetter) return 0;
-      const hasLongLength = pw.length >= 16;
-      const hasMixedCase  = /[A-Z]/.test(pw) && /[a-z]/.test(pw);
-      const hasSymbol     = /[^a-zA-Z0-9]/.test(pw);
-      const hasNumber     = /[0-9]/.test(pw);
-      const bonuses = [hasLongLength, hasMixedCase, hasSymbol, hasNumber].filter(Boolean).length;
-      if (bonuses >= 3) return 3;
-      if (bonuses >= 1) return 2;
-      return 1;
-    }
-
-    function updateMeter(inputId, meterId) {
-      const pw   = document.getElementById(inputId).value;
-      const wrap = document.getElementById(meterId);
-      const hLen = document.getElementById(meterId + '-hLen');
-      const hSym = document.getElementById(meterId + '-hSym');
-      const lbl  = document.getElementById(meterId + '-lbl');
-      if (!pw.length) { wrap.style.display = 'none'; return; }
-      wrap.style.display = 'block';
-      const score = scorePassword(pw);
-      const activeColor = METER_COLORS[score];
-      for (let i = 0; i < 4; i++) {
-        document.getElementById(meterId + '-s' + i).style.background = i < score + 1 ? activeColor : '#e5e7eb';
-      }
-      lbl.textContent = METER_LABELS[score];
-      lbl.style.color = activeColor;
-      const okLen = pw.length >= 12;
-      const okSym = /[^a-zA-Z]/.test(pw);
-      hLen.textContent = (okLen ? '✓' : '○') + ' At least 12 characters';
-      hLen.style.color = okLen ? '#22c55e' : '#9ca3af';
-      hSym.textContent = (okSym ? '✓' : '○') + ' At least one number or symbol';
-      hSym.style.color = okSym ? '#22c55e' : '#9ca3af';
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
     }
   </script>
 </body>

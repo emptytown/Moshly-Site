@@ -1,110 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact — Moshly</title>
+  <meta name="description" content="Get in touch with Moshly: questions, bugs, ideas, partnerships." />
+  <link rel="canonical" href="https://moshly.io/contact" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://moshly.io/contact" />
+  <meta property="og:title" content="Contact — Moshly" />
+  <meta property="og:description" content="Get in touch with Moshly: questions, bugs, ideas, partnerships." />
+  <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <script>
+    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/pricing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/site.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
-        <span class="nav-logo-text">Moshly</span>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Moshly home">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="34" height="34" />
+        Moshly
       </a>
-      <div class="nav-links">
-        <a href="/#apps" class="nav-link">Apps</a>
-        <a href="/#roadmap" class="nav-link">Roadmap</a>
-        <a href="/app-tour" class="nav-link">Tour</a>
-        <a href="/pricing" class="nav-link">Pricing</a>
-        <a href="/login" class="nav-login-btn" id="nav-login-btn">Log In</a>
-        <a id="nav-dash-btn" href="/dashboard" class="nav-login-btn u-hidden">Dashboard →</a>
-      </div>
-      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
+      <nav class="nav-links" aria-label="Main">
+        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/#news" class="nav-link">News</a>
+        <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
+        <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
+      </nav>
+      <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span><span class="nav-menu-line"></span><span class="nav-menu-line"></span>
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
-      <a href="/app-tour" class="mobile-nav-link" onclick="closeMobileMenu()">Tour</a>
-      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
-      <a href="/login" class="mobile-nav-login-btn" id="mobile-nav-login-btn" onclick="closeMobileMenu()">Log In</a>
-      <a id="mobile-nav-dash-btn" href="/dashboard" class="mobile-nav-login-btn u-hidden" onclick="closeMobileMenu()">Dashboard →</a>
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
+      <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
-  </nav>
+  </header>
 
-  <main style="padding-top:120px;">
+  <main id="main">
 
-    <!-- ABOUT CARD -->
-    <div class="section-inner" style="margin-bottom:0;">
-      <div class="section-label">Contact</div>
-      <h2 class="section-title">Get in touch with <span class="gradient-text">Moshly</span></h2>
+    <section class="page-head">
+      <div class="container">
+        <p class="label">Contact</p>
+        <h1 class="display">Say <span class="script">hi</span></h1>
+        <p>A question, a bug, an idea for a tool you wish existed. We read everything.</p>
+      </div>
+    </section>
 
-      <section style="max-width:820px;margin:18px auto 60px;">
-        <div style="background:var(--color-bg-surface);padding:28px;border-radius:12px;border:1px solid var(--color-border-strong);">
-          <h3 style="margin-bottom:8px;font-size:18px;font-weight:700;">About Moshly</h3>
-          <p style="color:var(--color-text-secondary);line-height:1.5;margin-bottom:14px;">Moshly is a Contrastdetails Lda. brand, founded by music professionals — a tight-knit team of tour managers, event producers and engineers who built tools to solve the real problems they faced on the road. What began as practical, in-house solutions quickly drew attention from colleagues; that momentum turned our tools into a product.
-            <br>Today Moshly is a growing suite of focused apps designed to streamline the day-to-day work of music professionals.</p>
-          <br>
-          <h4 style="margin-top:12px;margin-bottom:6px;font-size:15px;font-weight:600;">Email</h4>
-          <p><a href="mailto:hello@moshly.io" style="color:var(--color-accent-primary);">hello@moshly.io</a></p>
-
-          <h4 style="margin-top:14px;margin-bottom:6px;font-size:15px;font-weight:600;">Address</h4>
-          <p style="color:var(--color-text-secondary);">Moshly — Estrada de Sassoeiros, nr 24 C — 2775-530 Carcavelos, Portugal</p>
+    <section class="section" aria-label="Contact form">
+      <div class="container contact-grid">
+        <div class="contact-aside">
+          <p>Prefer email? Write to <a href="mailto:emptytown@proton.me">emptytown@proton.me</a>.</p>
+          <p>Privacy requests: <a href="mailto:privacy@moshly.io">privacy@moshly.io</a></p>
         </div>
-      </section>
-    </div>
 
-    <!-- CONTACT FORM -->
-    <section class="contact-section" id="contact">
-      <div class="section-inner">
-        <div class="contact-wrapper reveal">
-          <div class="contact-left">
-            <div class="section-label">Get in Touch</div>
-            <h2 class="contact-title">Questions?<br /><span class="gradient-text">We're here.</span></h2>
-            <p class="contact-desc">Not sure which plan fits your workflow? Need a custom deal for your label or agency? Drop us a line — we reply fast.</p>
-            <div class="contact-info-list">
-              <div class="contact-info-item">
-                <div class="contact-info-icon">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 4h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 5l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </div>
-                <a href="mailto:hello@moshly.io">hello@moshly.io</a>
+        <div class="card">
+          <form class="form" id="contactForm" onsubmit="handleContactSubmit(event)">
+            <div class="form-row">
+              <div class="field">
+                <label for="cf-name">Name</label>
+                <input class="input" type="text" id="cf-name" placeholder="Your name" autocomplete="name" required />
               </div>
-              <div class="contact-info-item">
-                <div class="contact-info-icon">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M9 5v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </div>
-                <span>We reply within 24 hours</span>
+              <div class="field">
+                <label for="cf-email">Email</label>
+                <input class="input" type="email" id="cf-email" placeholder="your@email.com" autocomplete="email" required />
               </div>
             </div>
-          </div>
-
-          <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
-            <div class="contact-form-row">
-              <div class="contact-field">
-                <label class="contact-label" for="cf-name">Name</label>
-                <input class="contact-input" type="text" id="cf-name" placeholder="Your name" required />
-              </div>
-              <div class="contact-field">
-                <label class="contact-label" for="cf-email">Email</label>
-                <input class="contact-input" type="email" id="cf-email" placeholder="your@email.com" required />
-              </div>
-            </div>
-            <div class="contact-field">
-              <label class="contact-label" for="cf-subject">Subject</label>
-              <select class="contact-input contact-select" id="cf-subject" required>
-                <option value="" disabled selected>Select a topic…</option>
+            <div class="field">
+              <label for="cf-subject">Subject</label>
+              <select class="input" id="cf-subject" required>
+                <option value="" disabled selected>Pick a topic…</option>
                 <option value="Plan question">Plan question</option>
                 <option value="Custom deal">Custom deal</option>
                 <option value="Technical support">Technical support</option>
@@ -112,15 +92,12 @@
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div class="contact-field">
-              <label class="contact-label" for="cf-message">Message</label>
-              <textarea class="contact-input contact-textarea" id="cf-message" placeholder="Tell us what you need…" rows="5" required></textarea>
+            <div class="field">
+              <label for="cf-message">Message</label>
+              <textarea class="input" id="cf-message" placeholder="Tell us what you need…" rows="5" required></textarea>
             </div>
-            <button type="submit" class="btn-primary contact-submit">Send Message</button>
-            <div class="contact-success u-hidden" id="contactSuccess">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4ADE80" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#4ADE80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Message sent! We'll be in touch shortly.
-            </div>
+            <div><button type="submit" class="btn btn--primary contact-submit">Send message</button></div>
+            <p class="form-note u-hidden" id="contactSuccess" role="status">Message sent. We'll get back to you soon.</p>
           </form>
         </div>
       </div>
@@ -129,56 +106,30 @@
   </main>
 
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
-        <span>Moshly.io</span>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
+        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
       </div>
-      <p class="footer-tagline">Micro-tools for the music industry.</p>
-      <div class="footer-links">
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/faq">FAQ</a>
-        <a href="/contact">Contact</a>
-      </div>
-      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
-      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
-        <span class="theme-toggle-icon theme-toggle-icon--sun">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </span>
-        <span class="theme-toggle-icon theme-toggle-icon--moon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
-        </span>
+      <ul class="footer-links">
+        <li><a href="/apps">Apps</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <div class="footer-meta">
+        <span>© 2026 Moshly</span>
+        <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
+          <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
+        </button>
       </div>
     </div>
   </footer>
 
-  <script src="/moshly-ui.js"></script>
   <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
   <script>
-    // Navigation logic (consistent with index/pricing)
-    (async () => {
-      const user = await MoshlyAuth.getSession();
-      const loginBtn = document.getElementById('nav-login-btn');
-      const dashBtn = document.getElementById('nav-dash-btn');
-      const mLoginBtn = document.getElementById('mobile-nav-login-btn');
-      const mDashBtn = document.getElementById('mobile-nav-dash-btn');
-
-      if (user) {
-        if (loginBtn) loginBtn.classList.add('u-hidden');
-        if (dashBtn) {
-            dashBtn.classList.remove('u-hidden');
-            dashBtn.style.display = 'inline-flex';
-        }
-        if (mLoginBtn) mLoginBtn.classList.add('u-hidden');
-        if (mDashBtn) {
-            mDashBtn.classList.remove('u-hidden');
-            mDashBtn.style.display = 'flex';
-        }
-      }
-    })();
-
     function isValidEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
     }
@@ -209,20 +160,24 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          document.getElementById('contactForm').style.opacity = '0.4';
-          document.getElementById('contactForm').style.pointerEvents = 'none';
-          document.getElementById('contactSuccess').style.display = 'flex';
-          btn.textContent = 'Sent!';
+          document.querySelectorAll('#contactForm .field, #contactForm .form-row').forEach(el => { el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; });
+          document.getElementById('contactSuccess').classList.remove('u-hidden');
+          btn.textContent = 'Sent';
         } else {
-          btn.textContent = 'Send Message';
+          btn.textContent = 'Send message';
           btn.disabled = false;
           alert(data.error || 'Something went wrong. Please try again.');
         }
       } catch {
-        btn.textContent = 'Send Message';
+        btn.textContent = 'Send message';
         btn.disabled = false;
         alert('Network error — please check your connection and try again.');
       }
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
     }
   </script>
 </body>

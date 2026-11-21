@@ -1,106 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy — Moshly</title>
+  <title>Privacy Policy — Moshly</title>
+  <meta name="description" content="How Moshly handles your data." />
+  <link rel="canonical" href="https://moshly.io/privacy" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://moshly.io/privacy" />
+  <meta property="og:title" content="Privacy Policy — Moshly" />
+  <meta property="og:description" content="How Moshly handles your data." />
+  <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <script>
+    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/site.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="nav-logo-img" />
-        <span class="nav-logo-text">Moshly</span>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Moshly home">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="34" height="34" />
+        Moshly
       </a>
-      <div class="nav-links">
-        <a href="/#apps" class="nav-link">Apps</a>
-        <a href="/#roadmap" class="nav-link">Roadmap</a>
-        <a href="/pricing" class="nav-link">Pricing</a>
-      </div>
-      <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
-        <span class="nav-menu-line"></span>
+      <nav class="nav-links" aria-label="Main">
+        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/#news" class="nav-link">News</a>
+        <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
+        <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
+      </nav>
+      <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span><span class="nav-menu-line"></span><span class="nav-menu-line"></span>
       </button>
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
-      <a href="/#apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-        <a href="/#roadmap" class="mobile-nav-link" onclick="closeMobileMenu()">Roadmap</a>
-      <a href="/pricing" class="mobile-nav-link" onclick="closeMobileMenu()">Pricing</a>
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
+      <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
-  </nav>
+  </header>
 
-  <!-- PRIVACY CONTENT -->
-  <section class="apps-section" style="padding-top: 100px;">
-    <div class="section-inner" style="max-width: 840px;">
-      <a href="/" class="app-cta" style="margin-bottom: 20px; display:inline-flex;">← Back</a>
-      <div class="section-label">Legal</div>
-      <h1 class="section-title">Privacy Policy</h1>
-      <p class="section-subtitle" style="max-width: 100%; margin-bottom: 20px;">
-        Effective date: 2 March 2026
-      </p>
+  <main id="main">
 
-      <div class="app-card" style="display:block;">
-        <p class="app-desc" style="margin-bottom: 14px;">
-          Moshly respects your privacy and handles your data with care.
-        </p>
-        <p class="app-desc" style="margin-bottom: 14px;">
-          All information uploaded, submitted, stored, or otherwise provided by clients is treated as protected confidential material.
-          We apply appropriate technical and organizational safeguards to prevent unauthorized access, disclosure, alteration, or loss.
-        </p>
-        <p class="app-desc" style="margin-bottom: 14px;">
-          We collect only the information needed to provide and improve Moshly services, including account information,
-          usage information, and data you choose to submit in forms.
-        </p>
-        <p class="app-desc" style="margin-bottom: 14px;">
-          We do not sell client personal data. Data may be processed by trusted service providers strictly for operating
-          our platform and only under confidentiality and security obligations.
-        </p>
-        <p class="app-desc" style="margin-bottom: 14px;">
-          You may request access, correction, or deletion of your personal information by contacting us.
-        </p>
-        <p class="app-desc">
-          For privacy requests, contact us at <a href="mailto:privacy@moshly.io" class="app-cta">privacy@moshly.io</a>.
-        </p>
+    <section class="page-head">
+      <div class="container">
+        <p class="label">Legal</p>
+        <h1 class="display">Privacy Policy</h1>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
+    <section class="section">
+      <div class="container prose">
+        <p class="effective">Effective date: 2 March 2026</p>
+        <p>Moshly respects your privacy and handles your data with care.</p>
+        <p>All information uploaded, submitted, stored, or otherwise provided by clients is treated as protected confidential material.
+          We apply appropriate technical and organizational safeguards to prevent unauthorized access, disclosure, alteration, or loss.</p>
+        <p>We collect only the information needed to provide and improve Moshly services, including account information,
+          usage information, and data you choose to submit in forms.</p>
+        <p>We do not sell client personal data. Data may be processed by trusted service providers strictly for operating
+          our platform and only under confidentiality and security obligations.</p>
+        <p>You may request access, correction, or deletion of your personal information by contacting us.</p>
+        <p>For privacy requests, contact us at <a href="mailto:privacy@moshly.io">privacy@moshly.io</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="assets/Moshly-Main-Logo-1.svg" alt="Moshly" class="footer-logo-img" />
-        <span>Moshly.io</span>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
+        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
       </div>
-      <p class="footer-tagline">Micro-tools for the music industry.</p>
-      <div class="footer-links">
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/faq">FAQ</a>
-        <a href="/contact">Contact</a>
-      </div>
-      <p class="footer-copy">© 2026 Moshly. All rights reserved.</p>
-      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" role="button" tabindex="0">
-        <span class="theme-toggle-icon theme-toggle-icon--sun">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" fill="currentColor"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </span>
-        <span class="theme-toggle-icon theme-toggle-icon--moon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z" fill="currentColor"/></svg>
-        </span>
+      <ul class="footer-links">
+        <li><a href="/apps">Apps</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <div class="footer-meta">
+        <span>© 2026 Moshly</span>
+        <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
+          <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
+        </button>
       </div>
     </div>
   </footer>
 
   <script src="/auth-client.js"></script>
   <script src="/moshly-ui.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    }
+  </script>
 </body>
 </html>

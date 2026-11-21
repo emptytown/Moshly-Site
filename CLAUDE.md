@@ -72,4 +72,8 @@ Browser → Cloudflare Pages (static site)
 
 ## Homepage News
 
-The `#roadmap` section of `index.html` holds 3 auto-numbered news cards (newest first). Add new items at the top and never hard-code numbers — see "Homepage News" in `docs/STANDARDS.md`.
+The `#news` section of `index.html` ("Latest stops") holds auto-numbered news cards, newest first; only the first 3 are shown. Add new items at the top and never hard-code numbers — see "Homepage News" in `docs/STANDARDS.md`.
+
+## Public site styling
+
+`index.html` and `apps.html` use only `/tokens/neo-brut.css` (vendored from `emptytown/moshly-design-tokens`, do not edit by hand) and `/site.css`. They do not load `style.css`.

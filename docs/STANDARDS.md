@@ -35,11 +35,11 @@
 - `/dashboard` → `dashboard.html`
 - `/pricing` → `pricing.html`
 
-## Homepage News (Roadmap section, `index.html` `#roadmap`)
-- The cards inside `<div class="roadmap-stations">` are **news items, newest first**.
-- **To add news**: copy one `<div class="roadmap-station">…</div>` block and paste it as the **first** child of `.roadmap-stations`. Do not touch the others.
-- **Do NOT write numbers** in `.roadmap-station-num` — leave it empty. A CSS counter in `style.css` numbers cards by position (01 = newest).
-- **Only the first 3 cards are shown** (`.roadmap-station:nth-child(n+4) { display: none; }`). The new item becomes 01, the old 01 becomes 02, and so on; the old 03 is hidden automatically.
-- Keep each text to the classic length (~2–3 sentences, ~200–260 chars), in English, with: badge (`New`/`Live`/`Update`), title, short tagline, description, CTA link to the app.
-- Hidden older cards may be deleted from the HTML to keep it clean.
-- Numbering lives in `style.css`. Whenever you change `style.css` (or any file in `SHELL_ASSETS` of `sw.js`), **bump `CACHE_VERSION` in `sw.js`**, otherwise returning visitors keep the old cached CSS and lose the numbers.
+## Homepage News ("Latest stops", `index.html` `#news`)
+- News are "stops on the road": `<li class="news-item card">` items inside `<ol class="news-grid route">`, **newest first**.
+- **To add news**: copy one `<li class="news-item card">…</li>` block and paste it as the **first** child of the list. Do not touch the others.
+- **Do NOT write numbers** — `.news-num` stays empty. A CSS counter in `site.css` renders "Stop 01, 02, 03" by position, and the newest stop gets the lime "you are here" marker.
+- **Only the first 3 items are shown** (`.news-grid > .news-item:nth-child(n+4) { display: none; }`). Older items may be deleted from the HTML.
+- Keep each text short (~2 sentences), in English, with: badge (`New` / `Live` / `Update`), app icon from `assets/neo-brut-icons/`, title, short tagline, description, and a link to the app's section on `/apps` (e.g. `/apps#run`).
+- Tone: plain and low-key. The audience is bands, small labels and bookers who do it themselves — no hard selling.
+- Whenever you change `site.css`, `tokens/neo-brut.css` or any file in `SHELL_ASSETS` of `sw.js`, **bump `CACHE_VERSION` in `sw.js`**.
