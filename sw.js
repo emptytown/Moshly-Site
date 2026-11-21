@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v9';
+const CACHE_VERSION = 'v10';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
@@ -9,6 +9,8 @@ const SHELL_ASSETS = [
   '/launcher',
   '/dashboard',
   '/style.css',
+  '/site.css',
+  '/tokens/neo-brut.css',
   '/dashboard.css',
   '/dashboard-brutal.css',
   '/auth-client.js',
