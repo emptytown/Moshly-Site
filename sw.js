@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v13';
+const CACHE_VERSION = 'v14';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
