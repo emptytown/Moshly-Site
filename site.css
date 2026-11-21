@@ -169,6 +169,52 @@ a { color: inherit; }
 .hero-points li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--nb-ink); flex-shrink: 0; }
 @media (max-width: 640px) { .hero { padding: 56px 0 48px; } }
 
+/* Hero layout: copy + flight case */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 48px; align-items: center; }
+.hero-grid .hero-title { font-size: clamp(44px, 7.4vw, 92px); }
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-case { max-width: 300px; justify-self: center; }
+}
+
+/* Flight case: the apps as stickers on the lid, joined by the road */
+.hero-case {
+  position: relative; width: 100%; max-width: 440px; aspect-ratio: 4 / 5; justify-self: end;
+  background-color: var(--nb-card);
+  border: var(--nb-border-width) solid var(--nb-line);
+  border-radius: var(--nb-radius-block);
+  box-shadow: var(--nb-shadow-lg);
+  background-image:                                   /* corner rivets */
+    radial-gradient(circle at 18px 18px, var(--nb-line-strong) 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) 18px, var(--nb-line-strong) 0 4px, transparent 5px),
+    radial-gradient(circle at 18px calc(100% - 18px), var(--nb-line-strong) 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), var(--nb-line-strong) 0 4px, transparent 5px);
+}
+.hero-case-road { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.hero-case-road path {
+  fill: none; stroke: var(--nb-line-strong); stroke-width: 2.5;
+  stroke-dasharray: 8 7; stroke-linecap: round; vector-effect: non-scaling-stroke;
+}
+.theme-light .hero-case-road path { stroke: var(--nb-ink); }
+.hero-case-here {                                     /* start of the road = you are here */
+  position: absolute; left: 6%; top: 38%; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  border-radius: 50%; background: var(--nb-lime); box-shadow: 0 0 0 5px var(--nb-card); z-index: 1;
+}
+.theme-light .hero-case-here { border: 2px solid var(--nb-ink); }
+.sticker {
+  position: absolute; left: var(--x); top: var(--y); width: 30%; z-index: 2;
+  transform: rotate(var(--r)); transition: transform .15s ease;
+  border-radius: 22%;
+}
+.sticker img { width: 100%; height: auto; }
+.sticker:hover, .sticker:focus-visible { transform: rotate(0deg) scale(1.08); z-index: 3; }
+.hero-case-stencil {
+  position: absolute; left: 0; right: 0; bottom: 14px; text-align: center;
+  font-size: 10px; font-weight: var(--nb-font-weight-label); letter-spacing: .22em; text-transform: uppercase;
+  color: var(--nb-muted); opacity: .8;
+}
+@media (prefers-reduced-motion: reduce) { .sticker:hover, .sticker:focus-visible { transform: rotate(var(--r)); } }
+
 /* ── Cards ────────────────────────────────────────────────── */
 .card {
   background: var(--nb-card);
