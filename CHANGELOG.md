@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 (cache fix)
+- **Stale app catalog after deploys**: `moshly-apps.js` (and the other shell JS/CSS) was served with a 4-hour browser cache, and the service worker pre-cached from that HTTP cache, so a new `CACHE_VERSION` could still store the old file — new apps (e.g. Time) did not show in the App Connector. The SW now pre-caches with `cache: 'reload'` and refreshes in the background with `cache: 'no-cache'`; `_headers` sets `Cache-Control: no-cache` for `/*.js` and `/*.css`. `CACHE_VERSION` bumped to `v16`.
+
 ## 2026-11-23
 - **New free app: Time**: Added Moshly Time (fullscreen clock, timer, stopwatch and countdowns) to the app catalog in `moshly-apps.js` as a `Free` app at `https://time.moshly.io`, so it shows in the dashboard's free apps and in the launcher without using a plan slot. New icons: `assets/neo-brut-icons/time.png` and `assets/moshly-time-logo-svg.svg`.
 - **Public pages**: Time added to `/apps` (jump list and its own entry) and to the homepage app strip, which now has 7 columns (4 on phones). Bumped `CACHE_VERSION` to `v15` in `sw.js`.
