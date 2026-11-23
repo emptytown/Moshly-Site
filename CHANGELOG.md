@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23
+- **New free app: Time**: Added Moshly Time (fullscreen clock, timer, stopwatch and countdowns) to the app catalog in `moshly-apps.js` as a `Free` app at `https://time.moshly.io`, so it shows in the dashboard's free apps and in the launcher without using a plan slot. New icons: `assets/neo-brut-icons/time.png` and `assets/moshly-time-logo-svg.svg`.
+- **Public pages**: Time added to `/apps` (jump list and its own entry) and to the homepage app strip, which now has 7 columns (4 on phones). Bumped `CACHE_VERSION` to `v15` in `sw.js`.
+
 ## 2026-04-13
 - **Auth Race Condition Resolution**: Implemented client-side promise deduplication for concurrent session refresh calls in `auth-client.js` to prevent token rotation collisions.
 - **Eliminated Placeholder Ghosting**: Removed the hardcoded "Jane" from `dashboard.html`, replacing it with a neutral loading placeholder to prevent UI flickering during session hydration.

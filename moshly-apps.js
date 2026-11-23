@@ -41,6 +41,11 @@
             slug: 'days', name: 'Days', description: 'Task management and scheduling',
             status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/days.png', url: 'https://days.moshly.io',
             type: 'Plan app', categories: ['Business', 'Productivity']
+        },
+        {
+            slug: 'time', name: 'Time', description: 'Fullscreen clock, timer, stopwatch and countdowns',
+            status: 'live', iconAsset: '/assets/moshly-time-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/time.png', url: 'https://time.moshly.io',
+            type: 'Free', categories: ['Productivity', 'Tour']
         }
     ]);
 

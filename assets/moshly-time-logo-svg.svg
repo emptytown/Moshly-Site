@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 248" width="248" height="248">
+  <!-- back paper card -->
+  <rect x="26" y="30" width="200" height="200" rx="34" fill="#FFF3DD" stroke="#111" stroke-width="7"/>
+  <rect x="20" y="22" width="200" height="200" rx="34" fill="#FFF3DD" stroke="#111" stroke-width="7"/>
+  <!-- face tile -->
+  <rect x="12" y="12" width="200" height="200" rx="34" fill="#D8FF54" stroke="#111" stroke-width="8"/>
+  <!-- clock: hard shadow then face -->
+  <circle cx="118" cy="118" r="68" fill="#111"/>
+  <circle cx="112" cy="112" r="68" fill="#FFFFFF" stroke="#111" stroke-width="8"/>
+  <!-- ticks -->
+  <g stroke="#111" stroke-width="8" stroke-linecap="round">
+    <line x1="112" y1="56" x2="112" y2="68"/>
+    <line x1="168" y1="112" x2="156" y2="112"/>
+    <line x1="112" y1="168" x2="112" y2="156"/>
+    <line x1="56" y1="112" x2="68" y2="112"/>
+  </g>
+  <!-- hands -->
+  <g stroke="#111" stroke-width="10" stroke-linecap="round">
+    <line x1="112" y1="112" x2="112" y2="78"/>
+    <line x1="112" y1="112" x2="140" y2="128"/>
+  </g>
+  <circle cx="112" cy="112" r="9" fill="#C575F8" stroke="#111" stroke-width="5"/>
+</svg>
