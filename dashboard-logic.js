@@ -203,6 +203,11 @@ async function initDashboard() {
     }
 
     window._currentUser = user; // Store globally for UI updates
+    // Admin link: god accounts only. The /admin page and its API check the role again.
+    ['db-admin-link', 'db-admin-link-mob'].forEach(id => {
+        const link = document.getElementById(id);
+        if (link) link.hidden = user.role !== 'god';
+    });
     updateProfileUI(user);
     updateQuotasUI(user.subscription);
     updateSubscriptionUI(user.subscription);

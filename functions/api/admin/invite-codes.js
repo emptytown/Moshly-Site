@@ -114,7 +114,10 @@ export async function onRequestPost({ request, env }) {
     .get();
 
   if (!godWorkspace) {
-    return json({ error: 'God user workspace not found' }, 500);
+    return json({
+      error: 'no_workspace',
+      message: 'Your account has no workspace, which invite codes are attached to. Create codes from an account that has one.'
+    }, 409);
   }
 
   const code = generateCode(customCode);

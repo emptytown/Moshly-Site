@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { getAllowedOrigin, corsOptionsResponse } from './_cors';
 import { resendVerification } from './_email_utils';
+import { settleSubscription } from './_subscription';
 
 export async function onRequestPost({ request, env }) {
   const db = drizzle(env.MOSHLY_DB);
@@ -71,7 +72,8 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const { user, profile, subscription } = loginResult;
+    const { user, profile } = loginResult;
+    const subscription = await settleSubscription(db, loginResult.subscription);
 
     // Verify password FIRST — before checking verification status.
     // This prevents an attacker from learning whether an email is registered

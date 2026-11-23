@@ -4022,3 +4022,7 @@ html.theme-dark .db-app-action-btn--connect {
 html.theme-dark .db-app-action-btn--connect:hover:not(:disabled) {
     background: #6366f1;
 }
+
+/* God-only admin link: hidden until dashboard-logic.js confirms the role. */
+.db-nav-btn[hidden], .db-mob-drawer-link[hidden] { display: none !important; }
+a.db-nav-btn { text-decoration: none; }
