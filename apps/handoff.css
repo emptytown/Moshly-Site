@@ -1,0 +1,108 @@
+/* ============================================================
+   SSO handoff screens (apps/quote.html, apps/fifthsense.html)
+   Neo Brut, on /tokens/neo-brut.css. Visual only: the pages' scripts
+   rewrite the first <h1> and the first <p>, and use #status, #error
+   and .dot — keep those in the markup.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  font-family: var(--nb-font-family-base);
+  font-weight: var(--nb-font-weight-body);
+  color: var(--nb-ink);
+  background-color: var(--nb-paper);
+  background-image:
+    linear-gradient(var(--nb-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nb-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card {
+  width: min(460px, 100%);
+  padding: 32px 28px 28px;
+  background: var(--nb-card);
+  border: var(--nb-border-width) solid var(--nb-line);
+  border-radius: var(--nb-radius-block);
+  box-shadow: var(--nb-shadow-lg);
+  text-align: center;
+}
+
+/* Moshly → app, joined by the road */
+.trip { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 22px; }
+.trip img { width: 64px; height: 64px; flex-shrink: 0; }
+.road {
+  position: relative; flex: 0 1 96px; height: 0;
+  border-top: 2px dashed var(--nb-line-strong);
+}
+.theme-light .road { border-top-color: var(--nb-ink); }
+.road::after {                                   /* travelling "you are here" */
+  content: ''; position: absolute; top: -8px; left: 0;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--nb-lime); box-shadow: 0 0 0 4px var(--nb-card);
+  animation: travel 1.4s ease-in-out infinite alternate;
+}
+.theme-light .road::after { border: 2px solid var(--nb-ink); top: -9px; }
+@keyframes travel { from { left: 0; } to { left: calc(100% - 14px); } }
+
+.brand {
+  font-size: var(--nb-font-size-label);
+  font-weight: var(--nb-font-weight-label);
+  letter-spacing: calc(var(--nb-font-tracking-label) * 1em);
+  text-transform: uppercase;
+  color: var(--nb-muted);
+}
+
+h1 {
+  margin: 10px 0 8px;
+  font-family: var(--nb-font-family-display);
+  font-weight: var(--nb-font-weight-display);
+  font-size: 28px; line-height: 1.1; letter-spacing: -.03em;
+}
+
+p { margin: 0 auto; max-width: 34ch; color: var(--nb-muted); font-size: 15px; line-height: 1.5; }
+
+.status {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 22px; padding: 8px 14px;
+  border: var(--nb-border-width) solid var(--nb-line-strong);
+  border-radius: var(--nb-radius-pill);
+  font-size: 13px; font-weight: 700; color: var(--nb-ink);
+}
+.theme-light .status { border-radius: var(--nb-radius-control); }
+
+.dot {
+  display: inline-block; width: 9px; height: 9px; margin-right: 8px;
+  border-radius: 50%; background: var(--nb-lime);
+  animation: pulse 1.6s infinite;
+}
+.theme-light .dot { box-shadow: 0 0 0 1.5px var(--nb-ink); animation: none; }
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(216, 255, 84, .55); }
+  70%  { box-shadow: 0 0 0 9px rgba(216, 255, 84, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(216, 255, 84, 0); }
+}
+
+.error {
+  margin-top: 20px; padding: 12px 14px; text-align: left;
+  border: var(--nb-border-width) solid var(--nb-red);
+  border-radius: var(--nb-radius-control);
+  color: var(--nb-red-ink); font-size: 14px; line-height: 1.5;
+}
+.error a { color: var(--nb-ink); font-weight: 700; text-decoration-color: var(--nb-lime); text-decoration-thickness: 2px; }
+.theme-light .error a { text-decoration-color: var(--nb-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .road::after { animation: none; left: calc(50% - 7px); }
+  .dot { animation: none; }
+}
+
+/* On error the trip stops: the marker turns red and stays put. */
+.card:has(#error:not([style*="none"])) .road::after { animation: none; left: calc(50% - 7px); background: var(--nb-red); }
