@@ -37,7 +37,7 @@
       </a>
       <nav class="nav-links" aria-label="Main">
         <a href="/apps" class="nav-link">Apps</a>
-        <a href="/#news" class="nav-link">News</a>
+        <a href="/news" class="nav-link">News</a>
         <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
         <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
       </nav>
@@ -47,7 +47,7 @@
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
       <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
       <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
@@ -93,9 +93,10 @@
       </div>
     </section>
 
-    <!-- News = stops on the road, newest first. Add a new <li class="news-item"> at the TOP of the list.
+    <!-- News = stops on the road, newest first. Add a new <li class="news-item"> at the TOP of the list,
+         and paste the SAME block at the top of the list in news.html (the full archive).
          "Stop 01, 02, 03" is automatic, the newest stop gets the lime "you are here" marker,
-         and only the 3 newest are shown. -->
+         and only the 3 newest are shown here. Long story? See "Homepage News" in docs/STANDARDS.md. -->
     <section class="section" id="news" aria-labelledby="news-title">
       <div class="container">
         <div class="section-head">
@@ -103,8 +104,19 @@
             <p class="label">On the road</p>
             <h2 class="section-title display" id="news-title">Latest stops</h2>
           </div>
+          <a href="/news" class="link-arrow">Every stop so far →</a>
         </div>
         <ol class="news-grid route">
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">New</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/time.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">Time is out</h3><p class="news-tagline">A big clock, free</p></div>
+            </div>
+            <p class="news-body">It won't change your life. It will end the yearly hunt through five random clock apps for a New Year's countdown that works. Plus a timer, a stopwatch and countdowns to doors or curfew, big enough to read from the stage.</p>
+            <a href="/apps#time" class="link-arrow">More on Time →</a>
+          </li>
 
           <li class="news-item card">
             <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">Update</span></div>

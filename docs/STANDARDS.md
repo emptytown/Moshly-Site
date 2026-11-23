@@ -39,7 +39,17 @@
 - News are "stops on the road": `<li class="news-item card">` items inside `<ol class="news-grid route">`, **newest first**.
 - **To add news**: copy one `<li class="news-item card">…</li>` block and paste it as the **first** child of the list. Do not touch the others.
 - **Do NOT write numbers** — `.news-num` stays empty. A CSS counter in `site.css` renders "Stop 01, 02, 03" by position, and the newest stop gets the lime "you are here" marker.
-- **Only the first 3 items are shown** (`.news-grid > .news-item:nth-child(n+4) { display: none; }`). Older items may be deleted from the HTML.
+- **Only the first 3 items are shown** on the homepage (`.news-grid > .news-item:nth-child(n+4) { display: none; }`). Older items may be deleted from `index.html`, but **never from `news.html`**.
+
+## News archive (`/news`) and articles (`/news/<slug>`)
+- `news.html` is the full archive: the **same** `<li class="news-item card">` blocks as the homepage, newest first, nothing hidden (`.news-archive`). Numbering is by position: the newest is always Stop 01 and the rest count up forever (02, 03 … 100 …), so every number shifts by one when a new item is added. Same numbers as the homepage.
+- **Every new item goes in two places**: the top of the list in `index.html` **and** the top of the list in `news.html`. Same block, same text.
+- **Long story? Write an article.** Only when there is more to say than the card's lead:
+  1. Copy `docs/templates/news-article.html` to `news/<slug>.html` (lowercase, hyphens, e.g. `news/merchpad-2.html`). It is served at `/news/<slug>`.
+  2. Replace every CAPITALISED placeholder: `<title>`, description, canonical/`og:url`, title, icon, badge, date, lead and text. The article lead is the card's text.
+  3. In **both** `index.html` and `news.html`, point that card's link to `/news/<slug>` with the text "Read the story →". The article itself links to the app at the bottom.
+  4. Article images go in `assets/news/` with `alt` text.
+- Short items need no article: the card keeps linking to the app on `/apps`.
 - Keep each text short (~2 sentences), in English, with: badge (`New` / `Live` / `Update`), app icon from `assets/neo-brut-icons/`, title, short tagline, description, and a link to the app's section on `/apps` (e.g. `/apps#run`).
 - Tone: plain and low-key. The audience is bands, small labels and bookers who do it themselves — no hard selling.
 - Whenever you change `site.css`, `tokens/neo-brut.css` or any file in `SHELL_ASSETS` of `sw.js`, **bump `CACHE_VERSION` in `sw.js`**.
