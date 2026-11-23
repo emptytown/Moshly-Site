@@ -77,3 +77,7 @@ The `#news` section of `index.html` ("Latest stops") holds auto-numbered news ca
 ## Public site styling
 
 `index.html` and `apps.html` use only `/tokens/neo-brut.css` (vendored from `emptytown/moshly-design-tokens`, do not edit by hand) and `/site.css`. They do not load `style.css`.
+
+## Language
+
+The public site is written in **British English** (`lang="en-GB"`): colour, organise, cancelled; dates as `31 January 2026`; prices in euros. See "Language" in `docs/STANDARDS.md`.

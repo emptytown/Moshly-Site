@@ -50,6 +50,12 @@
   3. In **both** `index.html` and `news.html`, point that card's link to `/news/<slug>` with the text "Read the story →". The article itself links to the app at the bottom.
   4. Article images go in `assets/news/` with `alt` text.
 - Short items need no article: the card keeps linking to the app on `/apps`.
-- Keep each text short (~2 sentences), in English, with: badge (`New` / `Live` / `Update`), app icon from `assets/neo-brut-icons/`, title, short tagline, description, and a link to the app's section on `/apps` (e.g. `/apps#run`).
+- Keep each text short (~2 sentences), in British English, with: badge (`New` / `Live` / `Update`), app icon from `assets/neo-brut-icons/`, title, short tagline, description, and a link to the app's section on `/apps` (e.g. `/apps#run`).
 - Tone: plain and low-key. The audience is bands, small labels and bookers who do it themselves — no hard selling.
 - Whenever you change `site.css`, `tokens/neo-brut.css` or any file in `SHELL_ASSETS` of `sw.js`, **bump `CACHE_VERSION` in `sw.js`**.
+
+## Language (public site)
+- Moshly is a European product, so the site is clearly **non-US**: **British English** everywhere (`<html lang="en-GB">`).
+- Spelling: colour, organise, authorised, personalised, cancelled, centre, licence (noun), programme. Not color, organize, canceled, center.
+- Dates as `31 January 2026` (day month year), never `January 31, 2026` or `01/31/2026`. Prices in euros: `€9.99`.
+- Words: "sound desk" / "lighting desk", "mobile" (not cell phone), "post code" (not zip code).
