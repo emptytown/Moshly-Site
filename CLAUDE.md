@@ -72,7 +72,7 @@ Browser → Cloudflare Pages (static site)
 
 ## Homepage News
 
-The `#news` section of `index.html` ("Latest stops") holds auto-numbered news cards, newest first; only the first 3 are shown. Add new items at the top and never hard-code numbers — see "Homepage News" in `docs/STANDARDS.md`.
+The `#news` section of `index.html` ("Latest stops") holds auto-numbered news cards, newest first; only the first 3 are shown. `news.html` (`/news`) is the full archive with the same cards. Add each new item at the top of **both** lists and never hard-code numbers. Items with more to say get an article at `news/<slug>.html`, copied from `docs/templates/news-article.html`. See "Homepage News" in `docs/STANDARDS.md`.
 
 ## Public site styling
 

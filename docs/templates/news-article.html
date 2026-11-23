@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" class="skin-brutal">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TITLE — Moshly News</title>
+  <meta name="description" content="ONE-SENTENCE LEAD" />
+  <link rel="canonical" href="https://moshly.io/news/SLUG" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://moshly.io/news/SLUG" />
+  <meta property="og:title" content="TITLE — Moshly News" />
+  <meta property="og:description" content="ONE-SENTENCE LEAD" />
+  <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <script>
+    // Theme before first paint (same key as the dashboard).
+    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Moshly home">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="34" height="34" />
+        Moshly
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/news" class="nav-link" aria-current="page">News</a>
+        <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
+        <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
+      </nav>
+      <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span><span class="nav-menu-line"></span><span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/news" class="mobile-nav-link" aria-current="page" onclick="closeMobileMenu()">News</a>
+      <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
+      <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- News article. Copy this file to news/<slug>.html (it is served at /news/<slug>).
+         Replace every CAPITALISED placeholder, including <title>, description and canonical/og:url above.
+         Then point the card's link (in index.html AND news.html) to /news/<slug>. -->
+    <article>
+      <section class="page-head">
+        <div class="container">
+          <p class="label"><a href="/news" class="link-arrow">← All news</a></p>
+          <h1 class="display">TITLE</h1>
+          <div class="article-meta">
+            <img src="/assets/neo-brut-icons/APP.png" alt="" width="40" height="40" />
+            <span class="badge">Update</span>
+            <time datetime="2026-01-31">31 January 2026</time>
+          </div>
+          <p class="article-lead">ONE-SENTENCE LEAD, the same text as the card on the homepage.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container"><div class="prose">
+          <p>First paragraph.</p>
+
+          <h2>A subheading, if the story needs one</h2>
+          <p>More text. Use <strong>strong</strong> for emphasis and <a href="/apps#APP">links</a> as usual.</p>
+          <ul>
+            <li>Lists work too.</li>
+          </ul>
+          <blockquote>A short quote, if there is one.</blockquote>
+          <!-- Images: <img src="/assets/news/SLUG-1.png" alt="Describe the image" width="1200" height="800" /> -->
+
+          <div class="article-foot">
+            <a href="/news" class="link-arrow">← All news</a>
+            <a href="/apps#APP" class="link-arrow">More on APP →</a>
+          </div>
+        </div></div>
+      </section>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
+        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/apps">Apps</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <div class="footer-meta">
+        <span>© 2026 Moshly</span>
+        <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
+          <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    }
+  </script>
+</body>
+</html>
