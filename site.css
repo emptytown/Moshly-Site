@@ -439,3 +439,5 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 .prose blockquote { margin: 0 0 18px; padding-left: 18px; border-left: 4px solid var(--nb-lime); font-size: 19px; font-weight: 700; color: var(--nb-ink); }
 .theme-light .prose blockquote { border-left-color: var(--nb-ink); }
 .article-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 40px; padding-top: 24px; border-top: 2px dashed var(--nb-line-strong); max-width: 70ch; }
+.plan-note { margin-top: 20px; font-size: 14px; }
+.plan-note a { color: var(--nb-ink); font-weight: 700; }
