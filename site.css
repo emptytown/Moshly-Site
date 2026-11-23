@@ -267,7 +267,7 @@ a { color: inherit; }
 }
 
 /* ── App icon strip (landing) ─────────────────────────────── */
-.app-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; list-style: none; }
+.app-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; list-style: none; }
 .app-strip a {
   display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 8px;
   border-radius: var(--nb-radius-block); text-decoration: none; font-weight: 700; font-size: 15px;
@@ -276,7 +276,7 @@ a { color: inherit; }
 .app-strip a:hover { background: var(--nb-card); transform: translateY(-3px); }
 .app-strip img { width: 76px; height: 76px; }
 .app-strip small { font-size: 12px; font-weight: 600; color: var(--nb-muted); margin-top: -8px; text-align: center; }
-@media (max-width: 760px) { .app-strip { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) { .app-strip { grid-template-columns: repeat(4, 1fr); } }
 
 /* ── Apps page ────────────────────────────────────────────── */
 .app-jump { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin-top: 32px; }
