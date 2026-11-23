@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="skin-brutal">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,11 +7,18 @@
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
   <meta name="theme-color" content="#181818" />
   <script>
-    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+    // Same skin + theme the user picked in the dashboard, applied before paint.
+    (function () {
+      var root = document.documentElement;
+      try {
+        root.classList.add('skin-' + (localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal'));
+        if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+      } catch (_) { root.classList.add('skin-brutal'); }
+    })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/tokens/neo-brut.css" />
   <link rel="stylesheet" href="/apps/handoff.css" />
   <script src="/auth-client.js"></script>
@@ -19,9 +26,11 @@
 <body>
   <main class="card" aria-live="polite">
     <div class="trip" aria-hidden="true">
-      <img src="/assets/neo-brut-icons/moshly.png" alt="" width="64" height="64" />
+      <img class="icon-brutal" src="/assets/neo-brut-icons/moshly.png" alt="" width="64" height="64" />
+      <img class="icon-legacy" src="/assets/Moshly-Main-Logo-1.svg" alt="" width="64" height="64" />
       <span class="road"></span>
-      <img src="/assets/neo-brut-icons/quote.png" alt="" width="64" height="64" />
+      <img class="icon-brutal" src="/assets/neo-brut-icons/quote.png" alt="" width="64" height="64" />
+      <img class="icon-legacy" src="/assets/moshly-Quote-logo-svg.svg" alt="" width="64" height="64" />
     </div>
     <div class="brand">Moshly Hub → Quote</div>
     <h1>Welcome to Quote…</h1>

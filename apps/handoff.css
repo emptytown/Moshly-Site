@@ -3,7 +3,58 @@
    Neo Brut, on /tokens/neo-brut.css. Visual only: the pages' scripts
    rewrite the first <h1> and the first <p>, and use #status, #error
    and .dot — keep those in the markup.
+   Two skins, picked in the dashboard (localStorage `moshly-skin`):
+     html.skin-brutal  → Neo Brut (tokens from /tokens/neo-brut.css)
+     html.skin-legacy  → Legacy Purple "galaxy" (values below, as in dashboard.css)
+   Both follow `moshly-theme` (html.theme-light).
    ============================================================ */
+
+/* ── Legacy Purple: same variable names, classic values ── */
+.skin-legacy {
+  color-scheme: dark;
+  --nb-paper: #0A0B10;
+  --nb-card: rgba(17, 18, 28, .78);
+  --nb-ink: #E6E9F5;
+  --nb-muted: #BFC4D9;
+  --nb-line: rgba(255, 255, 255, .12);
+  --nb-line-strong: rgba(139, 92, 246, .45);
+  --nb-grid: transparent;
+  --nb-lime: #8B5CF6;            /* accent: violet instead of lime */
+  --nb-red: #FF6B6B;
+  --nb-red-ink: #FF6B6B;
+  --nb-border-width: 1px;
+  --nb-radius-block: 18px;
+  --nb-radius-control: 8px;
+  --nb-radius-pill: 999px;
+  --nb-shadow-lg: 0 24px 60px rgba(0, 0, 0, .35);
+  --nb-font-family-base: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --nb-font-family-display: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --nb-font-weight-body: 400;
+  --nb-font-weight-label: 700;
+  --nb-font-weight-display: 800;
+  --nb-font-size-label: 11px;
+  --nb-font-tracking-label: .12;
+  --pulse-on: rgba(139, 92, 246, .6);
+  --pulse-off: rgba(139, 92, 246, 0);
+}
+.skin-legacy.theme-light {
+  color-scheme: light;
+  --nb-paper: #F0F1F8;
+  --nb-card: rgba(255, 255, 255, .86);
+  --nb-ink: #14151A;
+  --nb-muted: #4A4D5E;
+  --nb-line: #E2E4EF;
+  --nb-line-strong: rgba(107, 92, 255, .45);
+  --nb-lime: #6B5CFF;
+  --nb-red-ink: #D11A1A;
+  --nb-shadow-lg: 0 18px 44px rgba(41, 53, 99, .14);
+  --pulse-on: rgba(107, 92, 255, .5);
+  --pulse-off: rgba(107, 92, 255, 0);
+}
+.skin-brutal { --pulse-on: rgba(216, 255, 84, .55); --pulse-off: rgba(216, 255, 84, 0); }
+
+/* Icon sets */
+.skin-brutal .icon-legacy, .skin-legacy .icon-brutal { display: none; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -42,14 +93,14 @@ body {
   position: relative; flex: 0 1 96px; height: 0;
   border-top: 2px dashed var(--nb-line-strong);
 }
-.theme-light .road { border-top-color: var(--nb-ink); }
+.skin-brutal.theme-light .road { border-top-color: var(--nb-ink); }
 .road::after {                                   /* travelling "you are here" */
   content: ''; position: absolute; top: -8px; left: 0;
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--nb-lime); box-shadow: 0 0 0 4px var(--nb-card);
   animation: travel 1.4s ease-in-out infinite alternate;
 }
-.theme-light .road::after { border: 2px solid var(--nb-ink); top: -9px; }
+.skin-brutal.theme-light .road::after { border: 2px solid var(--nb-ink); top: -9px; }
 @keyframes travel { from { left: 0; } to { left: calc(100% - 14px); } }
 
 .brand {
@@ -76,18 +127,18 @@ p { margin: 0 auto; max-width: 34ch; color: var(--nb-muted); font-size: 15px; li
   border-radius: var(--nb-radius-pill);
   font-size: 13px; font-weight: 700; color: var(--nb-ink);
 }
-.theme-light .status { border-radius: var(--nb-radius-control); }
+.skin-brutal.theme-light .status { border-radius: var(--nb-radius-control); }
 
 .dot {
   display: inline-block; width: 9px; height: 9px; margin-right: 8px;
   border-radius: 50%; background: var(--nb-lime);
   animation: pulse 1.6s infinite;
 }
-.theme-light .dot { box-shadow: 0 0 0 1.5px var(--nb-ink); animation: none; }
+.skin-brutal.theme-light .dot { box-shadow: 0 0 0 1.5px var(--nb-ink); animation: none; }
 @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(216, 255, 84, .55); }
-  70%  { box-shadow: 0 0 0 9px rgba(216, 255, 84, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(216, 255, 84, 0); }
+  0%   { box-shadow: 0 0 0 0 var(--pulse-on); }
+  70%  { box-shadow: 0 0 0 9px var(--pulse-off); }
+  100% { box-shadow: 0 0 0 0 var(--pulse-off); }
 }
 
 .error {
@@ -97,7 +148,7 @@ p { margin: 0 auto; max-width: 34ch; color: var(--nb-muted); font-size: 15px; li
   color: var(--nb-red-ink); font-size: 14px; line-height: 1.5;
 }
 .error a { color: var(--nb-ink); font-weight: 700; text-decoration-color: var(--nb-lime); text-decoration-thickness: 2px; }
-.theme-light .error a { text-decoration-color: var(--nb-ink); }
+.skin-brutal.theme-light .error a { text-decoration-color: var(--nb-ink); }
 
 @media (prefers-reduced-motion: reduce) {
   .road::after { animation: none; left: calc(50% - 7px); }
@@ -106,3 +157,33 @@ p { margin: 0 auto; max-width: 34ch; color: var(--nb-muted); font-size: 15px; li
 
 /* On error the trip stops: the marker turns red and stays put. */
 .card:has(#error:not([style*="none"])) .road::after { animation: none; left: calc(50% - 7px); background: var(--nb-red); }
+
+/* ── Legacy Purple "galaxy" touches ── */
+.skin-legacy body {
+  background-image:
+    radial-gradient(1200px 800px at 20% 10%, rgba(139, 92, 246, .22), transparent 55%),
+    radial-gradient(1000px 700px at 85% 90%, rgba(192, 38, 211, .18), transparent 55%);
+  background-size: auto;
+}
+.skin-legacy.theme-light body {
+  background-image:
+    radial-gradient(1200px 800px at 20% 10%, rgba(107, 92, 255, .14), transparent 55%),
+    radial-gradient(1000px 700px at 85% 90%, rgba(192, 38, 211, .08), transparent 55%);
+}
+.skin-legacy .card { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.skin-legacy .trip img { border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+.skin-legacy.theme-light .trip img { box-shadow: 0 6px 18px rgba(41, 53, 99, .18); }
+.skin-legacy .road {                               /* glowing gradient route */
+  border-top: 0; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, #6B5CFF, #C026D3);
+}
+.skin-legacy .road::after {
+  top: -6px; box-shadow: 0 0 12px rgba(139, 92, 246, .8), 0 0 0 3px var(--nb-paper);
+  background: #fff;
+}
+.skin-legacy.theme-light .road::after { background: #6B5CFF; box-shadow: 0 0 10px rgba(107, 92, 255, .6); }
+.skin-legacy h1 { font-size: 24px; letter-spacing: -.02em; }
+.skin-legacy .status { border-color: var(--nb-line); background: rgba(139, 92, 246, .08); font-weight: 600; color: var(--nb-muted); }
+.skin-legacy .error { background: rgba(255, 107, 107, .1); }
+.skin-legacy .error a { text-decoration-color: currentColor; }
+.skin-legacy .card:has(#error:not([style*="none"])) .road::after { background: #FF6B6B; box-shadow: 0 0 12px rgba(255, 107, 107, .7); }
