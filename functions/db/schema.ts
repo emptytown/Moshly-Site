@@ -48,11 +48,17 @@ export const workspaces = sqliteTable('workspaces', {
 export const subscriptions = sqliteTable('subscriptions', {
   workspaceId: text('workspace_id').primaryKey().references(() => workspaces.id, { onDelete: 'cascade' }),
   plan: text('plan', { enum: ['free', 'solo', 'collective', 'business', 'major'] }).default('free'),
+  // NB: the database default is 1, but every insert must pass the plan's limit
+  // from _plans.js (free = 0). Changing a column default in SQLite means
+  // rebuilding the table, so the default stays as it is.
   pdfExportsLimit: integer('pdf_exports_limit').default(1),
   pdfExportsUsed: integer('pdf_exports_used').default(0),
   aiCreditsLimit: integer('ai_credits_limit').default(100),
   aiCreditsUsed: integer('ai_credits_used').default(0),
   expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  // First day (00:00 UTC) of the month the usage counters belong to. A read in
+  // a later month resets the counters (see settleSubscription).
+  usagePeriodStart: integer('usage_period_start', { mode: 'timestamp' }),
 });
 
 // --- INVITE CODES ---

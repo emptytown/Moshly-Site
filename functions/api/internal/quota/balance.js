@@ -1,54 +1,39 @@
-import { drizzle } from 'drizzle-orm/d1';
-import { eq } from 'drizzle-orm';
-import * as schema from '../../../db/schema';
+// GET /api/internal/quota/balance?userId=<id>[&resource=ai_credits|pdf_exports]
+// With `resource`: { resource, used, limit, remaining, resetsAt, app } (as before).
+// Without it:      { plan, resetsAt, quotas: { ai_credits: {...}, pdf_exports: {...} }, app }
 import { corsOptionsResponse } from '../../_cors';
 import { authenticateApp, unauthorizedResponse, jsonResponse } from '../_app-auth';
-import { settleSubscription } from '../../_subscription';
-
-const RESOURCES = {
-  ai_credits: { usedKey: 'aiCreditsUsed',   limitKey: 'aiCreditsLimit'   },
-  pdf_exports: { usedKey: 'pdfExportsUsed',  limitKey: 'pdfExportsLimit'  },
-};
+import {
+  QUOTA_RESOURCES, isQuotaResource, loadSubscriptionForUser, quotaSnapshot, allQuotaSnapshots, quotaDb,
+} from '../../_quota';
+import { nextUsagePeriodStart } from '../../_subscription';
 
 export async function onRequestGet({ request, env }) {
-  const appId = await authenticateApp(request, env);
-  if (!appId) return unauthorizedResponse();
+  const caller = await authenticateApp(request, env);
+  if (!caller) return unauthorizedResponse();
 
   const url      = new URL(request.url);
   const userId   = url.searchParams.get('userId');
   const resource = url.searchParams.get('resource');
 
-  if (!userId || typeof userId !== 'string') {
-    return jsonResponse({ error: 'invalid_user_id' }, 400);
+  if (!userId) return jsonResponse({ error: 'invalid_user_id' }, 400);
+  if (resource && !isQuotaResource(resource)) {
+    return jsonResponse({ error: 'unknown_resource', knownResources: Object.keys(QUOTA_RESOURCES) }, 400);
   }
-
-  const config = RESOURCES[resource];
-  if (!config) {
-    return jsonResponse({ error: 'unknown_resource', knownResources: Object.keys(RESOURCES) }, 400);
-  }
-
-  const db = drizzle(env.MOSHLY_DB);
 
   try {
-    const row = await db
-      .select({ subscription: schema.subscriptions })
-      .from(schema.workspaces)
-      .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
-      .where(eq(schema.workspaces.ownerId, userId))
-      .get();
+    const sub = await loadSubscriptionForUser(quotaDb(env), userId);
+    if (!sub) return jsonResponse({ error: 'no_subscription' }, 404);
 
-    if (!row || !row.subscription) {
-      return jsonResponse({ error: 'no_subscription' }, 404);
-    }
-
-    const sub       = await settleSubscription(db, row.subscription);
-    const used      = sub[config.usedKey];
-    const limit     = sub[config.limitKey];
-    const remaining = limit - used;
-
-    return jsonResponse({ used, limit, remaining, resource, app: appId });
+    if (resource) return jsonResponse({ ...quotaSnapshot(sub, resource), app: caller.appId });
+    return jsonResponse({
+      plan: sub.plan,
+      resetsAt: nextUsagePeriodStart().toISOString(),
+      quotas: allQuotaSnapshots(sub),
+      app: caller.appId,
+    });
   } catch (error) {
-    console.error('[quota] balance error', { appId, userId, resource, error: error.message });
+    console.error('[quota] balance error', { app: caller.appId, userId, resource, error: error.message });
     return jsonResponse({ error: 'server_error' }, 500);
   }
 }

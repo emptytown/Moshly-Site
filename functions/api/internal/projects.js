@@ -2,33 +2,17 @@ import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { corsOptionsResponse } from '../_cors';
+import { authenticateApp, unauthorizedResponse, jsonResponse } from './_app-auth';
 
 function tryParseJSON(value, fallback) {
   if (!value) return fallback;
   try { return JSON.parse(value); } catch { return fallback; }
 }
 
-function unauthorizedResponse() {
-  return new Response(JSON.stringify({ error: 'unauthorized' }), {
-    status: 401,
-    headers: { 'Content-Type': 'application/json' },
-  });
-}
-
-function jsonResponse(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
-}
-
 export async function onRequestGet({ request, env }) {
-  const authHeader = request.headers.get('Authorization') || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-
-  if (!token || !env.MOSHLY_INTERNAL_SECRET || token !== env.MOSHLY_INTERNAL_SECRET) {
-    return unauthorizedResponse();
-  }
+  // Same check as every internal route: per-app secret (KV) or MOSHLY_INTERNAL_SECRET.
+  const caller = await authenticateApp(request, env);
+  if (!caller) return unauthorizedResponse();
 
   const url = new URL(request.url);
   const userId = url.searchParams.get('userId');
