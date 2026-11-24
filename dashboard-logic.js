@@ -206,6 +206,7 @@ async function initDashboard() {
     updateProfileUI(user);
     updateQuotasUI(user.subscription);
     updateSubscriptionUI(user.subscription);
+    window.MoshlyBilling.handleReturn();
     updateAppsUI(user);
     updateAppConnectorUI(user);
 
@@ -815,27 +816,11 @@ function updateQuotasUI(sub) {
 }
 
 function updateSubscriptionUI(sub) {
-    const planNameEl = document.getElementById('db-billing-plan-name');
-    const planRenewEl = document.getElementById('db-plan-renew-sub');
-    const planPriceEl = document.getElementById('db-billing-price');
-    
-    if (planNameEl) {
-        planNameEl.textContent = (sub?.plan || 'Free').charAt(0).toUpperCase() + (sub?.plan || 'Free').slice(1) + ' Plan';
-    }
-
-    if (planPriceEl) {
-        const prices = { 'free': '€0.00', 'solo': '€4.99', 'collective': '€9.99', 'business': '€24.99', 'major': '€79.99' };
-        planPriceEl.textContent = prices[sub?.plan?.toLowerCase()] || '€0.00';
-    }
-
-    if (planRenewEl && sub?.expiresAt) {
-        const date = new Date(sub.expiresAt);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        planRenewEl.textContent = `Renews on ${date.toLocaleDateString(undefined, options)}`;
-    } else if (planRenewEl) {
-        planRenewEl.textContent = 'No active subscription cycle.';
-    }
+    // Plan name, price, status badge, renewal line and billing buttons: dashboard-billing.js
+    window.MoshlyBilling.renderSummary(sub);
 }
+window.updateSubscriptionUI = updateSubscriptionUI;
+window.updateQuotasUI = updateQuotasUI;
 
 async function handlePhotoFileChange(input) {
     const file = input.files[0];

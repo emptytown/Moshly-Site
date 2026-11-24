@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v19';
+const CACHE_VERSION = 'v20';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
@@ -16,6 +16,7 @@ const SHELL_ASSETS = [
   '/auth-client.js',
   '/moshly-ui.js',
   '/modal-manager.js',
+  '/dashboard-billing.js',
   '/dashboard-logic.js',
   '/moshly-apps.js',
   '/moshly-prefs.js',

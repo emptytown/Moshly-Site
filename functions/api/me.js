@@ -4,6 +4,8 @@ import { verifyJWT } from './_middleware_auth';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
+import { enforceExpiry, publicBillingFields } from './billing/_entitlements';
+import { cancelStripeSubscriptionForAccount } from './billing/_account';
 
 const MAX_FIELD_LENGTH = 200;
 
@@ -45,7 +47,9 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
-    const { user, profile, workspace, subscription } = result;
+    const { user, profile } = result;
+    // Plans whose paid or granted period has ended fall back to Free here.
+    const subscription = await enforceExpiry(env, db, result.subscription);
 
     return new Response(JSON.stringify({
       success: true,
@@ -77,6 +81,7 @@ export async function onRequestGet({ request, env }) {
           aiCreditsUsed: subscription.aiCreditsUsed,
           expiresAt: subscription.expiresAt,
           appChangedAt: subscription.appChangedAt,
+          ...publicBillingFields(subscription),
         } : null,
       }
     }), {
@@ -305,6 +310,22 @@ export async function onRequestDelete({ request, env }) {
 
   try {
     if (timing === 'now') {
+      // Stop any paid subscription first, so a deleted account is never billed again.
+      const owned = await db.select({ subscription: schema.subscriptions })
+        .from(schema.workspaces)
+        .leftJoin(schema.subscriptions, eq(schema.subscriptions.workspaceId, schema.workspaces.id))
+        .where(eq(schema.workspaces.ownerId, payload.userId))
+        .get();
+      try {
+        await cancelStripeSubscriptionForAccount(env, owned?.subscription, 'now');
+      } catch (err) {
+        console.error('Billing cancel before deletion failed', { userId: payload.userId, error: err.message });
+        return new Response(JSON.stringify({
+          error: 'billing_cancel_failed',
+          message: 'We could not cancel your subscription, so your account was not deleted. Please try again or contact us.'
+        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+      }
+
       // Immediate deletion - Cascade handles the rest
       await db.delete(schema.users)
         .where(eq(schema.users.id, payload.userId))
@@ -337,7 +358,19 @@ export async function onRequestDelete({ request, env }) {
         });
       }
 
-      const endOfCycle = existingSub.subscriptions.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      // A Stripe subscription stops renewing and runs to the end of the paid period.
+      let billingPeriodEnd = null;
+      try {
+        ({ periodEnd: billingPeriodEnd } = await cancelStripeSubscriptionForAccount(env, existingSub.subscriptions, 'end_of_cycle'));
+      } catch (err) {
+        console.error('Billing cancel at period end failed', { userId: payload.userId, error: err.message });
+        return new Response(JSON.stringify({
+          error: 'billing_cancel_failed',
+          message: 'We could not cancel your subscription. Please try again or contact us.'
+        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      const endOfCycle = billingPeriodEnd || existingSub.subscriptions.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
       await db.update(schema.subscriptions)
         .set({ expiresAt: endOfCycle })

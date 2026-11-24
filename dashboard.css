@@ -4022,3 +4022,101 @@ html.theme-dark .db-app-action-btn--connect {
 html.theme-dark .db-app-action-btn--connect:hover:not(:disabled) {
     background: #6366f1;
 }
+
+    /* ─── PLAN AND BILLING (dashboard-billing.js) ──────────────────
+       Built on --color-* tokens, which Neo Brut re-maps, so this works in
+       both skins and both themes; Neo Brut refinements are in dashboard-brutal.css. */
+    .db-billing-actions [hidden], .db-bill [hidden] { display: none !important; }
+    .db-billing-actions--sub { margin-top: 12px; }
+    .db-bill-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 3px 10px; border-radius: 999px;
+        font-size: 12px; font-weight: 700; letter-spacing: .02em; white-space: nowrap;
+        background: var(--color-accent-opacity-12, rgba(107,92,255,.12));
+        color: var(--color-text-secondary);
+    }
+    .db-bill-badge--active  { background: rgba(74,222,128,.14);  color: var(--color-success, #4ADE80); }
+    .db-bill-badge--warning { background: rgba(251,191,36,.16); color: var(--color-warning, #FBBF24); }
+    html.theme-light .db-bill-badge--active  { color: #15803D; }
+    html.theme-light .db-bill-badge--warning { color: #A16207; }
+
+    .db-modal--billing { padding: 16px; }
+    .db-modal--billing .db-modal-content.db-bill {
+        width: 640px; max-width: 100%; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px);
+        overflow-y: auto; text-align: left;
+    }
+    .db-bill-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+    .db-bill-close {
+        flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+        border: 1px solid var(--color-border-subtle); background: transparent;
+        color: var(--color-text-primary); font-size: 22px; line-height: 1; cursor: pointer;
+    }
+    .db-bill-close:hover { background: var(--color-bg-primary); }
+    .db-bill-close:focus-visible, .db-bill-interval-opt:focus-visible, .db-bill-plan-btn:focus-visible {
+        outline: 2px solid var(--color-accent-primary); outline-offset: 2px;
+    }
+    .db-bill-body { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+
+    .db-bill-current {
+        padding: 14px 16px; border-radius: 12px;
+        border: 1px solid var(--color-border-subtle); background: var(--color-bg-primary);
+    }
+    .db-bill-current-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .db-bill-label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-tertiary); }
+    .db-bill-current-plan { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 6px; }
+    .db-bill-current-plan strong { font-size: 22px; color: var(--color-text-primary); }
+    .db-bill-current-plan span { font-size: 14px; color: var(--color-text-secondary); }
+    .db-bill-current-line { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--color-text-secondary); }
+
+    .db-bill-interval {
+        display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px;
+        border: 1px solid var(--color-border-subtle); border-radius: 999px; background: var(--color-bg-primary);
+    }
+    .db-bill-interval-opt {
+        min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent;
+        font: inherit; font-size: 13px; font-weight: 600; color: var(--color-text-secondary); cursor: pointer;
+    }
+    .db-bill-interval-opt.active { background: var(--color-accent-primary); color: #fff; }
+    .db-bill-save { font-size: 11px; font-weight: 700; opacity: .8; }
+
+    .db-bill-plans { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .db-bill-plan {
+        display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 12px;
+        border: 1px solid var(--color-border-subtle); background: var(--color-bg-surface, var(--color-bg-secondary));
+    }
+    .db-bill-plan--current { border-color: var(--color-accent-primary); }
+    .db-bill-plan-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .db-bill-plan-name { margin: 0; font-size: 18px; font-weight: 800; color: var(--color-text-primary); }
+    .db-bill-plan-for { margin: 2px 0 0; font-size: 13px; color: var(--color-text-tertiary); }
+    .db-bill-plan-price { text-align: right; white-space: nowrap; }
+    .db-bill-plan-price strong { display: block; font-size: 20px; color: var(--color-text-primary); }
+    .db-bill-plan-price span { font-size: 12px; color: var(--color-text-tertiary); }
+    .db-bill-plan-features { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .db-bill-plan-features li { position: relative; padding-left: 20px; font-size: 13px; line-height: 1.4; color: var(--color-text-secondary); }
+    .db-bill-plan-features li::before { content: "✓"; position: absolute; left: 0; font-weight: 800; color: var(--color-accent-primary); }
+    .db-bill-plan-btn { width: 100%; min-height: 42px; }
+    .db-bill-plan-btn:disabled { cursor: default; opacity: .65; transform: none; }
+
+    .db-bill-hint { margin: 0; font-size: 13px; line-height: 1.45; color: var(--color-text-secondary); }
+    .db-bill-error { margin: 0; font-size: 13px; font-weight: 600; color: var(--color-error, #F87171); }
+    html.theme-light .db-bill-error { color: #B91C1C; }
+    .db-bill-small { margin: 0; font-size: 12px; line-height: 1.45; color: var(--color-text-tertiary); }
+    .db-bill-small a { color: var(--color-accent-primary); }
+    .db-bill-footer { justify-content: flex-end; flex-wrap: wrap; }
+    .db-bill-busy .db-bill { cursor: progress; }
+
+    .db-bill-notice {
+        position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 1100;
+        width: max-content; max-width: calc(100vw - 32px); padding: 12px 18px; border-radius: 12px;
+        background: var(--color-bg-secondary); color: var(--color-text-primary);
+        border: 1px solid var(--color-border-strong, var(--color-border-subtle));
+        box-shadow: 0 10px 30px rgba(0,0,0,.25); font-size: 14px; font-weight: 600;
+    }
+    .db-bill-notice[hidden] { display: none; }
+
+    @media (max-width: 560px) {
+        .db-bill-plans { grid-template-columns: 1fr; }
+        .db-bill-interval { align-self: stretch; }
+        .db-bill-interval-opt { flex: 1; }
+        .db-bill-footer .db-btn-secondary { flex: 1; }
+    }
