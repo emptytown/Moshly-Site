@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION on every deploy to force cache refresh.
-const CACHE_VERSION = 'v14';
+const CACHE_VERSION = 'v19';
 const CACHE_NAME = `moshly-shell-${CACHE_VERSION}`;
 
 // Hub shell only — spoke pages (quote, fifthsense) are NOT pre-cached here
@@ -33,7 +33,9 @@ const NETWORK_FIRST_PREFIXES = ['/api/', '/me'];
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(SHELL_ASSETS))
+      // cache: 'reload' skips the browser's HTTP cache, so a new SW version never
+      // pre-caches a stale copy of a shell asset (e.g. an old moshly-apps.js).
+      .then((cache) => cache.addAll(SHELL_ASSETS.map((url) => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
       .catch((err) => console.warn('[SW] Shell pre-cache partial failure:', err))
   );
@@ -123,9 +125,11 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Cache-first for shell assets (CSS, JS, images); fetch + update cache in background.
+  // The background fetch revalidates with the server (cache: 'no-cache') instead of
+  // re-reading the browser's HTTP cache, so the next load always gets the latest deploy.
   event.respondWith(
     caches.match(request).then((cached) => {
-      const networkFetch = fetch(request)
+      const networkFetch = fetch(request, { cache: 'no-cache' })
         .then((response) => {
           storeInCache(request, response);
           return response;

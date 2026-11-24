@@ -9,6 +9,14 @@
 /*.html
   Cache-Control: no-cache, must-revalidate
 
+# Scripts and styles are not fingerprinted: always revalidate (cheap 304 via ETag)
+# so a deploy is picked up on the next load instead of after hours.
+/*.js
+  Cache-Control: no-cache
+
+/*.css
+  Cache-Control: no-cache
+
 # SW must never be served from cache — browser needs latest version on every load.
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate

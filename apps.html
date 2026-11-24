@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="skin-brutal">
+<html lang="en-GB" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The apps — Moshly</title>
-  <meta name="description" content="Every Moshly app, one by one: Quote for gig budgets, MerchPad for the merch table, Run for roadbooks, Rank to get found online, Days for tasks and dates, and FifthSense, free." />
+  <meta name="description" content="Every Moshly app, one by one: Quote for gig budgets, MerchPad for the merch table, Run for roadbooks, Rank to get found online, Days for tasks and dates, and FifthSense and Time, both free." />
   <link rel="canonical" href="https://moshly.io/apps" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://moshly.io/apps" />
   <meta property="og:title" content="The apps — Moshly" />
-  <meta property="og:description" content="Small tools for bands that do it themselves. One job each." />
+  <meta property="og:description" content="Small tools for artists that do it themselves. One job each." />
   <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
   <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
@@ -36,7 +36,7 @@
       </a>
       <nav class="nav-links" aria-label="Main">
         <a href="/apps" class="nav-link" aria-current="page">Apps</a>
-        <a href="/#news" class="nav-link">News</a>
+        <a href="/news" class="nav-link">News</a>
         <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
         <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
       </nav>
@@ -46,7 +46,7 @@
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="/apps" class="mobile-nav-link" aria-current="page" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
       <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
       <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
@@ -66,6 +66,7 @@
           <li><a href="#rank"><img src="/assets/neo-brut-icons/rank.png" alt="" width="32" height="32" />Rank</a></li>
           <li><a href="#days"><img src="/assets/neo-brut-icons/days.png" alt="" width="32" height="32" />Days</a></li>
           <li><a href="#fifthsense"><img src="/assets/neo-brut-icons/fifthsense.png" alt="" width="32" height="32" />FifthSense</a></li>
+          <li><a href="#time"><img src="/assets/neo-brut-icons/time.png" alt="" width="32" height="32" />Time</a></li>
         </ul>
       </div>
     </section>
@@ -180,6 +181,23 @@
               </ul>
           </li>
 
+          <li class="app-entry" id="time">
+            <img class="app-entry-icon" src="/assets/neo-brut-icons/time.png" alt="" width="132" height="132" />
+            <div>
+              <div class="app-entry-head"><h2 class="app-entry-name display">Time</h2><span class="badge badge--free">Free</span></div>
+              <p class="app-entry-kicker">A big clock for the side of the stage</p>
+              <p class="app-entry-desc">Fullscreen clock, timer, stopwatch and countdown to doors or curfew, with digits that fill the screen. Leave it on a laptop or phone where the band can see it.</p>
+              <div class="app-entry-actions">
+                <a href="https://time.moshly.io" class="btn">Open Time</a>
+                <span class="muted">Free</span>
+              </div>
+            </div>
+            <ul class="app-entry-points">
+                <li>Clock, timer, stopwatch and countdowns</li>
+                <li>Free for everyone, no account needed</li>
+              </ul>
+          </li>
+
         </ol>
       </div>
     </section>
@@ -200,7 +218,7 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
-        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
+        <div>Moshly<span>Small tools for artists that do it themselves.</span></div>
       </div>
       <ul class="footer-links">
         <li><a href="/apps">Apps</a></li>
@@ -208,13 +226,17 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="/privacy">Privacy</a></li>
         <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
       </ul>
       <div class="footer-meta">
-        <span>© 2026 Moshly</span>
+        <span>© 2026 ContrastDetails Lda</span>
         <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
           <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
         </button>
       </div>
+    </div>
+    <div class="container footer-legal">
+      <p>Moshly by ContrastDetails Lda · NIF PT515858765 · Rua Gonçalves Crespo 13, 1.º Dto, 2775-579 Carcavelos, Portugal · <a href="mailto:hello@moshly.io">hello@moshly.io</a> · <a href="https://www.livroreclamacoes.pt">Livro de Reclamações</a></p>
     </div>
   </footer>
 

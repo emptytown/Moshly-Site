@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="skin-brutal">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News — Moshly</title>
+  <meta name="description" content="Every stop on the road so far: new Moshly apps, updates and the longer stories behind them." />
+  <link rel="canonical" href="https://moshly.io/news" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://moshly.io/news" />
+  <meta property="og:title" content="News — Moshly" />
+  <meta property="og:description" content="Every stop on the road so far: new Moshly apps, updates and the longer stories behind them." />
+  <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <script>
+    // Theme before first paint (same key as the dashboard).
+    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Moshly home">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="34" height="34" />
+        Moshly
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="/apps" class="nav-link">Apps</a>
+        <a href="/news" class="nav-link" aria-current="page">News</a>
+        <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
+        <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
+      </nav>
+      <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavMenu">
+        <span class="nav-menu-line"></span><span class="nav-menu-line"></span><span class="nav-menu-line"></span>
+      </button>
+    </div>
+    <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
+      <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
+      <a href="/news" class="mobile-nav-link" aria-current="page" onclick="closeMobileMenu()">News</a>
+      <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
+      <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Full news archive. Same <li class="news-item card"> blocks as the homepage, newest first.
+         Add each new item at the TOP of this list AND of the list in index.html.
+         Nothing is hidden here. If an item has a full article (news/<slug>.html), its link points there.
+         See "Homepage News" in docs/STANDARDS.md. -->
+    <section class="page-head">
+      <div class="container">
+        <p class="label">On the road</p>
+        <h1 class="display">Every stop so far</h1>
+        <p>What's new in Moshly, newest first. Some stops have the longer story behind them.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-label="All news">
+      <div class="container">
+        <ol class="news-grid route news-archive">
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">New</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/time.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">Time is out</h3><p class="news-tagline">A big clock, free</p></div>
+            </div>
+            <p class="news-body">It won't change your life. It will end the yearly hunt through five random clock apps for a New Year's countdown that works. Plus a timer, a stopwatch and countdowns to doors or curfew, big enough to read from the stage.</p>
+            <a href="/apps#time" class="link-arrow">More on Time →</a>
+          </li>
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">Update</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/moshly.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">Moshly has a new look</h3><p class="news-tagline">Neo Brut, inside and out</p></div>
+            </div>
+            <p class="news-body">New site, new dashboard, new app icons: louder colours, fewer boxes, the same small tools. Miss the old purple? Switch back any time in your dashboard, under Settings and Visibility.</p>
+            <a href="/apps" class="link-arrow">See the new kit →</a>
+          </li>
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">Update</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/merchpad.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">MerchPad 2 is here</h3><p class="news-tagline">Less, but better</p></div>
+            </div>
+            <p class="news-body">New versions usually pile on features. We went the other way: MerchPad 2 strips the screen back to what matters, so selling a shirt after the show takes fewer taps.</p>
+            <a href="/apps#merchpad" class="link-arrow">More on MerchPad →</a>
+          </li>
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">New</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/run.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">Run is on the road</h3><p class="news-tagline">Interactive roadbooks</p></div>
+            </div>
+            <p class="news-body">The tour in one place the whole crew can open: schedules, venues and logistics, from the first soundcheck to the last load-out.</p>
+            <a href="/apps#run" class="link-arrow">More on Run →</a>
+          </li>
+
+
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
+        <div>Moshly<span>Small tools for artists that do it themselves.</span></div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/apps">Apps</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
+      </ul>
+      <div class="footer-meta">
+        <span>© 2026 ContrastDetails Lda</span>
+        <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
+          <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
+        </button>
+      </div>
+    </div>
+    <div class="container footer-legal">
+      <p>Moshly by ContrastDetails Lda · NIF PT515858765 · Rua Gonçalves Crespo 13, 1.º Dto, 2775-579 Carcavelos, Portugal · <a href="mailto:hello@moshly.io">hello@moshly.io</a> · <a href="https://www.livroreclamacoes.pt">Livro de Reclamações</a></p>
+    </div>
+  </footer>
+
+  <script src="/auth-client.js"></script>
+  <script src="/moshly-ui.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    }
+  </script>
+</body>
+</html>

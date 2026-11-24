@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="skin-brutal">
+<html lang="en-GB" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moshly — Small tools for bands that do it themselves</title>
+  <title>Moshly — Small tools for artists that do it themselves</title>
   <meta name="description" content="Moshly is a handful of simple apps for musicians, small labels and bookers who handle everything on their own: gig budgets, merch, roadbooks, tasks and getting found online." />
   <link rel="canonical" href="https://moshly.io/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://moshly.io/" />
-  <meta property="og:title" content="Moshly — Small tools for bands that do it themselves" />
+  <meta property="og:title" content="Moshly — Small tools for artists that do it themselves" />
   <meta property="og:description" content="Simple apps for musicians, small labels and bookers who handle everything on their own." />
   <meta property="og:image" content="https://moshly.io/assets/icons/icon-512.png" />
   <meta name="twitter:card" content="summary" />
@@ -37,7 +37,7 @@
       </a>
       <nav class="nav-links" aria-label="Main">
         <a href="/apps" class="nav-link">Apps</a>
-        <a href="/#news" class="nav-link">News</a>
+        <a href="/news" class="nav-link">News</a>
         <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
         <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
       </nav>
@@ -47,7 +47,7 @@
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
       <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
       <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
@@ -59,11 +59,11 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-        <h1 class="hero-title display">Small tools for bands that do it <span class="script">themselves</span></h1>
+        <h1 class="hero-title display">Artists and technicians, <span class="script">on your side</span></h1>
         <p class="hero-lead">
-          Gig budgets, the merch table, the roadbook, the to-do list, getting found online.
-          <strong>Moshly is a handful of simple apps</strong> for musicians, small labels and bookers
-          who handle all of it on their own. Made by people in bands, for people in bands.
+          We've played the shows and run the desks. Now we build the tools we wished we'd had:
+          <strong>a handful of simple apps</strong> for gig budgets, the merch table, the roadbook,
+          the to-do list and getting found online. For musicians, small labels and bookers who handle it all on their own.
         </p>
         <div class="hero-actions">
           <a href="/apps" class="btn btn--primary">See the apps</a>
@@ -93,9 +93,10 @@
       </div>
     </section>
 
-    <!-- News = stops on the road, newest first. Add a new <li class="news-item"> at the TOP of the list.
+    <!-- News = stops on the road, newest first. Add a new <li class="news-item"> at the TOP of the list,
+         and paste the SAME block at the top of the list in news.html (the full archive).
          "Stop 01, 02, 03" is automatic, the newest stop gets the lime "you are here" marker,
-         and only the 3 newest are shown. -->
+         and only the 3 newest are shown here. Long story? See "Homepage News" in docs/STANDARDS.md. -->
     <section class="section" id="news" aria-labelledby="news-title">
       <div class="container">
         <div class="section-head">
@@ -103,8 +104,19 @@
             <p class="label">On the road</p>
             <h2 class="section-title display" id="news-title">Latest stops</h2>
           </div>
+          <a href="/news" class="link-arrow">Every stop so far →</a>
         </div>
         <ol class="news-grid route">
+
+          <li class="news-item card">
+            <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">New</span></div>
+            <div class="news-identity">
+              <img src="/assets/neo-brut-icons/time.png" alt="" width="52" height="52" />
+              <div><h3 class="news-title">Time is out</h3><p class="news-tagline">A big clock, free</p></div>
+            </div>
+            <p class="news-body">It won't change your life. It will end the yearly hunt through five random clock apps for a New Year's countdown that works. Plus a timer, a stopwatch and countdowns to doors or curfew, big enough to read from the stage.</p>
+            <a href="/apps#time" class="link-arrow">More on Time →</a>
+          </li>
 
           <li class="news-item card">
             <div class="news-top"><span class="news-num" aria-hidden="true"></span><span class="badge">Update</span></div>
@@ -158,6 +170,7 @@
           <li><a href="/apps#rank"><img src="/assets/neo-brut-icons/rank.png" alt="" width="76" height="76" />Rank<small>Get found</small></a></li>
           <li><a href="/apps#days"><img src="/assets/neo-brut-icons/days.png" alt="" width="76" height="76" />Days<small>Tasks &amp; dates</small></a></li>
           <li><a href="/apps#fifthsense"><img src="/assets/neo-brut-icons/fifthsense.png" alt="" width="76" height="76" />FifthSense<small>Free</small></a></li>
+          <li><a href="/apps#time"><img src="/assets/neo-brut-icons/time.png" alt="" width="76" height="76" />Time<small>Free</small></a></li>
         </ul>
       </div>
     </section>
@@ -168,7 +181,7 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
-        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
+        <div>Moshly<span>Small tools for artists that do it themselves.</span></div>
       </div>
       <ul class="footer-links">
         <li><a href="/apps">Apps</a></li>
@@ -176,13 +189,17 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="/privacy">Privacy</a></li>
         <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
       </ul>
       <div class="footer-meta">
-        <span>© 2026 Moshly</span>
+        <span>© 2026 ContrastDetails Lda</span>
         <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
           <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
         </button>
       </div>
+    </div>
+    <div class="container footer-legal">
+      <p>Moshly by ContrastDetails Lda · NIF PT515858765 · Rua Gonçalves Crespo 13, 1.º Dto, 2775-579 Carcavelos, Portugal · <a href="mailto:hello@moshly.io">hello@moshly.io</a> · <a href="https://www.livroreclamacoes.pt">Livro de Reclamações</a></p>
     </div>
   </footer>
 

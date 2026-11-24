@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="skin-brutal">
+<html lang="en-GB" class="skin-brutal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,7 +36,7 @@
       </a>
       <nav class="nav-links" aria-label="Main">
         <a href="/apps" class="nav-link">Apps</a>
-        <a href="/#news" class="nav-link">News</a>
+        <a href="/news" class="nav-link">News</a>
         <a href="/login" class="btn btn--sm" id="nav-login-btn">Log in</a>
         <a href="/dashboard" class="btn btn--sm u-hidden" id="nav-dash-btn">Dashboard →</a>
       </nav>
@@ -46,7 +46,7 @@
     </div>
     <div class="mobile-nav" id="mobileNavMenu" aria-hidden="true">
       <a href="/apps" class="mobile-nav-link" onclick="closeMobileMenu()">Apps</a>
-      <a href="/#news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
+      <a href="/news" class="mobile-nav-link" onclick="closeMobileMenu()">News</a>
       <a href="/login" class="btn" id="mobile-nav-login-btn">Log in</a>
       <a href="/dashboard" class="btn u-hidden" id="mobile-nav-dash-btn">Dashboard →</a>
     </div>
@@ -88,9 +88,9 @@
               <li><span><strong>12 PDF exports</strong> a month</span></li>
               <li><span><strong>500 AI credits</strong> a month</span></li>
               <li><span><strong>1 project</strong></span></li>
-              <li><span>Every feature, no limits</span></li>
+              <li><span>Every feature included</span></li>
             </ul>
-            <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn">Get Solo</a>
+            <a href="/signup?plan=solo" class="btn">Get Solo</a>
           </li>
 
           <li class="plan card">
@@ -102,12 +102,14 @@
               <li><span><strong>50 PDF exports</strong> a month</span></li>
               <li><span><strong>1,250 AI credits</strong> a month</span></li>
               <li><span><strong>3 projects</strong></span></li>
-              <li><span>Every feature, no limits</span></li>
+              <li><span>Every feature included</span></li>
             </ul>
-            <a href="mailto:moshly.hq@pm.me?subject=I want to Try Moshly Early Access" class="btn">Get Collective</a>
+            <a href="/signup?plan=collective" class="btn">Get Collective</a>
           </li>
 
         </ul>
+
+        <p class="plan-note muted">Prices include VAT. Paid plans open soon: sign up free today and upgrade once they do. Cancel any time, with refunds within 30 days under our <a href="/terms#refunds">refund policy</a>.</p>
 
         <div class="later card">
           <p><strong>Bigger crews later.</strong> Business (12 apps, 6 projects, €24.99/month) and Major (24 apps, 15 projects, €79.99/month) open when there's demand for them.</p>
@@ -122,7 +124,7 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <img src="/assets/neo-brut-icons/moshly.png" alt="" width="28" height="28" />
-        <div>Moshly<span>Small tools for bands that do it themselves.</span></div>
+        <div>Moshly<span>Small tools for artists that do it themselves.</span></div>
       </div>
       <ul class="footer-links">
         <li><a href="/apps">Apps</a></li>
@@ -130,13 +132,17 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="/privacy">Privacy</a></li>
         <li><a href="/terms">Terms</a></li>
+        <li><a href="/terms#refunds">Refunds</a></li>
       </ul>
       <div class="footer-meta">
-        <span>© 2026 Moshly</span>
+        <span>© 2026 ContrastDetails Lda</span>
         <button class="theme-switch" type="button" onclick="toggleTheme()" aria-label="Switch light or dark mode">
           <span class="when-dark">☀ Light</span><span class="when-light">☾ Dark</span>
         </button>
       </div>
+    </div>
+    <div class="container footer-legal">
+      <p>Moshly by ContrastDetails Lda · NIF PT515858765 · Rua Gonçalves Crespo 13, 1.º Dto, 2775-579 Carcavelos, Portugal · <a href="mailto:hello@moshly.io">hello@moshly.io</a> · <a href="https://www.livroreclamacoes.pt">Livro de Reclamações</a></p>
     </div>
   </footer>
 
