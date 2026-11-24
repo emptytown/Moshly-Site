@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 // --- USERS & AUTH ---
 export const users = sqliteTable('users', {
@@ -52,7 +52,32 @@ export const subscriptions = sqliteTable('subscriptions', {
   pdfExportsUsed: integer('pdf_exports_used').default(0),
   aiCreditsLimit: integer('ai_credits_limit').default(100),
   aiCreditsUsed: integer('ai_credits_used').default(0),
+  // Date the current plan is paid (or granted) until. For a Stripe subscription,
+  // the end of the current billing period. NULL = no end (free or eternal invite).
   expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  appChangedAt: integer('app_changed_at', { mode: 'timestamp' }),
+
+  // Billing (see functions/api/billing/). Provider-neutral fields first.
+  billingProvider: text('billing_provider', { enum: ['stripe', 'apple'] }),
+  billingStatus: text('billing_status'),
+  billingInterval: text('billing_interval', { enum: ['month', 'year'] }),
+  cancelAtPeriodEnd: integer('cancel_at_period_end', { mode: 'boolean' }).default(false),
+  stripeCustomerId: text('stripe_customer_id'),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  trialUsedAt: integer('trial_used_at', { mode: 'timestamp' }),
+  billingUpdatedAt: integer('billing_updated_at', { mode: 'timestamp' }),
+}, (table) => ({
+  stripeCustomerIdx: uniqueIndex('subscriptions_stripe_customer_id_idx').on(table.stripeCustomerId),
+  stripeSubscriptionIdx: index('subscriptions_stripe_subscription_id_idx').on(table.stripeSubscriptionId),
+}));
+
+// --- BILLING EVENTS ---
+// Webhook events already applied, so a redelivered event is a no-op.
+export const billingEvents = sqliteTable('billing_events', {
+  id: text('id').primaryKey(),
+  provider: text('provider').notNull(),
+  type: text('type').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
 // --- INVITE CODES ---

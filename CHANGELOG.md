@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-24 (billing, test mode)
+- **Stripe subscriptions**: `POST /api/billing/checkout`, `/portal` and `/webhook` (`functions/api/billing/`). Checkout with automatic tax and VAT number collection; signed, idempotent webhook that re-reads the subscription from Stripe; customer portal for card, invoices, plan changes and cancel at period end. Sandbox price IDs only; live stays off until approved. See `docs/billing.md`.
+- **Migration `0007_billing.sql`**: billing fields on `subscriptions` (provider, status, interval, cancel at period end, Stripe IDs, trial used) and a `billing_events` table. Also creates `app_changed_at`, which `me.js` used but never existed.
+- **Plans now expire**: `/api/me` and the internal quota endpoints drop expired plans (including invite codes) to Free; Stripe plans are re-checked with Stripe first.
+- **Account deletion** cancels the Stripe subscription first.
+- **Dashboard**: "Plan and billing" screen (current plan, monthly/yearly plans, Manage billing), live status badge, working Change plan and Cancel plan buttons, in both skins and themes. `CACHE_VERSION` → `v20`.
+
 ## 2026-11-23 (cache fix)
 - **Stale app catalog after deploys**: `moshly-apps.js` (and the other shell JS/CSS) was served with a 4-hour browser cache, and the service worker pre-cached from that HTTP cache, so a new `CACHE_VERSION` could still store the old file — new apps (e.g. Time) did not show in the App Connector. The SW now pre-caches with `cache: 'reload'` and refreshes in the background with `cache: 'no-cache'`; `_headers` sets `Cache-Control: no-cache` for `/*.js` and `/*.css`. `CACHE_VERSION` bumped to `v16`.
 

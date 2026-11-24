@@ -290,9 +290,9 @@
                 <div class="db-card db-card--subscription">
                     <div class="db-sub-top">
                         <span class="db-card-title db-card-title--flush">Subscription</span>
-                        <span class="db-stat-badge db-stat-badge--active db-stat-badge--flush">
-                <svg height="7" viewBox="0 0 7 7" width="7"><circle cx="3.5" cy="3.5" fill="#4ADE80" r="3.5"/></svg>
-                Active
+                        <span class="db-stat-badge db-stat-badge--flush db-bill-badge db-bill-badge--neutral" id="db-sub-status-badge">
+                <svg aria-hidden="true" height="7" viewBox="0 0 7 7" width="7"><circle cx="3.5" cy="3.5" fill="currentColor" r="3.5"/></svg>
+                <span data-label>…</span>
               </span>
                     </div>
                     <div class="db-sub-top db-sub-top--compact">
@@ -300,6 +300,9 @@
                         <span class="db-sub-price" id="db-billing-price"></span>
                     </div>
                     <div class="db-sub-line" id="db-plan-renew-sub"></div>
+                    <div class="db-billing-actions db-billing-actions--sub">
+                        <button class="btn-ghost db-btn-compact" type="button" onclick="MoshlyBilling.open()">Plan and billing</button>
+                    </div>
                 </div>
             </section>
 
@@ -349,8 +352,9 @@
                         <div class="db-hero-row"><span>AI credits</span><strong id="db-billing-ai-val"></strong></div>
                     </div>
                     <div class="db-billing-actions" id="db-billing-change-cancel">
-                        <a class="btn-ghost db-btn-compact" href="/pricing">Change plan</a>
-                        <button class="btn-ghost db-btn-compact db-btn-ghost-danger">Cancel</button>
+                        <button class="btn-ghost db-btn-compact" id="db-billing-change-btn" type="button" onclick="MoshlyBilling.open()">Change plan</button>
+                        <button class="btn-ghost db-btn-compact" hidden id="db-billing-manage-btn" type="button" onclick="MoshlyBilling.openPortal()">Manage billing</button>
+                        <button class="btn-ghost db-btn-compact db-btn-ghost-danger" hidden id="db-billing-cancel-btn" type="button" onclick="MoshlyBilling.openPortal('cancel')">Cancel plan</button>
                     </div>
                     <div class="db-hidden" id="db-billing-invoices"></div>
                 </div>
@@ -1052,6 +1056,45 @@
         </div>
     </div>
 
+    <!-- ─── PLAN AND BILLING MODAL (dashboard-billing.js) ───── -->
+    <div aria-hidden="true" aria-labelledby="dbBillTitle" aria-modal="true" class="db-modal-overlay db-modal--confirm db-modal--billing" id="dbBillingOverlay" role="dialog">
+        <div class="db-modal-backdrop" onclick="MoshlyBilling.close()"></div>
+        <div class="db-modal-content db-bill">
+            <div class="db-modal-header db-bill-header">
+                <h3 class="db-modal-title" id="dbBillTitle">Plan and billing</h3>
+                <button aria-label="Close" class="db-bill-close" type="button" onclick="MoshlyBilling.close()">×</button>
+            </div>
+            <div class="db-modal-body db-bill-body">
+                <div class="db-bill-current">
+                    <div class="db-bill-current-top">
+                        <span class="db-bill-label">Current plan</span>
+                        <span class="db-bill-badge" id="dbBillCurrentBadge"></span>
+                    </div>
+                    <div class="db-bill-current-plan">
+                        <strong id="dbBillCurrentName"></strong>
+                        <span id="dbBillCurrentPrice"></span>
+                    </div>
+                    <p class="db-bill-current-line" id="dbBillCurrentLine"></p>
+                </div>
+
+                <div aria-label="Billing period" class="db-bill-interval" role="group">
+                    <button aria-pressed="true" class="db-bill-interval-opt" data-bill-interval="month" type="button" onclick="MoshlyBilling.setInterval('month')">Monthly</button>
+                    <button aria-pressed="false" class="db-bill-interval-opt" data-bill-interval="year" type="button" onclick="MoshlyBilling.setInterval('year')">Yearly <span class="db-bill-save">2 months free</span></button>
+                </div>
+
+                <ul class="db-bill-plans" id="dbBillPlans"></ul>
+
+                <p class="db-bill-hint" hidden id="dbBillPortalHint">Plan changes, card updates, invoices and cancelling are in Manage billing. If you cancel, you keep your plan until the end of the period you have paid for.</p>
+                <p class="db-bill-error" hidden id="dbBillError" role="alert"></p>
+                <p class="db-bill-small">Prices include VAT. Subscriptions renew automatically until you cancel. <a href="/terms#refunds" target="_blank" rel="noopener">Refund policy</a></p>
+            </div>
+            <div class="db-modal-footer db-bill-footer">
+                <button class="db-btn-secondary" hidden id="dbBillManageBtn" type="button" onclick="MoshlyBilling.openPortal()">Manage billing</button>
+                <button class="db-btn-secondary" type="button" onclick="MoshlyBilling.close()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ─── SIGN OUT CONFIRMATION MODAL ────────── -->
     <div class="db-modal-overlay db-modal--confirm" id="dbSignOutOverlay">
         <div class="db-modal-backdrop" onclick="closeSignOutConfirmation()"></div>
@@ -1075,6 +1118,7 @@
 <script src="/moshly-ui.js"></script>
 <script src="/moshly-apps.js"></script>
 <script src="/moshly-prefs.js"></script>
+<script src="/dashboard-billing.js"></script>
 <script src="dashboard-logic.js"></script>
 <script>
   // When returning from an external spoke app, honour the hub screen the user launched from.

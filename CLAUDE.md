@@ -32,7 +32,8 @@ Browser → Cloudflare Pages (static site)
 | `functions/api/_cors.js` | CORS origin allowlist |
 | `functions/api/internal/` | Server-to-server endpoints (verified by `MOSHLY_INTERNAL_SECRET`) |
 | `functions/api/auth/sso/` | SSO token issuance and verification for other Moshly apps |
-| `functions/db/schema.ts` | Drizzle schema — users, profiles, workspaces, subscriptions, projects, invite codes |
+| `functions/db/schema.ts` | Drizzle schema — users, profiles, workspaces, subscriptions, projects, invite codes, billing events |
+| `functions/api/billing/` | Stripe checkout, customer portal and webhook (see `docs/billing.md`) |
 
 ## Authentication
 
@@ -69,6 +70,19 @@ Browser → Cloudflare Pages (static site)
 | `AUTH_KV` | KV namespace binding — SSO tokens, refresh tokens, rate limits |
 | `MOSHLY_DB` | D1 database binding |
 | `SMTP_*` | Email sending (verification, password reset) |
+| `STRIPE_SECRET_KEY` | Stripe secret key (`sk_test_…` in Preview, `sk_live_…` only after go-live). Its prefix picks test or live price IDs |
+| `STRIPE_WEBHOOK_SECRET` | Signing secret (`whsec_…`) of the Stripe webhook endpoint `/api/billing/webhook` |
+
+Never put Stripe keys in code, `wrangler.toml` or chat. They are Cloudflare secrets only.
+
+## Billing
+
+Stripe subscriptions; the plan always lives in D1 (`subscriptions`). See `docs/billing.md`.
+
+- `functions/api/billing/checkout.js`, `portal.js`, `webhook.js`: the three endpoints. `_config.js` holds the price IDs (test and live) and the trial setting.
+- `_entitlements.js` is provider-neutral: a future Apple in-app purchase handler maps its state onto the same fields.
+- Expiry is lazy: `/api/me` and the internal quota endpoints call `enforceExpiry` (Pages Functions have no cron).
+- `npm run test:billing` runs the billing tests against a local D1.
 
 ## Homepage News
 

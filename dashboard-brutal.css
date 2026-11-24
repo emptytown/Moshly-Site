@@ -974,3 +974,27 @@ html.skin-brutal:not(.theme-light) .db-app-slot-btn:disabled {
   box-shadow: none; cursor: not-allowed; transform: none;
 }
 html.skin-brutal:not(.theme-light) .db-app-slot-btn:disabled { border-color: #3A3A3A; }
+
+/* ══ PLAN AND BILLING (Neo Brut, dark + light) ══════════════════ */
+html.skin-brutal .db-bill-badge { border-radius: var(--nb-radius); background: var(--nb-paper-2); color: var(--nb-ink); border: var(--nb-border); }
+html.skin-brutal .db-bill-badge--active  { background: var(--nb-lime); color: var(--nb-on); border-color: var(--nb-lime); }
+html.skin-brutal .db-bill-badge--warning { background: var(--nb-orange); color: var(--nb-on); border-color: var(--nb-orange); }
+html.skin-brutal.theme-light .db-bill-badge--active,
+html.skin-brutal.theme-light .db-bill-badge--warning { border-color: var(--nb-line); }
+html.skin-brutal .db-bill-close { background: var(--nb-card); color: var(--nb-ink); border: var(--nb-border); border-radius: var(--nb-radius); }
+html.skin-brutal .db-bill-close:hover { background: var(--nb-violet); color: var(--nb-on); }
+html.skin-brutal .db-bill-current { background: var(--nb-paper-2); border: var(--nb-border); border-radius: var(--nb-radius); }
+html.skin-brutal .db-bill-current-plan strong,
+html.skin-brutal .db-bill-plan-name,
+html.skin-brutal .db-bill-plan-price strong { font-family: var(--nb-font-display); font-weight: var(--nb-display-weight); letter-spacing: -.03em; }
+html.skin-brutal .db-bill-interval { background: var(--nb-paper-2); border: var(--nb-border); border-radius: var(--nb-radius); }
+html.skin-brutal .db-bill-interval-opt { border-radius: calc(var(--nb-radius) - 2px); color: var(--nb-ink); font-weight: 800; }
+html.skin-brutal .db-bill-interval-opt.active { background: var(--nb-lime); color: var(--nb-on); }
+html.skin-brutal .db-bill-plan { background: var(--nb-card); border: var(--nb-border); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow); }
+html.skin-brutal .db-bill-plan--current { border-color: var(--nb-violet); box-shadow: inset 0 0 0 1px var(--nb-violet), var(--nb-shadow); }
+html.skin-brutal.theme-light .db-bill-plan--current { border-color: var(--nb-line); background: #F4E6FF; box-shadow: var(--nb-shadow-lg); }
+html.skin-brutal .db-bill-plan-features li::before { color: var(--nb-ink); }
+html.skin-brutal:not(.theme-light) .db-bill-plan-features li::before { color: var(--nb-lime); }
+html.skin-brutal .db-bill-small a { color: var(--nb-ink); text-decoration: underline; }
+html.skin-brutal.theme-light .db-bill-error { color: #D11A1A; }
+html.skin-brutal .db-bill-notice { background: var(--nb-card); color: var(--nb-ink); border: var(--nb-border); border-radius: var(--nb-radius); box-shadow: var(--nb-shadow-lg); }
