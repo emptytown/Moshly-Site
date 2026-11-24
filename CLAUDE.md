@@ -81,3 +81,9 @@ The `#news` section of `index.html` ("Latest stops") holds auto-numbered news ca
 ## Language
 
 The public site is written in **British English** (`lang="en-GB"`): colour, organise, cancelled; dates as `31 January 2026`; prices in euros. See "Language" in `docs/STANDARDS.md`.
+
+## Admin
+
+`/admin` (`admin.html`) is for accounts with `role = 'god'` only; the dashboard shows an "Admin" link to them. Its API lives in `functions/api/admin/` and every endpoint calls `requireGod()` from `_guard.js`, which checks the JWT role and then the role in the database. To make someone an admin: `UPDATE users SET role='god' WHERE id='...'` (they must log in again).
+
+Plans can be given for a fixed number of months (`subscriptions.expires_at`). `settleSubscription()` in `functions/api/_subscription.js` moves an expired paid plan back to free; call it wherever a subscription is read.

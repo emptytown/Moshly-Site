@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import * as schema from '../../../db/schema';
 import { corsOptionsResponse } from '../../_cors';
 import { authenticateApp, unauthorizedResponse, jsonResponse } from '../_app-auth';
+import { settleSubscription } from '../../_subscription';
 
 const RESOURCES = {
   ai_credits: { usedKey: 'aiCreditsUsed',   limitKey: 'aiCreditsLimit'   },
@@ -40,8 +41,9 @@ export async function onRequestGet({ request, env }) {
       return jsonResponse({ error: 'no_subscription' }, 404);
     }
 
-    const used      = row.subscription[config.usedKey];
-    const limit     = row.subscription[config.limitKey];
+    const sub       = await settleSubscription(db, row.subscription);
+    const used      = sub[config.usedKey];
+    const limit     = sub[config.limitKey];
     const remaining = limit - used;
 
     return jsonResponse({ used, limit, remaining, resource, app: appId });

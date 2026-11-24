@@ -4,6 +4,7 @@ import { verifyJWT } from './_middleware_auth';
 import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
+import { settleSubscription } from './_subscription';
 
 const MAX_FIELD_LENGTH = 200;
 
@@ -45,7 +46,8 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
-    const { user, profile, workspace, subscription } = result;
+    const { user, profile, workspace } = result;
+    const subscription = await settleSubscription(db, result.subscription);
 
     return new Response(JSON.stringify({
       success: true,

@@ -3,6 +3,7 @@ import { eq, sql, and } from 'drizzle-orm';
 import * as schema from '../../../db/schema';
 import { corsOptionsResponse } from '../../_cors';
 import { authenticateApp, unauthorizedResponse, jsonResponse } from '../_app-auth';
+import { settleSubscription } from '../../_subscription';
 
 // Resource registry — add new quota types here, no new files needed
 const RESOURCES = {
@@ -61,7 +62,7 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ error: 'no_subscription' }, 404);
     }
 
-    const sub = row.subscription;
+    const sub = await settleSubscription(db, row.subscription);
     const currentUsed  = sub[config.usedKey];
     const currentLimit = sub[config.limitKey];
     const remaining    = currentLimit - currentUsed;

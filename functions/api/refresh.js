@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { applyRateLimit, getClientIp, rateLimitedResponse } from './_rate-limit';
 import { corsOptionsResponse } from './_cors';
 import { resendVerification } from './_email_utils';
+import { settleSubscription } from './_subscription';
 
 export async function onRequestPost({ request, env }) {
   try {
@@ -113,7 +114,8 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const { user, profile, subscription } = refreshResult; 
+    const { user, profile } = refreshResult;
+    const subscription = await settleSubscription(db, refreshResult.subscription);
     if (!user.emailVerified) {
       const now = new Date();
       if (user.verificationExpires && user.verificationExpires < now) {
