@@ -16,3 +16,18 @@ migrations_dir = "drizzle/migrations"
 binding = "AUTH_KV"
 id = "67a5f773bd124eafb0ae5af32aadb02e"
 preview_id = "4c934828e2824b459e2aca262eed3a5f"
+
+# Preview deployments (every branch except production) use their own D1, so
+# testing (e.g. Stripe sandbox billing) never touches production data.
+# Bindings are not inherited by environments, so both are repeated here.
+[env.preview]
+
+[[env.preview.d1_databases]]
+binding = "MOSHLY_DB"
+database_name = "moshly-db-preview"
+database_id = "15220174-501b-4b89-a42b-d7e9afd80b02"
+migrations_dir = "drizzle/migrations"
+
+[[env.preview.kv_namespaces]]
+binding = "AUTH_KV"
+id = "4c934828e2824b459e2aca262eed3a5f"
