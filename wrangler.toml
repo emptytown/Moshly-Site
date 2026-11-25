@@ -16,3 +16,8 @@ migrations_dir = "drizzle/migrations"
 binding = "AUTH_KV"
 id = "67a5f773bd124eafb0ae5af32aadb02e"
 preview_id = "4c934828e2824b459e2aca262eed3a5f"
+
+# Public half of the VAPID key pair used for Moshly Days push notifications
+# (served by /api/days/push). The private half is a secret of the days-push Worker.
+[vars]
+VAPID_PUBLIC_KEY = "BI24QpOCb4DIt3zhr7TRxk1TWTlGEWChIfHYdP4mXrMV1gY8i_n3Iz64Y8Q7tvOs9ZpMSrvIS3gf950RAJOB9lc"
