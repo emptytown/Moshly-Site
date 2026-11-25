@@ -1,10 +1,27 @@
-# Moshly quotas — AI credits, PDF exports and beyond
+# Moshly AI and quotas — AI credits, PDF exports and beyond
 
 The authoritative reference for quota tracking across Moshly. Read it before touching quota code here or in an app.
 
 ## Model
 
-moshly-site is the **only** place quotas live (`subscriptions` table). Apps never count locally: their **server** asks the site before doing paid work.
+moshly-site is the **only** place quotas live (`subscriptions` table), and the **only** place that talks to the AI provider. Apps never count locally and never hold an AI key: their **server** asks the site.
+
+## AI (central, on moshly.io)
+
+```
+app server ── POST /api/internal/ai/chat  (app secret)  ─┐
+iOS / web  ── POST /api/ai/chat           (user token)  ─┴→ functions/api/_ai.js runAI():
+                                                              1. feature known?  2. spend its credits
+                                                              3. call the model (retries 429/5xx)
+                                                              4. failed → refund, 503 ai_unavailable
+```
+
+- **Provider config (Cloudflare Pages secrets/vars):** `AI_API_KEY` (required), `AI_API_URL` (OpenAI-compatible chat-completions URL; default Gemini), `AI_MODEL` (default `gemini-2.5-flash`). Changing model or provider is configuration only.
+- **Feature registry:** `AI_FEATURES` in `functions/api/_ai.js`: `<app>.<action>` → `{ credits, maxTokens }`. Unknown features are refused (400 `unknown_feature`), so every price is set here. The balance endpoints return the costs as `aiFeatures`.
+- **Body:** `{ userId (internal only), feature, messages: [{ role: system|user|assistant, content }], responseFormat?, maxTokens? }`. Limits: 60 messages, 200 000 characters.
+- **Answer:** `{ success, content, usage, model, charged: { resource, amount }, quota }`. If the app's own processing of the answer fails, it refunds with `POST /api/internal/quota/refund` and `charged`.
+- **User-token route** (`/api/ai/chat`) is rate limited (120 calls / 15 min per user).
+- **Apps use the shared client** `MoshlyAI` from emptytown/moshly-modules (`modules/MoshlyAI/moshly.ts`), vendored as `server/_vendor/moshly.ts`.
 
 ```
 moshly-site
@@ -70,6 +87,8 @@ Same body. Gives back quota when the paid work failed after consuming (AI provid
 | `invalid_amount` | 400 | Not an integer between 1 and `maxPerCall` |
 | `no_subscription` | 404 | No workspace/subscription for that user |
 | `insufficient_credits` | 402 | Would go over the limit (AI credits **and** PDF exports) |
+| `unknown_feature` / `invalid_messages` / `input_too_long` | 400 | AI request the site won't run |
+| `ai_unavailable` | 503 | AI provider failed or `AI_API_KEY` missing; credits refunded |
 | `server_error` | 500 | Database error |
 | `endpoint_moved` | 410 | Old `/api/internal/ai-credits/*` address |
 | `not_found` | 404 | Any other unknown `/api/*` address |
@@ -85,16 +104,18 @@ Same body. Gives back quota when the paid work failed after consuming (AI provid
 
 ## How an app uses it
 
-Each app server has a small hub client (`hub.ts`) with the same four calls:
+Vendor `modules/MoshlyAI/moshly.ts` from moshly-modules (see its README), then:
 
 ```ts
-const quota = await getQuotaBalance(userId);                 // all resources, or null if the site is unreachable
-await consumeQuota(userId, "ai_credits", COST);              // throws a "no credits" error on 402 — call BEFORE the work
-await refundQuota(userId, "ai_credits", COST);               // if the work then failed
+const moshly = createMoshlyClient({ appId: "quote", appSecret: process.env.MOSHLY_APP_SECRET!, hubUrl: process.env.MOSHLY_HUB_URL });
+const answer = await moshly.ai.chat({ userId, feature: "quote.chat", messages });  // AI: credits handled on moshly.io
+await moshly.quota.consume(userId, "pdf_exports");                                 // non-AI: before the work
+await moshly.quota.refund(userId, { resource: "pdf_exports", amount: 1 });         // if the work failed
+const overview = await moshly.quota.overview(userId);                              // UI: remaining, resetsAt, aiFeatures
 ```
 
 Rules:
-1. Consume **before** the paid work, refund if it fails. Never consume after sending the result.
-2. 402 → show the user they have run out until `resetsAt` (or can upgrade on Moshly). Disable the action in the UI when `remaining` is too low.
-3. Treat anything that is not a JSON answer as an error, never as success.
-4. Credit costs per action are constants in the app (`AI_CREDIT_COSTS`).
+1. Spend **before** the paid work, refund if it fails. Never spend after sending the result.
+2. Errors are `MoshlyError`; show `err.message` to the user. 402 means out of credits until `resetsAt` (or upgrade); disable the action in the UI when `remaining` is too low.
+3. Anything that is not a JSON answer is an error, never a success (the client enforces this).
+4. A new AI feature = one entry in `AI_FEATURES` here + `moshly.ai.chat({ feature })` in the app.

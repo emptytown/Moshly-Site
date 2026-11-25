@@ -7,6 +7,7 @@ import { verifyJWT } from './_middleware_auth';
 import { getAllowedOrigin, corsOptionsResponse } from './_cors';
 import { loadSubscriptionForUser, allQuotaSnapshots, quotaDb } from './_quota';
 import { nextUsagePeriodStart } from './_subscription';
+import { aiFeatureCosts } from './_ai';
 
 function json(request, body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -32,6 +33,7 @@ export async function onRequestGet({ request, env }) {
       plan: sub.plan,
       resetsAt: nextUsagePeriodStart().toISOString(),
       quotas: allQuotaSnapshots(sub),
+      aiFeatures: aiFeatureCosts(),
     });
   } catch (error) {
     console.error('[quota] user balance error', { userId: payload.userId, error: error.message });

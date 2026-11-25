@@ -17,6 +17,7 @@ const MAX_ATTEMPTS_PER_WINDOW = {
   'me-patch': 30,
   'me-delete': 3,
   'days-sync': 240,
+  'ai-chat': 120,
 };
 
 /**

@@ -54,9 +54,13 @@ Browser → Cloudflare Pages (static site)
 **3. Internal API** (server-to-server from other Moshly apps)
 - Every route under `api/internal/` authenticates with `authenticateApp()` (`internal/_app-auth.js`), which accepts `Authorization: Bearer <secret>` where the secret is either a per-app secret in KV (`appsecret:<secret>` → app id, preferred) or `MOSHLY_INTERNAL_SECRET` (with `X-Moshly-App: <app id>`).
 - No user JWT involved — the caller passes the **Moshly** `userId` (from SSO verify)
-- Current internal endpoints: `quota/balance`, `quota/consume`, `quota/refund`, `projects`
+- Current internal endpoints: `ai/chat`, `quota/balance`, `quota/consume`, `quota/refund`, `projects`
 - The old `ai-credits/*` addresses answer 410 JSON; any unknown `/api/*` answers 404 JSON (`api/[[path]].js`), never the home page
 - Quotas (AI credits, PDF exports, monthly reset, how apps must call them): see `AI-PDF-CSV-QUOTA.md`
+
+**4. AI** — this site is the only one that calls the AI provider (`functions/api/_ai.js`).
+- Apps: `POST /api/internal/ai/chat` (app secret) via the shared `MoshlyAI` client from moshly-modules. iOS/web: `POST /api/ai/chat` with the user's access token.
+- Credits per feature in `AI_FEATURES` (`<app>.<action>`); unknown features are refused. Spends before the call, refunds if the provider fails.
 
 **Rule:** `_middleware_auth.js` verifyJWT expects an RS256 token issued by this app. Never pass SSO UUIDs, HS256 tokens from other apps, or internal secrets to user-facing endpoints — they will always return 401.
 
@@ -69,6 +73,8 @@ Browser → Cloudflare Pages (static site)
 | `MOSHLY_INTERNAL_SECRET` | Shared secret for server-to-server calls from other Moshly apps (per-app secrets in KV are preferred) |
 | `AUTH_KV` | KV namespace binding — SSO tokens, refresh tokens, rate limits, per-app secrets (`appsecret:*`) |
 | `MOSHLY_DB` | D1 database binding |
+| `AI_API_KEY` | AI provider key (secret). The only AI key in Moshly |
+| `AI_API_URL` / `AI_MODEL` | Optional: OpenAI-compatible endpoint (default Gemini) and model (default `gemini-2.5-flash`) |
 | `SMTP_*` | Email sending (verification, password reset) |
 
 ## Homepage News

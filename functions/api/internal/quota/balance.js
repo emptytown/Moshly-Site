@@ -7,6 +7,7 @@ import {
   QUOTA_RESOURCES, isQuotaResource, loadSubscriptionForUser, quotaSnapshot, allQuotaSnapshots, quotaDb,
 } from '../../_quota';
 import { nextUsagePeriodStart } from '../../_subscription';
+import { aiFeatureCosts } from '../../_ai';
 
 export async function onRequestGet({ request, env }) {
   const caller = await authenticateApp(request, env);
@@ -30,6 +31,7 @@ export async function onRequestGet({ request, env }) {
       plan: sub.plan,
       resetsAt: nextUsagePeriodStart().toISOString(),
       quotas: allQuotaSnapshots(sub),
+      aiFeatures: aiFeatureCosts(),
       app: caller.appId,
     });
   } catch (error) {
