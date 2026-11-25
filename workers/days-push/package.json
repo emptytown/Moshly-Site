@@ -1,0 +1,10 @@
+{
+  "name": "moshly-days-push",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Cron Worker: sends Web Push for Moshly Days due-date alerts",
+  "scripts": { "deploy": "wrangler deploy", "dev": "wrangler dev --test-scheduled" },
+  "dependencies": { "@pushforge/builder": "^2.0.5" },
+  "devDependencies": { "wrangler": "^4.77.0" }
+}
