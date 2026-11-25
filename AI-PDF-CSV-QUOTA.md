@@ -1,145 +1,100 @@
-# Moshly Quota System — AI, PDF, CSV & Beyond
+# Moshly quotas — AI credits, PDF exports and beyond
 
-This document is the authoritative reference for how quota/credit tracking works across the Moshly ecosystem. Read it before touching any quota-related code.
+The authoritative reference for quota tracking across Moshly. Read it before touching quota code here or in an app.
 
-## Architecture: Hub-and-Spoke
+## Model
 
-moshly-site is the **single source of truth** for all user quotas. Spoke apps (Quote, Rank, Run, Merchpad) never track quotas locally — they call the Hub.
+moshly-site is the **only** place quotas live (`subscriptions` table). Apps never count locally: their **server** asks the site before doing paid work.
 
 ```
-moshly-site (Hub)
-  └── subscriptions table → pdfExportsUsed / aiCreditsUsed / ...
-       ↑ POST /api/internal/quota/consume
-       ↑ GET  /api/internal/quota/balance
-       │
-       ├── Quote  (MOSHLY_APP_SECRET=<quote-uuid>)
-       ├── Rank   (MOSHLY_APP_SECRET=<rank-uuid>)
-       ├── Run    (MOSHLY_APP_SECRET=<run-uuid>)
-       └── Merchpad (MOSHLY_APP_SECRET=<merchpad-uuid>)
+moshly-site
+  subscriptions: ai_credits_used/limit, pdf_exports_used/limit, usage_period_start
+     ↑ POST /api/internal/quota/consume   (app servers, app secret)
+     ↑ POST /api/internal/quota/refund    (app servers, app secret)
+     ↑ GET  /api/internal/quota/balance   (app servers, app secret)
+     ↑ GET  /api/quota                    (clients: dashboard, iOS — user's Moshly token)
 ```
 
-## Hub Endpoints
+- Limits per plan: `functions/api/_plans.js` (must match `/pricing`).
+- Logic: `functions/api/_quota.js` (registry, consume, refund, snapshots). A feature that runs inside this site (e.g. Days) calls `consumeQuota(db, userId, resource, amount)` from there directly — no HTTP, no secret.
+- **Monthly reset:** usage periods are calendar months in UTC. Every read of a subscription goes through `settleSubscription()` (`_subscription.js`), which resets both counters to zero the first time it sees a subscription in a new month. Someone who subscribes on the 28th gets a fresh allowance on the 1st.
+- **Every resource is enforced.** Going over the limit is refused with 402 — AI credits and PDF exports alike. The Free plan has `pdf_exports_limit = 0`, so it cannot export PDFs.
+
+## Authentication (all `/api/internal/*` routes)
+
+`Authorization: Bearer <secret>`, where the secret is either:
+
+1. **A per-app secret (preferred).** KV `AUTH_KV`, key `appsecret:<secret>` → app id (`quote`, `rank`, `merchpad`, `run`, …). Identifies the app in logs; rotating one app's secret doesn't touch the others.
+2. **`MOSHLY_INTERNAL_SECRET`** (the site's shared secret; kept so nothing already deployed breaks). Send `X-Moshly-App: <app id>` with it so logs show who called.
+
+Both are accepted on `quota/*` **and** `projects`. Apps send `X-Moshly-App` in every case.
+
+Secrets only ever live on app **servers** (Fly secrets, Cloudflare secrets). A browser or iOS app never holds one: it calls its own backend, or reads `GET /api/quota` with the user's Moshly access token.
+
+**Register or rotate an app secret** (run by the owner, not by an agent):
+```bash
+SECRET=$(openssl rand -hex 32)
+npx wrangler kv key put "appsecret:$SECRET" "quote" --binding AUTH_KV --remote --preview false
+fly secrets set MOSHLY_APP_SECRET=$SECRET -a moshly-quote
+# after the app has redeployed with the new secret:
+npx wrangler kv key delete "appsecret:<old secret>" --binding AUTH_KV --remote --preview false
+```
+Never write a secret in this file or anywhere else in git.
+
+## Endpoints
+
+`userId` is always the **Moshly user id** (`user.id` from `/api/auth/sso/verify`), never an id internal to the app.
 
 ### POST /api/internal/quota/consume
-
-Deducts quota. Blocked by `enforceLimit` resources if over limit.
-
-**Auth:** `Authorization: Bearer <MOSHLY_APP_SECRET>`
-
-**Request body:**
 ```json
 { "userId": "<moshly user id>", "resource": "ai_credits", "amount": 5 }
 ```
+→ `200 { "success": true, "resource", "used", "limit", "remaining", "resetsAt" }`
 
-**Success response:**
-```json
-{ "success": true, "used": 45, "limit": 100, "remaining": 55 }
-```
-
-**Error responses:**
-| `error` field        | HTTP | Meaning |
-|----------------------|------|---------|
-| `unauthorized`       | 401  | Invalid or missing app secret |
-| `unknown_resource`   | 400  | Resource name not in registry |
-| `invalid_amount`     | 400  | Amount out of allowed range |
-| `no_subscription`    | 404  | User has no subscription record |
-| `insufficient_credits` | 402 | Over limit on an enforced resource |
-| `server_error`       | 500  | DB error |
+### POST /api/internal/quota/refund
+Same body. Gives back quota when the paid work failed after consuming (AI provider error, PDF build error). Never below zero.
 
 ### GET /api/internal/quota/balance?userId=&resource=
+- with `resource` → `{ resource, used, limit, remaining, resetsAt, app }`
+- without → `{ plan, resetsAt, quotas: { ai_credits: {...}, pdf_exports: {...} }, app }`
 
-Returns current balance without modifying anything.
+### GET /api/quota (user token)
+`{ plan, resetsAt, quotas: { ai_credits: {...}, pdf_exports: {...} } }` for the signed-in user.
 
-**Auth:** `Authorization: Bearer <MOSHLY_APP_SECRET>`
+### Errors (always JSON)
+| `error` | HTTP | Meaning |
+|---|---|---|
+| `unauthorized` | 401 | Missing or unknown secret |
+| `invalid_body` / `invalid_user_id` | 400 | Bad request |
+| `unknown_resource` | 400 | Resource not in the registry |
+| `invalid_amount` | 400 | Not an integer between 1 and `maxPerCall` |
+| `no_subscription` | 404 | No workspace/subscription for that user |
+| `insufficient_credits` | 402 | Would go over the limit (AI credits **and** PDF exports) |
+| `server_error` | 500 | Database error |
+| `endpoint_moved` | 410 | Old `/api/internal/ai-credits/*` address |
+| `not_found` | 404 | Any other unknown `/api/*` address |
 
-**Response:**
-```json
-{ "used": 45, "limit": 100, "remaining": 55, "resource": "ai_credits", "app": "rank" }
+## Resource registry (`functions/api/_quota.js`)
+
+| Resource | Columns | maxPerCall |
+|---|---|:---:|
+| `ai_credits` | `ai_credits_used` / `ai_credits_limit` | 50 |
+| `pdf_exports` | `pdf_exports_used` / `pdf_exports_limit` | 1 |
+
+**Adding a resource** (e.g. `csv_exports`): columns in `schema.ts` + a migration, limits in `_plans.js` and `/pricing`, an entry in `QUOTA_RESOURCES`. Apps only need the new resource name.
+
+## How an app uses it
+
+Each app server has a small hub client (`hub.ts`) with the same four calls:
+
+```ts
+const quota = await getQuotaBalance(userId);                 // all resources, or null if the site is unreachable
+await consumeQuota(userId, "ai_credits", COST);              // throws a "no credits" error on 402 — call BEFORE the work
+await refundQuota(userId, "ai_credits", COST);               // if the work then failed
 ```
 
-## Resource Registry
-
-Defined in `functions/api/internal/quota/consume.js`. Add new resources here.
-
-| Resource      | DB columns                          | enforceLimit | maxPerCall | Notes |
-|---------------|-------------------------------------|:---:|:---:|---|
-| `ai_credits`  | `aiCreditsUsed` / `aiCreditsLimit`  | ✅  | 50  | Blocks if over limit |
-| `pdf_exports` | `pdfExportsUsed` / `pdfExportsLimit`| ❌  | 1   | Tracks only, never blocks |
-
-**To add a new resource** (e.g. `csv_exports`):
-1. Add columns to `subscriptions` in `functions/db/schema.ts` + run migration
-2. Add entry to `RESOURCES` in `quota/consume.js` and `RESOURCES` in `quota/balance.js`
-3. No other Hub changes needed
-
-## Authentication: Per-App Secrets in KV
-
-Each spoke has its own secret. Stored in Cloudflare KV under:
-```
-appsecret:<secret-uuid>  →  "quote" | "rank" | "run" | "merchpad"
-```
-
-The Hub looks up `appsecret:<bearer-token>` on every request to identify the caller.
-
-**To register a new spoke or rotate a secret:**
-```bash
-# Generate a new secret
-openssl rand -hex 32
-
-# Store it in KV (Cloudflare dashboard → KV → AUTH_KV, or via wrangler)
-wrangler kv key put "appsecret:<new-secret>" "quote" --binding AUTH_KV
-
-# Set it as a Fly secret on the spoke
-fly secrets set MOSHLY_APP_SECRET=<new-secret> -a <app-name>
-```
-
-**Rotation is per-app** — rotating Quote's secret does not affect Rank.
-
-## Current App Secrets (KV keys to set)
-
-Set these in `AUTH_KV` on Cloudflare after generating fresh secrets:
-
-| KV key | Value (appId) |
-|--------|---------------|
-| `appsecret:9f81061c-73b6-4cea-b15c-fa356a5bec5f` | `quote`    |
-| `appsecret:625355ed-a4b0-44f5-bd3a-d08651c488d3` | `rank`     |
-| `appsecret:20776757-04cf-401e-9b96-9b491ca8ce01` | `run`      |
-| `appsecret:951797f6-fdb3-49f4-8997-9f55c5aab14a` | `merchpad` |
-
-And set on each Fly app:
-```bash
-fly secrets set MOSHLY_HUB_URL=https://moshly.io MOSHLY_APP_SECRET=9f81061c-73b6-4cea-b15c-fa356a5bec5f -a moshly-quote
-fly secrets set MOSHLY_HUB_URL=https://moshly.io MOSHLY_APP_SECRET=625355ed-a4b0-44f5-bd3a-d08651c488d3 -a moshly-rank
-fly secrets set MOSHLY_HUB_URL=https://moshly.io MOSHLY_APP_SECRET=20776757-04cf-401e-9b96-9b491ca8ce01 -a moshly-run
-fly secrets set MOSHLY_HUB_URL=https://moshly.io MOSHLY_APP_SECRET=951797f6-fdb3-49f4-8997-9f55c5aab14a -a moshly-merchpad
-```
-
-## Spoke Usage Pattern
-
-Every spoke has a `hub.ts` (or `hub.js`) with these exports:
-
-```typescript
-// Check balance before showing UI (non-blocking, returns null if Hub unreachable)
-const balance = await getQuotaBalance(userId, "ai_credits");
-
-// Debit that blocks on enforcement (use for AI features — throws TRPCError on 402)
-await consumeQuota(userId, "ai_credits", 5);
-
-// Fire-and-forget debit (use for PDF/CSV exports — never blocks the response)
-consumeQuotaBackground(userId, "pdf_exports");
-```
-
-**Rule:** use `consumeQuota` (blocking) for enforced resources like `ai_credits`.
-Use `consumeQuotaBackground` for tracking-only resources like `pdf_exports`.
-
-## Quota Lifecycle
-
-```
-User action → spoke calls consumeQuota/consumeQuotaBackground
-           → Hub atomically increments usedColumn
-           → Hub returns { used, limit, remaining }
-           → Spoke logs result (or ignores for background)
-
-Monthly reset → (manual or scheduled) set usedColumn = 0 for all subscriptions
-```
-
-There is currently no automatic monthly reset — this is done manually or via a cron job you add to the Hub.
+Rules:
+1. Consume **before** the paid work, refund if it fails. Never consume after sending the result.
+2. 402 → show the user they have run out until `resetsAt` (or can upgrade on Moshly). Disable the action in the UI when `remaining` is too low.
+3. Treat anything that is not a JSON answer as an error, never as success.
+4. Credit costs per action are constants in the app (`AI_CREDIT_COSTS`).
