@@ -15,7 +15,8 @@
         {
             slug: 'quote', name: 'Quote', description: 'Financial hub',
             status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/quote.png', url: '/apps/quote.html',
-            shell: true, origin: 'https://quote.moshly.io', entry: '/callback',
+            // Browshly-ready (origin/entry); `shell: true` once quote.moshly.io ships MoshlyShell.
+            origin: 'https://quote.moshly.io', entry: '/callback',
             type: 'Plan app', categories: ['Business', 'Analytics']
         },
         {
