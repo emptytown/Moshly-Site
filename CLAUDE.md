@@ -106,4 +106,4 @@ Apply a new migration to production **before** deploying code that reads its col
 
 - An app opens in the frame when its `moshly-apps.js` entry has `shell: true`; `origin` is its site when `url` is a page here, `entry` the path that takes the one-time `?token=` (none: no sign-in). Launcher and dashboard links go through `MoshlyApps.shellUrlFor()`.
 - Every framed app must send `Content-Security-Policy: frame-ancestors 'self' https://moshly.io` and use `MoshlyShell` from `emptytown/moshly-modules` (never navigate the frame to moshly.io). `_headers` allows `frame-src https://*.moshly.io`.
-- Messages accepted from the active apps only: `moshly:home`, `moshly:switcher`, `moshly:reauth`, `moshly:quota-changed`.
+- Messages accepted from the live apps only (own origin and window): `moshly:home`, `moshly:switcher`, `moshly:reauth`, `moshly:quota-changed`, `moshly:theme` (the bar takes the app's skin colours, remembered per app in `localStorage` `browshly-theme:<slug>`).
