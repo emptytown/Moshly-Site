@@ -405,6 +405,8 @@
     // SSO launch for external spoke apps (rank.moshly.io, merchpad.moshly.io).
     window.launchApp = async function(appUrl) {
       markLaunchOrigin();
+      const shellUrl = window.MoshlyApps.shellUrlFor?.(appUrl);
+      if (shellUrl) { window.location.href = shellUrl; return; }
       try {
         const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
         if (!res.ok) throw new Error(`server responded ${res.status}`);
@@ -495,6 +497,11 @@
 
         if (isSoon || badge === 'Locked') {
           return `<div class="app-icon-item app-icon-item--soon" title="${badge === 'Locked' ? 'Locked until next cycle' : 'Coming soon'}">${iconInner}</div>`;
+        }
+        // Browshly: apps that run inside the Moshly frame stay on moshly.io.
+        const shellUrl = window.MoshlyApps.shellUrlFor?.(app.url);
+        if (shellUrl) {
+          return `<a class="app-icon-item" href="${shellUrl}" onclick="markLaunchOrigin()">${iconInner}</a>`;
         }
         if (isExternal) {
           return `<a class="app-icon-item" href="javascript:void(0)" onclick="window.launchApp('${app.url}')">${iconInner}</a>`;

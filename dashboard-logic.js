@@ -146,6 +146,8 @@ function _showLaunchError(msg) {
 
 // SSO launch: generates a 60s token and redirects to the app's /auth/callback
 window.launchApp = async function(appUrl) {
+    const shellUrl = window.MoshlyApps.shellUrlFor?.(appUrl);
+    if (shellUrl) { window.location.href = shellUrl; return; }
     try {
         const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
         if (!res.ok) throw new Error(`server responded ${res.status}`);
@@ -901,7 +903,9 @@ function updateAppsUI(user) {
         const slotClass = isBlacklisted
             ? 'db-app-slot db-app-slot--blacklisted'
             : isNew ? 'db-app-slot db-app-slot--new' : 'db-app-slot';
-        const linkAttr = app.url.includes('.moshly.io')
+        const linkAttr = window.MoshlyApps.shellUrlFor?.(app.url)
+            ? `href="${window.MoshlyApps.shellUrlFor(app.url)}"`
+            : app.url.includes('.moshly.io')
             ? `href="javascript:void(0)" onclick="window.launchApp('${app.url}')"`
             : `href="${app.url}"`;
 
@@ -968,7 +972,9 @@ function updateAppsUI(user) {
         const peekApp = appLayout.peekApp;
 
         if (peekApp) {
-            const peekLinkAttr = peekApp.url.includes('.moshly.io')
+            const peekLinkAttr = window.MoshlyApps.shellUrlFor?.(peekApp.url)
+            ? `href="${window.MoshlyApps.shellUrlFor(peekApp.url)}"`
+            : peekApp.url.includes('.moshly.io')
                 ? `href="javascript:void(0)" onclick="window.launchApp('${peekApp.url}')"`
                 : `href="${peekApp.url}"`;
             peekGrid.innerHTML = `
@@ -1006,7 +1012,7 @@ function updateAppsUI(user) {
         // Updated Logic: Always start with 3 empty slots. If used >= 3, show 3 more empty slots (incremental).
         // Render active free apps first
         let freeAppsHtml = activeFreeApps.map(app => `
-            <a href="${app.url}" class="db-app-slot">
+            <a href="${window.MoshlyApps.shellUrlFor?.(app.url) || app.url}" class="db-app-slot">
                 <div class="db-app-slot-icon">
                     ${appIconImgs(app)}
                 </div>
