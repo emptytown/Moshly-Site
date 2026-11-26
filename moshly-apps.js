@@ -25,6 +25,7 @@
         {
             slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
             status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/merchpad.png', url: 'https://merchpad.moshly.io',
+            shell: true,
             type: 'Plan app', categories: ['Business', 'Booking']
         },
         {
@@ -143,7 +144,24 @@
         };
     }
 
+    // Browshly (app.html): apps flagged `shell: true` open inside the Moshly frame instead of
+    // leaving moshly.io. Returns the app's origin, or null if it must not be framed.
+    function shellOrigin(app) {
+        if (!app || app.shell !== true) return null;
+        try {
+            const u = new URL(app.url);
+            return u.protocol === 'https:' && u.hostname.endsWith('.moshly.io') ? u.origin : null;
+        } catch (_) { return null; }
+    }
+
+    // Where the hub sends the user to open an app: the frame for shell apps, else null.
+    function shellUrlFor(appUrl) {
+        const app = CATALOG.find(a => a.url === appUrl);
+        return shellOrigin(app) ? `/app?app=${encodeURIComponent(app.slug)}` : null;
+    }
+
     global.MoshlyApps = Object.freeze({
-        CATALOG, PLAN_APP_SLOTS, appSlotsFor, planOf, normalizeSlug, activeSlugs, findApp, blacklistedSlugs, layout
+        CATALOG, PLAN_APP_SLOTS, appSlotsFor, planOf, normalizeSlug, activeSlugs, findApp, blacklistedSlugs, layout,
+        shellOrigin, shellUrlFor
     });
 })(window);
