@@ -44,7 +44,9 @@
       font-weight: 500;
       display: flex;
       flex-direction: column;
-      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      /* No bottom inset here: the app reaches the screen's bottom edge and keeps its own
+         safe-area padding (e.g. Days' bottom nav), as it does outside the frame. */
+      padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
     }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     :focus-visible { outline: 2px solid var(--nb-focus, #D8FF54); outline-offset: 2px; }
