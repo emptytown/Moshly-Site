@@ -15,17 +15,19 @@
         {
             slug: 'quote', name: 'Quote', description: 'Financial hub',
             status: 'live', iconAsset: '/assets/moshly-Quote-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/quote.png', url: '/apps/quote.html',
+            shell: true, origin: 'https://quote.moshly.io', entry: '/callback',
             type: 'Plan app', categories: ['Business', 'Analytics']
         },
         {
             slug: 'fifthsense', name: 'Fifth Sense', description: 'Interactive Circle of Fifths',
             status: 'live', iconAsset: '/assets/moshly-FifhtSense-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/fifthsense.png', url: '/apps/fifthsense.html',
+            shell: true, origin: 'https://fifthsense.moshly.io', entry: '/',
             type: 'Free', categories: ['Learning', 'Interactive']
         },
         {
             slug: 'merchpad', name: 'MerchPad', description: 'Merch management',
             status: 'live', iconAsset: '/assets/moshly-merchpad-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/merchpad.png', url: 'https://merchpad.moshly.io',
-            shell: true,
+            shell: true, entry: '/auth/callback',
             type: 'Plan app', categories: ['Business', 'Booking']
         },
         {
@@ -36,16 +38,19 @@
         {
             slug: 'run', name: 'Run', description: 'Interactive Roadbooks for tours and shows',
             status: 'live', iconAsset: '/assets/moshly-run-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/run.png', url: 'https://run.moshly.io',
+            shell: true, entry: '/auth/callback',
             type: 'Plan app', categories: ['Business', 'Tour']
         },
         {
             slug: 'days', name: 'Days', description: 'Task management and scheduling',
             status: 'live', iconAsset: '/assets/moshly-days-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/days.png', url: 'https://days.moshly.io',
+            shell: true, entry: '/auth/callback',
             type: 'Plan app', categories: ['Business', 'Productivity']
         },
         {
             slug: 'time', name: 'Time', description: 'Fullscreen clock, timer, stopwatch and countdowns',
             status: 'live', iconAsset: '/assets/moshly-time-logo-svg.svg', iconBrutal: '/assets/neo-brut-icons/time.png', url: 'https://time.moshly.io',
+            shell: true,
             type: 'Free', categories: ['Productivity', 'Tour']
         }
     ]);
@@ -145,11 +150,13 @@
     }
 
     // Browshly (app.html): apps flagged `shell: true` open inside the Moshly frame instead of
-    // leaving moshly.io. Returns the app's origin, or null if it must not be framed.
+    // leaving moshly.io. `origin` is the app's own site when `url` is a page on moshly.io;
+    // `entry` is the path that receives the one-time sign-in `?token=` (none: no sign-in).
+    // Returns the app's origin, or null if it must not be framed.
     function shellOrigin(app) {
         if (!app || app.shell !== true) return null;
         try {
-            const u = new URL(app.url);
+            const u = new URL(app.origin || app.url);
             return u.protocol === 'https:' && u.hostname.endsWith('.moshly.io') ? u.origin : null;
         } catch (_) { return null; }
     }

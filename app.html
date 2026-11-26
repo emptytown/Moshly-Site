@@ -12,41 +12,209 @@
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link href="/tokens/neo-brut.css" rel="stylesheet" />
+  <script>
+    // Same skin + theme as the dashboard and launcher, applied before paint.
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('skin-brutal');
+      try { if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light'); } catch (_) {}
+    })();
+  </script>
   <!--
     Browshly — the Moshly app frame.
-    Shows one Moshly app (its own subdomain) in a full-screen iframe so the installed
-    PWA never leaves moshly.io and iOS never shows its in-app browser (X + bars).
-    Each app keeps its own origin: storage, cookies and scripts stay isolated.
-    The app talks to this page only through postMessage ({ type: 'moshly:home' }).
+    The installed PWA never leaves moshly.io, so iOS never shows its in-app browser (X + bars).
+    Each app runs in its own iframe on its own subdomain: storage, cookies and scripts stay
+    isolated, so a bug in one app cannot reach the others or moshly.io.
+    The bar is drawn here, once, for every app: the active app's icon (the app menu) and name,
+    the user's AI credits and notifications.
+    Apps talk to this page only through postMessage (see moshly-modules/modules/MoshlyShell):
+      moshly:home · moshly:switcher · moshly:reauth · moshly:quota-changed
   -->
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: #070a14; overflow: hidden; }
+    html, body { height: 100%; overflow: hidden; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-      color: #fff;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      background: var(--nb-paper, #181818);
+      color: var(--nb-ink, #fff);
+      font-family: var(--nb-font-family-base, Inter, system-ui, sans-serif);
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
-    #frame {
-      display: block;
-      width: 100%;
-      height: 100%;
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--nb-focus, #D8FF54); outline-offset: 2px; }
+
+    /* ── Bar ─────────────────────────────────────────── */
+    .bar {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: calc(env(safe-area-inset-top) + 6px) 10px 6px;
+      background: var(--nb-paper-2, #111);
+      border-bottom: var(--nb-border-width, 1.5px) solid var(--nb-line, #2E2E2E);
+      position: relative;
+      z-index: 20;
+    }
+    .app-btn {
+      display: flex; align-items: center; gap: 9px;
+      min-width: 0; flex: 1;
+      padding: 2px 6px 2px 2px;
+      border-radius: 12px;
+      text-align: left;
+    }
+    .app-btn img { width: 32px; height: 32px; border-radius: 8px; flex: none; display: block; }
+    .app-btn .name {
+      font-family: var(--nb-font-family-display, inherit);
+      font-weight: 900; font-size: 17px; letter-spacing: -0.02em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .app-btn .chev { flex: none; opacity: 0.6; }
+    .chip {
+      flex: none;
+      display: flex; align-items: center; gap: 5px;
+      height: 32px; padding: 0 11px;
+      border: var(--nb-border-width, 1.5px) solid var(--nb-line-strong, #3A3A3A);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 800; letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .chip[hidden] { display: none; }
+    .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--nb-lime, #D8FF54); }
+    .icon-btn {
+      flex: none;
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      position: relative;
+    }
+    .icon-btn:hover, .app-btn:hover, .chip:hover { background: var(--nb-card, #232323); }
+
+    /* ── Apps (one iframe each) ──────────────────────── */
+    .stage { flex: 1; position: relative; min-height: 0; }
+    .stage iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       border: 0;
-      background: #070a14;
+      background: var(--nb-paper, #181818);
     }
-    #status {
-      position: fixed; inset: 0;
+    .stage iframe[hidden] { display: none; }
+    .status {
+      position: absolute; inset: 0;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-      font-size: 14px; letter-spacing: 0.04em; color: rgba(255,255,255,0.7);
-      text-align: center; padding: 24px;
+      padding: 24px; text-align: center;
+      font-size: 14px; color: var(--nb-muted, #A6A6A6);
     }
-    #status[hidden] { display: none; }
-    #status a { color: #fff; font-weight: 700; }
+    .status[hidden] { display: none; }
+    .status a { color: var(--nb-ink, #fff); font-weight: 800; }
+
+    /* ── Menu + notifications ────────────────────────── */
+    .scrim {
+      position: fixed; inset: 0; z-index: 40;
+      background: rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .scrim.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed; top: 0; bottom: 0; left: 0; z-index: 50;
+      width: min(320px, 86vw);
+      display: flex; flex-direction: column;
+      padding: calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 14px);
+      background: var(--nb-paper-2, #111);
+      border-right: var(--nb-border-width, 1.5px) solid var(--nb-line, #2E2E2E);
+      transform: translateX(-102%);
+      transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow-y: auto;
+    }
+    .drawer.open { transform: none; }
+    .drawer h2, .panel h2 {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--nb-muted, #A6A6A6);
+      margin: 6px 4px 10px;
+    }
+    .search {
+      width: 100%; height: 44px; padding: 0 14px; margin-bottom: 12px;
+      border-radius: var(--nb-radius-control, 16px);
+      border: var(--nb-border-width, 1.5px) solid var(--nb-line-strong, #3A3A3A);
+      background: var(--nb-card, #232323); color: inherit;
+      font: inherit; font-size: 16px; /* 16px: no zoom on iOS */
+    }
+    .apps { list-style: none; display: grid; gap: 4px; }
+    .apps a, .links a {
+      display: flex; align-items: center; gap: 12px;
+      min-height: 48px; padding: 6px 8px;
+      border-radius: 14px;
+      color: inherit; text-decoration: none;
+    }
+    .apps a:hover, .links a:hover { background: var(--nb-card, #232323); }
+    .apps a[aria-current="page"] { background: var(--nb-lime, #D8FF54); color: var(--nb-on, #111); }
+    .apps img { width: 36px; height: 36px; border-radius: 9px; flex: none; }
+    .apps .app-name { font-weight: 800; font-size: 15px; }
+    .apps .app-desc { font-size: 12px; opacity: 0.7; }
+    .apps .empty { padding: 12px 8px; font-size: 13px; color: var(--nb-muted, #A6A6A6); }
+    .links {
+      margin-top: auto; padding-top: 14px;
+      border-top: var(--nb-border-width, 1.5px) solid var(--nb-line, #2E2E2E);
+      display: grid; gap: 2px;
+      font-weight: 700; font-size: 14px;
+    }
+    .panel {
+      position: fixed; z-index: 50;
+      top: calc(env(safe-area-inset-top) + 54px); right: 10px;
+      width: min(300px, calc(100vw - 20px));
+      padding: 12px;
+      background: var(--nb-card, #232323);
+      border: var(--nb-border-width, 1.5px) solid var(--nb-line, #2E2E2E);
+      border-radius: var(--nb-radius-control, 16px);
+      box-shadow: var(--nb-shadow-elevate, 0 14px 30px rgba(0,0,0,.35));
+    }
+    .panel[hidden] { display: none; }
+    .panel p { font-size: 13px; color: var(--nb-muted, #A6A6A6); padding: 4px 4px 8px; }
+    @media (prefers-reduced-motion: reduce) { .drawer, .scrim { transition: none; } }
   </style>
 </head>
 <body>
-  <div id="status" role="status" aria-live="polite">Opening…</div>
-  <iframe id="frame" title="Moshly app" allow="clipboard-read; clipboard-write; fullscreen" hidden></iframe>
+  <header class="bar">
+    <button class="app-btn" id="appBtn" type="button" aria-haspopup="dialog" aria-controls="drawer" aria-expanded="false" aria-label="Switch app">
+      <img id="appIcon" alt="" />
+      <span class="name" id="appName">Moshly</span>
+      <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <button class="chip" id="credits" type="button" hidden title="AI credits left this month">
+      <span class="dot" aria-hidden="true"></span><span id="creditsValue"></span>
+    </button>
+    <button class="icon-btn" id="bellBtn" type="button" aria-label="Notifications" aria-haspopup="dialog" aria-controls="bellPanel" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+    </button>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="status" id="status" role="status" aria-live="polite">Opening…</div>
+  </main>
+
+  <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+  <nav class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Moshly apps" inert>
+    <h2>Your apps</h2>
+    <input class="search" id="search" type="search" placeholder="Find an app" autocomplete="off" aria-label="Find an app" />
+    <ul class="apps" id="appList"></ul>
+    <div class="links">
+      <a href="/launcher">Launcher</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/contact">Help</a>
+    </div>
+  </nav>
+
+  <section class="panel" id="bellPanel" role="dialog" aria-label="Notifications" hidden>
+    <h2>Notifications</h2>
+    <p>No notifications yet.</p>
+  </section>
 
   <script src="/auth-client.js"></script>
   <script src="/moshly-apps.js"></script>
@@ -54,49 +222,222 @@
     (function () {
       'use strict';
 
-      const statusEl = document.getElementById('status');
-      const frame = document.getElementById('frame');
+      const M = window.MoshlyApps;
       const HOME = '/launcher';
+      const MAX_LIVE = 3; // apps kept alive (hidden) so each one is where you left it
 
-      function fail(msg) {
-        frame.hidden = true;
+      const $ = (id) => document.getElementById(id);
+      const stage = $('stage'), statusEl = $('status');
+      const drawer = $('drawer'), scrim = $('scrim'), appBtn = $('appBtn');
+      const bellBtn = $('bellBtn'), bellPanel = $('bellPanel');
+      const search = $('search'), appList = $('appList');
+
+      /** slug → { app, origin, iframe }, most recently used last. */
+      const live = new Map();
+      let current = null;
+      let myApps = [];
+
+      const iconOf = (app) => (app.iconBrutal || app.iconAsset);
+
+      function setStatus(msg, withHomeLink) {
         statusEl.hidden = false;
         statusEl.textContent = '';
         const p = document.createElement('p');
         p.textContent = msg;
-        const a = document.createElement('a');
-        a.href = HOME;
-        a.textContent = 'Back to Moshly';
-        statusEl.append(p, a);
+        statusEl.append(p);
+        if (withHomeLink) {
+          const a = document.createElement('a');
+          a.href = HOME;
+          a.textContent = 'Back to Moshly';
+          statusEl.append(a);
+        }
       }
 
-      // Only apps flagged `shell: true` on a moshly.io subdomain can be framed.
-      const slug = new URLSearchParams(location.search).get('app') || '';
-      const app = window.MoshlyApps.CATALOG.find((a) => a.slug === slug);
-      const appOrigin = app && window.MoshlyApps.shellOrigin?.(app);
-      if (!appOrigin) { fail('This app cannot be opened here.'); return; }
+      // ── Sign-in: a fresh one-time token for each app load ────────────────
+      async function entryUrl(app, origin) {
+        if (!app.entry) return origin + '/';
+        const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
+        if (!res.ok || !res.data?.token) throw new Error(`server responded ${res.status}`);
+        return `${origin}${app.entry}?token=${encodeURIComponent(res.data.token)}`;
+      }
 
-      document.title = `${app.name} · Moshly`;
+      async function load(entry) {
+        statusEl.hidden = true;
+        try {
+          entry.iframe.src = await entryUrl(entry.app, entry.origin);
+        } catch (err) {
+          console.error('[Browshly] sign-in for', entry.app.slug, 'failed:', err);
+          if (current === entry) setStatus('Could not connect. Please try again.', true);
+        }
+      }
 
-      // The framed app asks to go home; accept it only from that app's own origin.
+      // ── Switching apps ───────────────────────────────────────────────────
+      function show(slug) {
+        const app = M.CATALOG.find((a) => a.slug === slug);
+        const origin = app && M.shellOrigin(app);
+        if (!origin) { setStatus('This app cannot be opened here.', true); return; }
+
+        let entry = live.get(slug);
+        if (entry) {
+          live.delete(slug); // re-insert as most recently used
+        } else {
+          const iframe = document.createElement('iframe');
+          iframe.title = app.name;
+          iframe.allow = 'clipboard-read; clipboard-write; fullscreen';
+          stage.append(iframe);
+          entry = { app, origin, iframe };
+          load(entry);
+        }
+        live.set(slug, entry);
+
+        // Keep at most MAX_LIVE apps alive: drop the least recently used.
+        while (live.size > MAX_LIVE) {
+          const [oldSlug, old] = live.entries().next().value;
+          old.iframe.remove();
+          live.delete(oldSlug);
+        }
+
+        current = entry;
+        for (const e of live.values()) e.iframe.hidden = e !== entry;
+        statusEl.hidden = true;
+
+        $('appIcon').src = iconOf(app);
+        $('appName').textContent = app.name;
+        document.title = `${app.name} · Moshly`;
+        history.replaceState(null, '', `/app?app=${encodeURIComponent(slug)}`);
+        renderMenu();
+        refreshCredits();
+      }
+
+      // ── Menu ─────────────────────────────────────────────────────────────
+      function renderMenu() {
+        const q = search.value.trim().toLowerCase();
+        const list = myApps.filter((a) => !q || a.name.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
+        appList.textContent = '';
+        if (!list.length) {
+          const li = document.createElement('li');
+          li.className = 'empty';
+          li.textContent = myApps.length ? 'No app matches.' : 'No apps yet. Add them in the dashboard.';
+          appList.append(li);
+          return;
+        }
+        for (const app of list) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          const framed = !!M.shellOrigin(app);
+          a.href = framed ? `/app?app=${encodeURIComponent(app.slug)}` : app.url;
+          if (current && current.app.slug === app.slug) a.setAttribute('aria-current', 'page');
+          a.addEventListener('click', async (ev) => {
+            ev.preventDefault();
+            closeAll();
+            if (framed) { show(app.slug); return; }
+            // Apps not in the frame yet keep their usual sign-in launch (they open over the PWA).
+            try {
+              const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
+              if (!res.ok || !res.data?.token) throw new Error(`server responded ${res.status}`);
+              location.href = `${app.url}/auth/callback?token=${encodeURIComponent(res.data.token)}`;
+            } catch (err) {
+              console.error('[Browshly] launch failed:', err);
+            }
+          });
+          const img = document.createElement('img');
+          img.src = iconOf(app); img.alt = '';
+          const text = document.createElement('span');
+          const name = document.createElement('div'); name.className = 'app-name'; name.textContent = app.name;
+          const desc = document.createElement('div'); desc.className = 'app-desc'; desc.textContent = app.description || '';
+          text.append(name, desc);
+          a.append(img, text);
+          li.append(a);
+          appList.append(li);
+        }
+      }
+
+      function openMenu() {
+        closePanel();
+        drawer.inert = false;
+        drawer.classList.add('open');
+        scrim.classList.add('open');
+        appBtn.setAttribute('aria-expanded', 'true');
+        search.value = '';
+        renderMenu();
+        // Focus the list, not the search box, so the iOS keyboard does not pop up.
+        const first = appList.querySelector('a');
+        if (first) first.focus({ preventScroll: true });
+      }
+      function closeMenu() {
+        drawer.classList.remove('open');
+        drawer.inert = true;
+        appBtn.setAttribute('aria-expanded', 'false');
+      }
+      function openPanel() {
+        closeMenu();
+        bellPanel.hidden = false;
+        scrim.classList.add('open');
+        bellBtn.setAttribute('aria-expanded', 'true');
+      }
+      function closePanel() {
+        bellPanel.hidden = true;
+        bellBtn.setAttribute('aria-expanded', 'false');
+      }
+      function closeAll() {
+        closeMenu();
+        closePanel();
+        scrim.classList.remove('open');
+      }
+
+      appBtn.addEventListener('click', () => (drawer.classList.contains('open') ? closeAll() : openMenu()));
+      bellBtn.addEventListener('click', () => (bellPanel.hidden ? openPanel() : closeAll()));
+      scrim.addEventListener('click', closeAll);
+      search.addEventListener('input', renderMenu);
+      document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') closeAll(); });
+      $('credits').addEventListener('click', () => { location.href = '/dashboard'; });
+
+      // ── Credits ──────────────────────────────────────────────────────────
+      async function refreshCredits() {
+        try {
+          const res = await window.MoshlyAuth.authFetch('/quota');
+          const ai = res.ok && res.data?.quotas?.ai_credits;
+          if (!ai || !ai.limit) { $('credits').hidden = true; return; }
+          $('creditsValue').textContent = String(ai.remaining);
+          $('credits').title = `${ai.remaining} of ${ai.limit} AI credits left this month`;
+          $('credits').setAttribute('aria-label', $('credits').title);
+          $('credits').hidden = false;
+        } catch (_) {
+          $('credits').hidden = true;
+        }
+      }
+
+      // ── Messages from the apps ───────────────────────────────────────────
       window.addEventListener('message', (event) => {
-        if (event.origin !== appOrigin || event.source !== frame.contentWindow) return;
-        if (event.data && event.data.type === 'moshly:home') location.href = HOME;
+        const entry = [...live.values()].find((e) => e.iframe.contentWindow === event.source);
+        if (!entry || event.origin !== entry.origin) return; // only a live app, from its own origin
+        const type = event.data && event.data.type;
+        if (type === 'moshly:home') location.href = HOME;
+        else if (type === 'moshly:switcher') openMenu();
+        else if (type === 'moshly:reauth') load(entry);
+        else if (type === 'moshly:quota-changed') refreshCredits();
       });
 
-      (async function open() {
+      // ── Start ────────────────────────────────────────────────────────────
+      (async function start() {
         const ok = await window.MoshlyAuth.requireSession('/login');
         if (!ok) return;
+
+        const params = new URLSearchParams(location.search);
+        show(params.get('app') || '');
+
         try {
-          const res = await window.MoshlyAuth.authFetch('/auth/sso/token', { method: 'POST' });
-          if (!res.ok || !res.data?.token) throw new Error(`server responded ${res.status}`);
-          frame.src = `${appOrigin}/auth/callback?token=${encodeURIComponent(res.data.token)}`;
-          frame.hidden = false;
-          frame.addEventListener('load', () => { statusEl.hidden = true; }, { once: true });
+          const { ok: meOk, data } = await window.MoshlyAuth.authFetch('/me');
+          if (meOk && data.user) {
+            const layout = M.layout(data.user);
+            myApps = [...layout.mainApps, ...layout.freeApps].filter((a) => !layout.blacklisted.includes(a.slug));
+            renderMenu();
+          }
         } catch (err) {
-          console.error('[Browshly] SSO launch failed:', err);
-          fail('Could not connect. Please try again.');
+          console.error('[Browshly] could not load your apps:', err);
         }
+
+        if (params.get('switcher') === '1') openMenu();
       })();
     })();
   </script>

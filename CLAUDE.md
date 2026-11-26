@@ -99,3 +99,11 @@ Plans can be given for a fixed number of months (`subscriptions.expires_at`). `s
 
 Apply a new migration to production **before** deploying code that reads its columns (e.g. `0007_usage_period_start.sql`: every subscription read selects `usage_period_start`, so login fails until it exists):
 `npx wrangler d1 migrations apply moshly-db --remote`
+
+## Browshly (app frame)
+
+`/app?app=<slug>` (`app.html`) shows Moshly apps inside the installed PWA without leaving moshly.io, so iOS never opens its in-app browser (X + toolbars). Each app runs in its own iframe on its own subdomain (isolated storage and cookies). The Browshly bar (active app's icon = app menu, app name, AI credits, notifications) is drawn here once for every app.
+
+- An app opens in the frame when its `moshly-apps.js` entry has `shell: true`; `origin` is its site when `url` is a page here, `entry` the path that takes the one-time `?token=` (none: no sign-in). Launcher and dashboard links go through `MoshlyApps.shellUrlFor()`.
+- Every framed app must send `Content-Security-Policy: frame-ancestors 'self' https://moshly.io` and use `MoshlyShell` from `emptytown/moshly-modules` (never navigate the frame to moshly.io). `_headers` allows `frame-src https://*.moshly.io`.
+- Messages accepted from the active apps only: `moshly:home`, `moshly:switcher`, `moshly:reauth`, `moshly:quota-changed`.
