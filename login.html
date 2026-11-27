@@ -8,7 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    // Same skin as the hub: Neo Brut by default, then the last skin used on this device.
+    (function () {
+      var root = document.documentElement;
+      try {
+        root.classList.add('skin-' + (localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal'));
+        if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+      } catch (_) { root.classList.add('skin-brutal'); }
+    })();
+  </script>
   <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/tokens/neo-brut.css" />
+  <link rel="stylesheet" href="/auth-brutal.css" />
 </head>
 <body>
 
