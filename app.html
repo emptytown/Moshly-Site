@@ -38,7 +38,13 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; }
     body {
-      background: var(--nb-paper, #181818);
+      /* Pin the frame to all four screen edges. In an installed iOS PWA with the
+         black-translucent status bar, height: 100% comes out shorter than the screen by
+         the status bar's height, which left an empty band under every app. */
+      position: fixed;
+      inset: 0;
+      height: auto;
+      background: var(--bar-bg, var(--nb-paper, #181818));
       color: var(--nb-ink, #fff);
       font-family: var(--nb-font-family-base, Inter, system-ui, sans-serif);
       font-weight: 500;
