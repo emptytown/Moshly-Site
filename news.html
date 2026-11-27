@@ -18,7 +18,7 @@
   <meta name="theme-color" content="#181818" />
   <script>
     // Theme before first paint (same key as the dashboard).
-    try { if (localStorage.getItem('moshly-theme') === 'light') document.documentElement.classList.add('theme-light'); } catch (_) {}
+    try { if ((function(){var m=document.cookie.match(/(?:^|;\s*)moshly_theme=(light|dark)/);return m?m[1]==='light':localStorage.getItem('moshly-theme')==='light'})()) document.documentElement.classList.add('theme-light'); } catch (_) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
