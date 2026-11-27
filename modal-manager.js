@@ -225,13 +225,38 @@ function selectProjectType(btn) {
     btn.classList.add('active');
 }
 
+function setMobMenuExpanded(open) {
+    const btn = document.getElementById('dbMobMenuBtn');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
 function openMobDrawer() {
+    // The ☰ button toggles: a second tap closes the drawer.
+    if (document.getElementById('dbMobDrawer')?.classList.contains('open')) { closeMobDrawer(); return; }
     ModalManager.open('dbMobDrawer');
+    setMobMenuExpanded(true);
 }
 
 function closeMobDrawer() {
     ModalManager.close('dbMobDrawer');
+    setMobMenuExpanded(false);
 }
+
+// The drawer closes when tapping outside it (backdrop) or swiping it to the left.
+document.addEventListener('DOMContentLoaded', () => {
+    const backdrop = document.getElementById('dbMobBackdrop');
+    if (backdrop) backdrop.addEventListener('click', closeMobDrawer);
+    const drawer = document.getElementById('dbMobDrawer');
+    if (!drawer) return;
+    let startX = null, startY = null;
+    drawer.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+    drawer.addEventListener('touchend', (e) => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX, dy = e.changedTouches[0].clientY - startY;
+        if (dx < -60 && Math.abs(dx) > Math.abs(dy)) closeMobDrawer();
+        startX = startY = null;
+    }, { passive: true });
+});
 
 // Global Listeners for Phase 1
 document.addEventListener('keydown', e => {
@@ -248,8 +273,6 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// Sync backdrop click for drawers if they have their own
-// Note: dashboard.html has inline onclick on backdrops, but we'll ensure they work.
 
 // Export to window for global access (consistent with existing moshly-ui.js pattern)
 window.ModalManager = ModalManager;
