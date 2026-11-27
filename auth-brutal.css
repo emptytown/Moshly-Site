@@ -1,0 +1,94 @@
+/* ══ Auth pages · Neo Brut skin ════════════════════════════════════════
+   Login, signup, forgot / reset password and join use the same skin as the
+   hub (launcher + dashboard): Neo Brut by default for new visitors, then the
+   last skin used on this device (localStorage 'moshly-skin', set by the hub).
+   Tokens come from /tokens/neo-brut.css (html.skin-brutal [+ .theme-light]).
+   Legacy pages keep style.css untouched: every rule here is scoped to
+   html.skin-brutal. */
+
+html.skin-brutal { background: var(--nb-paper); }
+
+html.skin-brutal body {
+  background: var(--nb-paper);
+  color: var(--nb-ink);
+  font-family: var(--nb-font-family-base);
+  font-weight: var(--nb-font-weight-body);
+}
+html.skin-brutal.theme-light body {
+  background-image:
+    linear-gradient(var(--nb-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nb-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Top nav */
+html.skin-brutal .nav { background: transparent; border: 0; box-shadow: none; backdrop-filter: none; }
+html.skin-brutal .nav-logo-text { color: var(--nb-ink); font-weight: 900; letter-spacing: -0.03em; }
+
+/* Card */
+html.skin-brutal .auth-modal {
+  background: var(--nb-card);
+  border: var(--nb-border-width) solid var(--nb-line);
+  border-radius: var(--nb-radius-block);
+  box-shadow: var(--nb-shadow-lg);
+  transform: none;
+}
+html.skin-brutal .auth-panel-title {
+  color: var(--nb-ink);
+  font-family: var(--nb-font-family-display);
+  font-weight: var(--nb-font-weight-display);
+  letter-spacing: -0.03em;
+}
+html.skin-brutal .auth-panel-desc,
+html.skin-brutal .auth-switch { color: var(--nb-muted); }
+
+/* Fields */
+html.skin-brutal .auth-label {
+  color: var(--nb-muted);
+  font-weight: var(--nb-font-weight-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+html.skin-brutal .auth-input,
+html.skin-brutal .auth-dial {
+  background: var(--nb-paper);
+  color: var(--nb-ink);
+  border: var(--nb-border-width) solid var(--nb-line);
+  border-radius: var(--nb-radius-control);
+  font-size: 16px; /* no zoom on iOS */
+}
+html.skin-brutal .auth-input::placeholder { color: var(--nb-muted); opacity: 0.7; }
+html.skin-brutal .auth-input:focus {
+  border-color: var(--nb-line);
+  box-shadow: var(--nb-shadow-sm);
+  outline: 2px solid var(--nb-focus);
+  outline-offset: 2px;
+}
+html.skin-brutal .auth-pw-toggle { color: var(--nb-muted); }
+
+/* Links */
+html.skin-brutal .auth-forgot,
+html.skin-brutal .auth-switch a,
+html.skin-brutal .auth-back {
+  color: var(--nb-purple-ink);
+  font-weight: var(--nb-font-weight-strong);
+}
+
+/* Primary action */
+html.skin-brutal .btn-primary,
+html.skin-brutal .auth-submit {
+  background: var(--nb-lime);
+  color: var(--nb-on);
+  border: var(--nb-border-width) solid var(--nb-line);
+  border-radius: var(--nb-radius-control);
+  box-shadow: var(--nb-shadow-md);
+  font-weight: var(--nb-font-weight-label);
+  letter-spacing: 0.02em;
+}
+html.skin-brutal .btn-primary:hover { opacity: 1; background: var(--nb-lime-hover); }
+html.skin-brutal .btn-primary:active { transform: translate(2px, 2px); box-shadow: none; }
+
+/* Messages */
+html.skin-brutal .auth-feedback { border-radius: var(--nb-radius-control); border-width: var(--nb-border-width); }
+html.skin-brutal .auth-feedback--error { background: var(--nb-card); border-color: var(--nb-red); color: var(--nb-red-ink); }
+html.skin-brutal .auth-feedback--success { background: var(--nb-card); border-color: var(--nb-line); color: var(--nb-ink); }
