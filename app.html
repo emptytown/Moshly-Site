@@ -21,7 +21,7 @@
     (function () {
       var root = document.documentElement;
       root.classList.add('skin-brutal');
-      try { if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light'); } catch (_) {}
+      try { if ((function(){var m=document.cookie.match(/(?:^|;\s*)moshly_theme=(light|dark)/);return m?m[1]==='light':localStorage.getItem('moshly-theme')==='light'})()) root.classList.add('theme-light'); } catch (_) {}
     })();
   </script>
   <!--

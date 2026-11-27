@@ -20,10 +20,10 @@
       // Apply skin + theme before first paint to avoid a flash of the wrong skin.
       (function () {
         try {
-          var skin = localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal';
+          var skin = (function(){var m=document.cookie.match(/(?:^|;\s*)moshly_skin=(neo|legacy)/);return m?m[1]==='legacy':localStorage.getItem('moshly-skin')==='legacy'})() ? 'legacy' : 'brutal';
           var root = document.documentElement;
           root.classList.add('skin-' + skin);
-          if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+          if ((function(){var m=document.cookie.match(/(?:^|;\s*)moshly_theme=(light|dark)/);return m?m[1]==='light':localStorage.getItem('moshly-theme')==='light'})()) root.classList.add('theme-light');
         } catch (_) { document.documentElement.classList.add('skin-brutal'); }
       })();
     </script>

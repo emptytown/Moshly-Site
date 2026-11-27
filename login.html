@@ -13,8 +13,8 @@
     (function () {
       var root = document.documentElement;
       try {
-        root.classList.add('skin-' + (localStorage.getItem('moshly-skin') === 'legacy' ? 'legacy' : 'brutal'));
-        if (localStorage.getItem('moshly-theme') === 'light') root.classList.add('theme-light');
+        root.classList.add('skin-' + ((function(){var m=document.cookie.match(/(?:^|;\s*)moshly_skin=(neo|legacy)/);return m?m[1]==='legacy':localStorage.getItem('moshly-skin')==='legacy'})() ? 'legacy' : 'brutal'));
+        if ((function(){var m=document.cookie.match(/(?:^|;\s*)moshly_theme=(light|dark)/);return m?m[1]==='light':localStorage.getItem('moshly-theme')==='light'})()) root.classList.add('theme-light');
       } catch (_) { root.classList.add('skin-brutal'); }
     })();
   </script>
