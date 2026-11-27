@@ -27,6 +27,9 @@
   </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* iOS PWA can show the html element below the body: paint it like the page. */
+    html { background: #070a14; }
+    .launcher-error { grid-column: 1 / -1; font-size: 13px; line-height: 1.4; opacity: .8; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
@@ -558,26 +561,45 @@
 
       // ── Init: fetch user, fall back to cache ──────────────
       (async function initLauncher() {
+        let user = null;
         try {
           const { ok, data } = await window.MoshlyAuth.authFetch('/me');
           if (ok && data.user) {
-            const user = data.user;
+            user = data.user;
             // Same skin / theme / empty-slot count as chosen in the full dashboard.
-            window.MoshlyPrefs.syncFromServer(user);
-            const firstName = (user.name || '').split(' ')[0] || (user.profile?.firstName) || '';
-            if (firstName) {
-              document.querySelectorAll('[data-first-name]').forEach((el) => { el.textContent = firstName; });
-            }
-            updateLauncherAppsUI(user);
-            return;
+            try { window.MoshlyPrefs.syncFromServer(user); } catch (err) { console.warn('[Launcher] prefs sync failed:', err); }
           }
         } catch (err) {
           console.warn('[Launcher] /me fetch failed, using cache:', err);
         }
+        if (!user) {
+          try { user = JSON.parse(localStorage.getItem('moshly_user') || 'null'); } catch (_) {}
+        }
+        // No account at all: renew the session or go to login, instead of an empty page.
+        if (!user) {
+          const ok = await window.MoshlyAuth.requireSession('/login');
+          if (!ok) return;
+          try { user = JSON.parse(localStorage.getItem('moshly_user') || 'null'); } catch (_) {}
+          if (!user) return;
+        }
+        const firstName = (user.name || '').split(' ')[0] || (user.profile?.firstName) || '';
+        if (firstName) {
+          document.querySelectorAll('[data-first-name]').forEach((el) => { el.textContent = firstName; });
+        }
         try {
-          const user = JSON.parse(localStorage.getItem('moshly_user') || 'null');
-          if (user) updateLauncherAppsUI(user);
-        } catch (_) {}
+          updateLauncherAppsUI(user);
+        } catch (err) {
+          // Never fail silently: show what broke where the apps should be.
+          console.error('[Launcher] could not draw the apps:', err);
+          const grid = document.getElementById('dbAppsGrid');
+          if (grid) {
+            grid.innerHTML = '';
+            const msg = document.createElement('p');
+            msg.className = 'launcher-error';
+            msg.textContent = `Could not show your apps (${err && err.message ? err.message : err}). Open the Dashboard or try again.`;
+            grid.appendChild(msg);
+          }
+        }
       })();
 
       // ── Sync user name ────────────────────────────────────
