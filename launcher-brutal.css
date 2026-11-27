@@ -37,6 +37,7 @@ html.skin-brutal.theme-light {
 }
 
 /* ── Page ── */
+html.skin-brutal { background: var(--nb-paper); }
 html.skin-brutal body {
   font-family: var(--nb-font);
   background: var(--nb-paper);
